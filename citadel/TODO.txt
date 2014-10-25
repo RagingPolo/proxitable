@@ -1,3 +1,5 @@
-Seperate graphical output from game logic
-
 Seperate input from game logic
+
+Write GPIO output module
+
+Seperate main game classes into individual files

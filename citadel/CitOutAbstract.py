@@ -9,9 +9,10 @@ from abc import ABCMeta, abstractmethod
 class CitOutAbstract:
   __metaclass__ = ABCMeta
 
-  P1   = 1
-  P2   = 2
-  DRAW = 3
+  def __init__( self ):
+    self.P1   = 1
+    self.P2   = 2
+    self.DRAW = 3
 
   # Display the current game state
   # pos : board position : 0-6 

@@ -5,6 +5,7 @@ import os
 class CitOutAscii( CitOutAbstract.CitOutAbstract ):
 
   def __init__( self ):
+    super().__init__()
     init() # Colorama init
 
   def showState( self, pos, p1p, p2p, p1m, p2m ):
@@ -36,4 +37,11 @@ class CitOutAscii( CitOutAbstract.CitOutAbstract ):
     print()
 
   def showResult( self, result ):
-    pass
+    if result == self.P1:
+      print( Fore.WHITE + '         Player One Wins!' + Fore.RESET )
+    elif result == self.P2:
+      print( Fore.WHITE + '         Player Two Wins!' + Fore.RESET )
+    elif result == self.DRAW:
+      print( Fore.WHITE + '               Draw!' + Fore.RESET )
+    print()
+
