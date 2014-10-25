@@ -7,7 +7,7 @@ import numbers
 import getpass
 import CitOutAbstract
 # Import desired output class here
-#import ???
+import CitOutAscii as output
 
 # ------------------------------------
 # CLASS CitPlayer                    |
@@ -17,34 +17,37 @@ import CitOutAbstract
 class CitPlayer( object ):
   
   def __init__( self ):
-    self._points = 50
-    self._moves  = list()
+    self.__points = 50
+    self.__moves  = list()
 
   def getPoints( self ):
-    return self._points
+    return self.__points
 
   def addMove( self, move ):
     if isinstance( move, numbers.Number ):
-      if self._points < move:
-        self._points -= self._points
+      if self.__points < move:
+        self.__points -= self.__points
       else:
-        self._points -= move
-      self._moves.append( move )
+        self.__points -= move
+      self.__moves.append( move )
     else:
       raise Exception( 'CitPlayer.addMove(): Not a number' );
  
   def getLastMove( self ):
-    return self._moves[ -1 ]
+    if len( self.__moves ) > 0:
+      return self.__moves[ -1 ]
+    else:
+      return None
 
   def hasLost( self ):
-    if self._points > 0:
+    if self.__points > 0:
       return False
     else:
       return True
 
   def canWin( self, movesToWin ):
     if isinstance( movesToWin, numbers.Number ):
-      if self._points < movesToWin:
+      if self.__points < movesToWin:
         return False
       else:
         return True
@@ -102,7 +105,7 @@ class CitGame( object ):
     self.showResult()
 
   def setOutput( self, output ):
-    if isinstance( output, CitOutAbstract ):
+    if isinstance( output, CitOutAbstract.CitOutAbstract ):
       self.__output = output
     else:
       raise Exception( 'CitGame.setOutput(): Not a valid output object' )
@@ -134,7 +137,7 @@ class CitGame( object ):
       return 2
     if self.__p1.hasLost():
       if self.__p2.canWin( self.__board.getPosition() ):
-        while self._board.getPosition() > CitBoard.MIN:
+        while self.__board.getPosition() > CitBoard.MIN:
           self.__p2.addMove( 1 )
           self.__board.moveLeft()
         return 2
@@ -152,11 +155,15 @@ class CitGame( object ):
 
   def showState( self ):
     if self.__output is not None:
-      self.__output.showState()
+      self.__output.showState( self.__board.getPosition(),
+                               self.__p1.getPoints(), 
+                               self.__p2.getPoints(),
+                               self.__p1.getLastMove(),
+                               self.__p2.getLastMove() )
 
   def showResult( self ):
     if self.__output is not None:
-      self.__output.showResult()
+      self.__output.showResult( self.hasWinner() )
 # ------------------------------------
 
 # Get move from human
@@ -173,4 +180,5 @@ def getMove( name ):
 
 # Main -------------------------------
 game = CitGame()
+game.setOutput( output.CitOutAscii() )
 game.run()

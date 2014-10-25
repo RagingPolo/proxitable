@@ -2,7 +2,7 @@ import CitOutAbstract
 from colorama import init, Fore
 import os
 
-class CitOutAscii( CitOutAbstract ):
+class CitOutAscii( CitOutAbstract.CitOutAbstract ):
 
   def __init__( self ):
     init() # Colorama init
