@@ -2,4 +2,4 @@ Seperate input from game logic
 
 Write GPIO output module
 
-Seperate main game classes into individual files
+Write some form of computer player logic
