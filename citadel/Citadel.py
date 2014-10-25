@@ -99,6 +99,21 @@ class CitGame( object ):
     self._p1 = CitPlayer()
     self._p2 = CitPlayer()
     self._output = CitGame.OUTPUT.index( 'ASCII' )
+  
+  def run( self ):
+    winner = self.hasWinner()
+    while winner == 0:
+      self.display()
+      self.move( getMove( 'Player 1' ), getMove( 'Player 2' ) )
+      winner = self.hasWinner()
+    self.display()
+    if winner == 1:
+      print( '          Player 1 Wins!' )
+    elif winner == 2:
+      print( '          Player 2 Wins!' )
+    else:
+      print( '               Draw' )
+    print()
 
   def setOutput( self, output ):
     try:
@@ -203,16 +218,4 @@ def getMove( name ):
 # Main -------------------------------
 game = CitGame()
 #game.setOuput( 'GPIO' )
-winner = game.hasWinner()
-while winner == 0:
-  game.display()
-  game.move( getMove( 'Player 1' ), getMove( 'Player 2' ) )
-  winner = game.hasWinner()
-game.display()
-if winner == 1:
-  print( '          Player 1 Wins!' )
-elif winner == 2:
-  print( '          Player 2 Wins!' )
-else:
-  print( '               Draw' )
-print()
+game.run()
