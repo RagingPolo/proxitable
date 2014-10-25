@@ -1,0 +1,5 @@
+Seperate graphical output from game logic
+
+Seperate input from game logic
+
+Create run method for main game loop
