@@ -1,5 +1,3 @@
-Seperate input from game logic
-
 Write GPIO output module
 
 Write some form of computer player logic
