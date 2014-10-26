@@ -96,19 +96,20 @@ class CitGame( object ):
     if player == self.P1:
       opponent = self.P2
     elif player == self.P2:
-      opponent == self.P1
+      opponent = self.P1
     # Try and call the players input module
     try:
       if self.__input[ player ] is not None:
         # TODO add name attribute and associated methods to CitPlayer class
-        self.__input[ player ].getMove( str( player ),
-                                        self.__player[ player ].getPoints(),
-                                        self.__player[ opponent ].getLastMove() )
+        move = self.__input[ player ].getMove( str( player ),
+                                               self.__player[ player ].getPoints(),
+                                               self.__player[ opponent ].getLastMove() )
       else:
         # TODO is there a way to make this an uncatchable fatal error?
         raise Exception( 'CitGame.getMove(): Fatal error - No input module provided for ' + str( player ) )
     except KeyError:
       raise Exception( 'CitGame.getMove(): Not a valid player, use P1 - 1 or P2 - 2' )
+    return move
 
   def showState( self ):
     if self.__output is not None:

@@ -17,3 +17,4 @@ class CitInAbstract:
   @abstractmethod
   def getMove( self, name, points, last=None ):
     pass
+# ------------------------------------
