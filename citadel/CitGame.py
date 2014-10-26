@@ -23,7 +23,7 @@ class CitGame( object ):
     winner = self.hasWinner()
     while winner == 0:
       self.showState()
-      self.move( self.getMove( self.P1 ), getMove( self.P2 ) )
+      self.move( self.getMove( self.P1 ), self.getMove( self.P2 ) )
       winner = self.hasWinner()
     self.showState()
     self.showResult()
