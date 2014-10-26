@@ -1,7 +1,13 @@
 import CitOutAbstract
 from colorama import init, Fore
 import os
-
+# ------------------------------------
+# CLASS CitOutAscii                  |
+#                                    |
+# Basic output class displaying the  |
+# current game state on the command  |
+# line                               |
+# ------------------------------------
 class CitOutAscii( CitOutAbstract.CitOutAbstract ):
 
   def __init__( self ):
@@ -44,4 +50,4 @@ class CitOutAscii( CitOutAbstract.CitOutAbstract ):
     elif result == self.DRAW:
       print( Fore.WHITE + '               Draw!' + Fore.RESET )
     print()
-
+# ------------------------------------

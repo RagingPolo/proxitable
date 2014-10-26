@@ -1,7 +1,6 @@
 from abc import ABCMeta, abstractmethod
-
 # ------------------------------------
-# ABSTRACT CLASS CitOut              |
+# ABSTRACT CLASS CitOutAbstract      |
 #                                    |
 # Defines required method for a      |
 # valid output class                 |
@@ -30,4 +29,3 @@ class CitOutAbstract:
   def showResult( self, result ):
     pass
 # ------------------------------------
-
