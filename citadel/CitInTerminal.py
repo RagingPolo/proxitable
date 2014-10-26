@@ -12,7 +12,7 @@ class CitInTerminal( CitInAbstract.CitInAbstract ):
   def getMove( self, name, points, last=None ):
     valid = False
     while valid is False:
-      move = getpass.getpass( 'Player ' + str( name ) + ' enter move: ' )
+      move = getpass.getpass( str( name ) + ' enter move: ' )
       try:
         move = int( move )
         if move > 0 and move <= points:

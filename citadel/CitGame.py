@@ -15,7 +15,7 @@ class CitGame( object ):
     self.P1 = 1
     self.P2 = 2
     self.__board = CB.CitBoard()
-    self.__player = { self.P1 : CP.CitPlayer(), self.P2 : CP.CitPlayer() }
+    self.__player = { self.P1 : CP.CitPlayer( 'Player 1' ), self.P2 : CP.CitPlayer( 'Player 2' ) }
     self.__output = None
     self.__input = { self.P1 : None, self.P2 : None }
 
@@ -100,13 +100,12 @@ class CitGame( object ):
     # Try and call the players input module
     try:
       if self.__input[ player ] is not None:
-        # TODO add name attribute and associated methods to CitPlayer class
-        move = self.__input[ player ].getMove( str( player ),
+        move = self.__input[ player ].getMove( self.__player[ player ].getName(),
                                                self.__player[ player ].getPoints(),
                                                self.__player[ opponent ].getLastMove() )
       else:
         # TODO is there a way to make this an uncatchable fatal error?
-        raise Exception( 'CitGame.getMove(): Fatal error - No input module provided for ' + str( player ) )
+        raise Exception( 'CitGame.getMove(): Fatal error - No input module provided for ' + self.__player[ player ].getName() ) )
     except KeyError:
       raise Exception( 'CitGame.getMove(): Not a valid player, use P1 - 1 or P2 - 2' )
     return move

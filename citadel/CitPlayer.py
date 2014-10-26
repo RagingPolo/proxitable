@@ -6,12 +6,16 @@ import numbers
 # ------------------------------------
 class CitPlayer( object ):
   
-  def __init__( self ):
+  def __init__( self, name ):
     self.__points = 50
     self.__moves  = list()
+    self.__name = str( name )
 
   def getPoints( self ):
     return self.__points
+
+  def getName( self ):
+    return self.__name
 
   def addMove( self, move ):
     if isinstance( move, numbers.Number ):
