@@ -44,9 +44,9 @@ class CitOutAscii( CitOutAbstract.CitOutAbstract ):
 
   def showResult( self, result ):
     if result == self.P1:
-      print( Fore.WHITE + '         Player One Wins!' + Fore.RESET )
+      print( Fore.WHITE + '         Player One Wins' + Fore.RESET )
     elif result == self.P2:
-      print( Fore.WHITE + '         Player Two Wins!' + Fore.RESET )
+      print( Fore.WHITE + '         Player Two Wins' + Fore.RESET )
     elif result == self.DRAW:
       print( Fore.WHITE + '               Draw!' + Fore.RESET )
     print()
