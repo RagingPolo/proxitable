@@ -105,7 +105,7 @@ class CitGame( object ):
                                                self.__player[ opponent ].getLastMove() )
       else:
         # TODO is there a way to make this an uncatchable fatal error?
-        raise Exception( 'CitGame.getMove(): Fatal error - No input module provided for ' + self.__player[ player ].getName() ) )
+        raise Exception( 'CitGame.getMove(): Fatal error - No input module provided for ' + self.__player[ player ].getName() )
     except KeyError:
       raise Exception( 'CitGame.getMove(): Not a valid player, use P1 - 1 or P2 - 2' )
     return move
