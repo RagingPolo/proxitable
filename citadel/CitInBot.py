@@ -24,6 +24,10 @@ class CitInBot( CitInAbstract.CitInAbstract ):
       self.__history = list()
 
   def __del__( self ):
+    # Trim history list to at most last 100 turns
+    if len( self.__history ) > 100:
+      cut = len( self.__history ) - 101
+      self.__history = self.__history[ cut : ]
     # Save move history
     with open( '.CitBot.pkl', 'wb' ) as fd:
       pickle.dump( self.__history, fd )
