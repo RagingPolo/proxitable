@@ -12,6 +12,8 @@ from enum import Enum
 class CitInBot( CitInAbstract.CitInAbstract ):
 
   def __init__( self, filename, variance ):
+    # Set as a ai player input
+    super().__init__( True )
     # Initialise the random number generator
     random.seed( urandom( 128 ) )
     # Store class attributes

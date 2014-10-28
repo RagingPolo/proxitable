@@ -9,6 +9,10 @@ import numbers
 # ------------------------------------
 class CitInTerminal( CitInAbstract.CitInAbstract ):
 
+  def __init__( self ):
+    # Set as non ai input
+    super().__init__( False )
+
   def getMove( self, name, points, last=None ):
     valid = False
     while valid is False:

@@ -1,3 +1,4 @@
+#!/usr/local/bin/python3
 # -----------------------------------------------------------------
 # Citidel game - written in python 3                              |
 #                                                                 |
@@ -12,7 +13,7 @@ import CitInBot as input2
 # -----------------------------------------------------------------
 game = CitGame.CitGame()
 game.setInput( 1, input1.CitInTerminal() ) 
-game.setInput( 2, input2.CitInBot() ) 
+game.setInput( 2, input2.CitInBot( '.CitBot.pkl', 10 ) ) 
 game.setOutput( output.CitOutAscii() )
 game.run()
 # -----------------------------------------------------------------
