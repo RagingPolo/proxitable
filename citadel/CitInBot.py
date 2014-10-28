@@ -20,6 +20,7 @@ class CitInBot( CitInAbstract.CitInAbstract ):
     self.__filename = filename
     self.__variance = variance
     # Setup mode
+    self.__opLast = list()
     self.__mode = Enum( 'mode', 'UNK DEF AGR' )
     self.__opMode = self.__mode.UNK
     # Load move history
@@ -53,6 +54,21 @@ class CitInBot( CitInAbstract.CitInAbstract ):
       elif last > self.__myLast:
         self.__pos -= 1
       self.__opPoints -= last
+    # Update opponents mode
+    if len( self.__opLast ) == 3:
+      self.__opLast = self.__opLast[ 1 : ]
+    if last is not None:
+      self.__opLast.append( last )
+    if len( self.__opLast ) == 3:
+      # At least 2 of the last 3 moves were very low
+      if sum( x < 4 for x in self.__opLast ) > 1:
+        self.__opMode = self.__mode.DEF
+      # At least 2 of the last 3 moves were quite high  
+      elif sum( x > 8 for x in self.__opLast ) > 1:
+        self.__opMode = self.__mode.AGR
+      # Neither
+      else:
+        self.__opMode = self.__mode.UNK
     # Calculate next move
     move = self.__calculateMove( points )
     self.__myLast = move
@@ -82,6 +98,19 @@ class CitInBot( CitInAbstract.CitInAbstract ):
             move = 1
           elif move > points:
             move = points
+          # Ajust move based on position and percieved opponent mode
+          if self.__pos < 3:
+            # Were losing!
+            if self.__opMode == self.__mode.DEF:
+              pass
+            elif self.__opMode == self.__mode.AGR:
+              move += 2
+          else:
+            # We're winning I guess
+            if self.__opMode == self.__mode.DEF:
+              move += 2
+            elif self.__opMode == self.__mode.AGR:
+              move -= 2
         else:
           # If all else fails, just pick a random number
           move = random.randrange( 1, points )
