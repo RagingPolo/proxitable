@@ -3,6 +3,7 @@ import CitBoard as CB
 import CitOutAbstract
 import CitInAbstract
 import numbers
+from time import sleep
 # ------------------------------------
 # CLASS CitGame                      |
 #                                    |
@@ -23,6 +24,9 @@ class CitGame( object ):
     winner = self.hasWinner()
     while winner == 0:
       self.showState()
+      if ( self.__input[ self.P1 ].isAi() is True and
+           self.__input[ self.P2 ].isAi() is True ):
+        sleep( 1 )
       self.move( self.getMove( self.P1 ), self.getMove( self.P2 ) )
       winner = self.hasWinner()
     self.showState()
