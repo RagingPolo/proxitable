@@ -21,13 +21,9 @@ class BtlShip( object ):
   # Set the position of the ship and the direction on the board
   def setPosition( self, x, y, direction ):
     if ( direction in [ '^', '>' ] and
-         isinstance( x, numbers.Number ) and
-         isinstance( y, numbers.Number ) ):
-      self.__x   = x
-      self.__y   = y
+      self.__x   = int( x )
+      self.__y   = int( y )
       self.__dir = direction
-    else:
-      raise Exception( 'BtlShip.setPosition() - Invalid position' )
 
   # Set a section of the ship as hit
   def setHit( self, pos ):
@@ -35,18 +31,30 @@ class BtlShip( object ):
       self.__hits[ pos ] = 1
 
   # Check if the specified board position hit the ship
+  # Does not care or know if position is repeated
+  # It is up to class supplying the position to make
+  # such checks
   def isHit( self, x, y ):
-    if self.__dir == '^':
-      if ( self.__x == x and
-           self.__y >= y and
-           self.__y < ( y + self.__size ) ):
-        return True
-    elif self.__dir == '>':
-      if ( self.__y == y and
-           self.__x >= x and
-           self.__x < ( x + self.__size ) ):
-        return True
-    return False
+    if ( self.__x is not None 
+         self.__y is not None
+         self.__dir is not None ):
+      # Vertical ship
+      if self.__dir == '^':
+        if ( self.__x == x and
+             self.__y >= y and
+             self.__y < ( y + self.__size ) ):
+          # Update record of hits
+          self.__hits[ y - self.__y ] = 1
+          return True
+      # Horizontal ship
+      elif self.__dir == '>':
+        if ( self.__y == y and
+             self.__x >= x and
+             self.__x < ( x + self.__size ) ):
+          # Update record of hits
+          self.__hits[ x - self.__x ] = 1
+          return True
+      return False
 
   # Check if the ship is sunk
   def isSunk( self ):
