@@ -1,4 +1,3 @@
-import numbers
 # ------------------------------------
 # CLASS BtlShip                      |
 #                                    |
