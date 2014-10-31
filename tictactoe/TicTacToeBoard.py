@@ -11,6 +11,6 @@ class TicTacToeBoard( object ):
 
     def __init__( self ):
         # Create board matrix: 3x3
-        self.__board = [ [ 0 for x in range( SIZE ) ] for x in range( SIZE ) ]
+        self.__board = [ [ 0 for x in range( TicTacToeBoard.SIZE ) ] for x in range( TicTacToeBoard.SIZE ) ]
 
 # ----------------------------------- #
