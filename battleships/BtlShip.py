@@ -17,9 +17,24 @@ class BtlShip( object ):
   def getName( self ):
     return self.__name
 
+  def getDirection( self ):
+    return self.__dir
+
+  def getX( self ):
+    return self.__x
+
+  def getY( self ):
+    return self.__y
+
+  def getSize( self ):
+    return self.__size
+
   # Set the position of the ship and the direction on the board
+  # Is is assumed that this position fits within the current game
+  # board, checking should be done in the calling class as BtlShip
+  # has no notion of what a board is
   def setPosition( self, x, y, direction ):
-    if ( direction in [ '^', '>' ] and
+    if direction in [ '^', '>' ]:
       self.__x   = int( x )
       self.__y   = int( y )
       self.__dir = direction
@@ -34,8 +49,8 @@ class BtlShip( object ):
   # It is up to class supplying the position to make
   # such checks
   def isHit( self, x, y ):
-    if ( self.__x is not None 
-         self.__y is not None
+    if ( self.__x is not None and 
+         self.__y is not None and
          self.__dir is not None ):
       # Vertical ship
       if self.__dir == '^':
