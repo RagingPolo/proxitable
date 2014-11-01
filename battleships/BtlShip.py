@@ -34,7 +34,7 @@ class BtlShip( object ):
   # board, checking should be done in the calling class as BtlShip
   # has no notion of what a board is
   def setPosition( self, x, y, direction ):
-    if direction in [ '^', '>' ]:
+    if direction in [ 'v', '>' ]:
       self.__x   = int( x )
       self.__y   = int( y )
       self.__dir = direction
@@ -44,31 +44,28 @@ class BtlShip( object ):
     if pos < self.__size:
       self.__hits[ pos ] = 1
 
-  # Check if the specified board position hit the ship
+  # Check if part of the shit is at x,y position
+  # If shot is True it is record as an actual hit on the ship
   # Does not care or know if position is repeated
   # It is up to class supplying the position to make
   # such checks
-  def isHit( self, x, y ):
+  def isHit( self, x, y, shot ):
     if ( self.__x is not None and 
          self.__y is not None and
          self.__dir is not None ):
       # Vertical ship
-      if self.__dir == '^':
-        if ( self.__x == x and
-             self.__y >= y and
-             self.__y < ( y + self.__size ) ):
-          # Update record of hits
-          self.__hits[ y - self.__y ] = 1
+      if self.__dir == 'v' and self.__x == x:
+         if y >= self.__y and y < ( self.__y + self.__size ):
+          if shot is True:
+            self.__hits[ self.__y - y ] = 1
           return True
       # Horizontal ship
-      elif self.__dir == '>':
-        if ( self.__y == y and
-             self.__x >= x and
-             self.__x < ( x + self.__size ) ):
-          # Update record of hits
-          self.__hits[ x - self.__x ] = 1
+      elif self.__dir == '>' and self.__y == y:
+        if x >= self.__x and x < ( self.__x + self.__size ):
+          if shot is True:
+            self.__hits[ self.__x - x ] = 1
           return True
-      return False
+    return False
 
   # Check if the ship is sunk
   def isSunk( self ):

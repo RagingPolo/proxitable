@@ -46,7 +46,6 @@ class BtlBoard( object ):
     return True
 
   # Randomly position the availible ships on the board
-  # XXX This is horrible and messy, open to suggestions to improve
   def positionShips( self ):
     overlap = True
     # Repeat until no ships overlap
@@ -57,47 +56,52 @@ class BtlBoard( object ):
         while onboard is False:
           x = random.randrange( 0, self.__size - 1 )
           y = random.randrange( 0, self.__size - 1 )
-          d = direction = random.choice( '^>' )
-          if d == '^':
+          d = direction = random.choice( 'v>' )
+          if d == 'v':
             onboard = ( y + ship.getSize() - 1 ) < self.__size
           else: # d == '>'
             onboard = ( x + ship.getSize() - 1 ) < self.__size
         ship.setPosition( x, y, d )    
       # Check that they don't overlap
       overlap = False
-      for i in range( 0, len( self.__ships ) - 1 ):
-        if overlap is True:
-          break
-        for j in range( i + 1, len( self.__ships ) - 1 ):
-          if overlap is True:
-            break
-          if self.__ships[ i ].getDirection() == '^':
-            pos = range( self.__ships[ i ].getY(), self.__ships[ i ].getY() + self.__ships[ i ].getSize() - 1 )
-            for y in pos:
-              overlap = self.__ships[ j ].isHit( self.__ships[ i ].getX(), y )
-              if  overlap is True:
-                break
-          else: # Direction is '>'
-            pos = range( self.__ships[ i ].getX(), self.__ships[ i ].getX() + self.__ships[ i ].getSize() - 1 )
-            for x in pos:
-              overlap = self.__ships[ j ].isHit( x, self.__ships[ i ].getY() )
-              if overlap is True:
-                break
+      for ship in self.__ships:
+        if overlap is True: break
+        for boat in self.__ships:
+          if overlap is True: break
+          if ship is not boat:
+            if ship.getDirection() == 'v':
+              x = ship.getX()
+              for y in range( ship.getY(), ship.getY() + ship.getSize() ):
+                overlap = boat.isHit( x, y, False )
+                if overlap is True: break
+            else: # direction is '>'
+              y = ship.getY()
+              for x in range( ship.getX(), ship.getX() + ship.getSize() ):
+                overlap = boat.isHit( x, y, False )
+                if overlap is True: break
+
+  # For testing ship positions before output modules have been written
+  def testPrintBoard( self ):
     # Testing print out of the board
     for s in self.__ships:
-      print( s.getDirection(), s.getX(), s.getY(), s.getSize() )
+      print( '   ' + s.getName()[ 0 : 1 ], s.getDirection(), s.getX(), s.getY(), s.getSize() )
     x = 0
     y = 0
+    print( '\n  ', end='' )
+    for i in range( 0, self.__size ):
+      print( str( i ) + ' ', end='' )
+    print()
     while y < self.__size:
+      print( str( y ) + ' ', end='' )
       while x < self.__size:
         for ship in self.__ships:
           water = True
-          if ship.isHit( x, y ) is True:
-            print( '#', end='' )
+          if ship.isHit( x, y, False ) is True:
+            print( ship.getName()[0:1] + ' ', end='' )
             water = False
             break
         if water is True:
-          print( '~', end='' )
+          print( '~ ', end='' )
         x += 1
       x = 0
       y += 1
@@ -105,9 +109,13 @@ class BtlBoard( object ):
 
   # XXX What should this return to the main game class?
   # and what info can be retrieved by polling the board
+  # XXX Actually should it even be in this class? Would 
+  # it not be better in the player class and the player
+  # class to have a board object??
   def takeShot( self, shot ):
     pass
 
 # Testing of class
-b = BtlBoard( 6 )
+b = BtlBoard( 10 )
 b.positionShips()
+b.testPrintBoard()
