@@ -63,6 +63,7 @@ class BtlBoard( object ):
             onboard = ( x + ship.getSize() - 1 ) < self.__size
         ship.setPosition( x, y, d )    
       # Check that they don't overlap
+      # TODO Could this be altered sensibly to make sure they don't touch either
       overlap = False
       for ship in self.__ships:
         if overlap is True: break
