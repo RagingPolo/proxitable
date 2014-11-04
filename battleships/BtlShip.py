@@ -44,7 +44,7 @@ class BtlShip( object ):
     if pos < self.__size:
       self.__hits[ pos ] = 1
 
-  # Check if part of the shit is at x,y position
+  # Check if part of the ship is at x,y position
   # If shot is True it is record as an actual hit on the ship
   # Does not care or know if position is repeated
   # It is up to class supplying the position to make

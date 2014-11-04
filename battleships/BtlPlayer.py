@@ -1,4 +1,4 @@
-import BtlBoard
+from BtlBoard import BtlBoard
 # ------------------------------------
 # CLASS BtlPlayer                    |
 #                                    |
@@ -10,7 +10,7 @@ class BtlPlayer( object ):
   
   def __init__( self, name ):
     self.__name   = str( name )
-    self.__board  = BtlBoard.BtlBoard( 10 )
+    self.__board  = BtlBoard( 10 )
     self.__input  = None
     self.__output = None
     self.__board.positionShips()

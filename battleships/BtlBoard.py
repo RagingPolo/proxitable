@@ -1,4 +1,4 @@
-import BtlShip
+from BtlShip import BtlShip
 import random
 from os import urandom
 # ------------------------------------
@@ -8,11 +8,6 @@ from os import urandom
 # board                              |
 # ------------------------------------
 class BtlBoard( object ):
-
-  # Look up tables to convert A1 style coordinates into list indexes
-  X = { 'A':0, 'B':1, 'C':2, 'D':3, 'E':4, 'F':5, 'G':6, 'H':7, 'I':8, 'J':9 }
-  # Would this would be better as just y - 1 ???
-  Y = { 1:0, 2:1, 3:2, 4:3, 5:4, 6:5, 7:6, 8:7, 9:8, 0:9 }
 
   # Create a board, size 6 or 7 - 3 ships
   #                 size 8 to 9 - 4 ships
@@ -26,14 +21,14 @@ class BtlBoard( object ):
     elif size > 10:
       size = 10
     # Create ships
-    self.__ships = [ BtlShip.BtlShip( 'Battleship', 4 ),
-                     BtlShip.BtlShip( 'Destroyer', 3 ),
-                     BtlShip.BtlShip( 'Gunship', 2 ) ]
+    self.__ships = [ BtlShip( 'Battleship', 4 ),
+                     BtlShip( 'Destroyer', 3 ),
+                     BtlShip( 'Gunship', 2 ) ]
     # Add more ships if needed 
     if size > 7:
-      self.__ships.append( BtlShip.BtlShip( 'Submarine', 3 ) )
+      self.__ships.append( BtlShip( 'Submarine', 3 ) )
     if size == 10:
-      self.__ships.append( BtlShip.BtlShip( 'Aircraft Carrier', 5 ) )
+      self.__ships.append( BtlShip( 'Aircraft Carrier', 5 ) )
     # Create board matrix
     self.__board = [ [ 0 for x in range( size ) ] for x in range( size ) ]
     self.__size = size
@@ -107,14 +102,6 @@ class BtlBoard( object ):
       x = 0
       y += 1
       print()
-
-  # XXX What should this return to the main game class?
-  # and what info can be retrieved by polling the board
-  # XXX Actually should it even be in this class? Would 
-  # it not be better in the player class and the player
-  # class to have a board object??
-  def takeShot( self, shot ):
-    pass
 
 # Testing of class
 b = BtlBoard( 10 )

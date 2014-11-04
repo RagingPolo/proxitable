@@ -18,9 +18,11 @@ class BtlMove( object ):
     else:
       raise TypeError( 'BtlMove() - invalid move' )
 
+  # Returns a tuple containing the move as list indexes
   def getMoveIndex( self ):
     return ( BtlMove.X[ x ], y - 1 )
 
+  # Returns a tuple containing the move as human readable strings
   def getMoveHuman( self ):
     return ( str( self.__x ), str( self.__y ) )
 # ------------------------------------
