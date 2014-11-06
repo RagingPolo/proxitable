@@ -16,6 +16,11 @@ class BtlPlayer( object ):
     self.__history = list()
     self.__board.positionShips()
 
+  # Should not be allowed once the game has started
+  def repositionShips( self ):
+    if len( self.__history ) == 0:
+      self.__board.positionShips()
+
   def setInput( self, _input ):
     if isinstance( _input, BtlInputAbstract ):
       self.__input = _input

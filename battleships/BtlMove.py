@@ -4,7 +4,7 @@
 # Stores a single move and           |
 # translates between human           |
 # coordinates, A1, and list indexes, |
-# 00. Imutable                       |
+# 00.                                |
 # ------------------------------------
 class BtlMove( object ):
 
@@ -15,9 +15,19 @@ class BtlMove( object ):
          int( y ) in range( 1, 11 ) ):
       self.__x = x
       self.__y = y
+      self.__hit = False
     else:
       raise TypeError( 'BtlMove() - invalid move' )
   
+  def setHit( self, hit ):
+    if hit is True:
+      self.__hit = True
+    else:
+      self.__hit = False
+
+  def wasHit( self ):
+    return self.__hit is True
+
   # Returns a tuple containing the move as list indexes
   def getMove( self ):
     return ( BtlMove.X[ self.__x ], self.__y - 1 )
