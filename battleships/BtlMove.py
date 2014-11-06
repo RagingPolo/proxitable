@@ -17,12 +17,47 @@ class BtlMove( object ):
       self.__y = y
     else:
       raise TypeError( 'BtlMove() - invalid move' )
-
+  
   # Returns a tuple containing the move as list indexes
-  def getMoveIndex( self ):
-    return ( BtlMove.X[ x ], y - 1 )
+  def getMove( self ):
+    return ( BtlMove.X[ self.__x ], self.__y - 1 )
 
-  # Returns a tuple containing the move as human readable strings
-  def getMoveHuman( self ):
-    return ( str( self.__x ), str( self.__y ) )
+  def getX( self ):
+    return BtlMove.X[ self.__x ]
+
+  def getY( self ):
+    return self.__y - 1
+
+  def __str__( self ):
+    return self.__x + str( self.__y )
+
+  def __eq__( self, other ):
+    return self.getX() == other.getX() and self.getY() == other.getY()
+
+  def __ne__( self, other ):
+    return self.getX() != other.getX() and self.getY() != other.getY()
+  
+  def __gt__( self, other ):
+    if self.getY() == other.selfY():
+      return self.getX() > other.getX()
+    else:
+      return self.getY() > other.getY()
+
+  def __lt__( self, other ):
+    if self.getY() == other.getY():
+      return self.getX() < other.getX()
+    else:
+      return self.getY() < other.getY()
+  
+  def __ge__( self, other ):
+    if self.getY() == other.selfY():
+      return self.getX() >= other.getX()
+    else:
+      return self.getY() >= other.getY()
+
+  def __le__( self, other ):
+    if self.getY() == other.getY():
+      return self.getX() <= other.getX()
+    else:
+      return self.getY() <= other.getY()
 # ------------------------------------
