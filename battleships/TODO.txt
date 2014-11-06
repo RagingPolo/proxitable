@@ -1,1 +1,10 @@
- 
+Create main game class - run()
+
+Create player class - name
+                    - input module
+                    - move history
+
+Terminal based IO modules for testing
+
+GPIO IO module
+
