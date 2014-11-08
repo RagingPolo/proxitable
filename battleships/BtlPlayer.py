@@ -6,7 +6,6 @@ from BtlInputAbstract import BtlInputAbstract
 # Maintains state of a single player |
 # and provides IO modules            |
 # ------------------------------------
-
 class BtlPlayer( object ):
   
   def __init__( self, name, bsize ):
@@ -33,6 +32,9 @@ class BtlPlayer( object ):
 
   def getMoveHistory( self ):
     return self.__history
+
+  def getBoard( self ):
+    return self.__board
 
   def getLastMove( self ):
     if len( self.__history ) > 0:
