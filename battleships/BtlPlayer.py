@@ -26,7 +26,13 @@ class BtlPlayer( object ):
     else:
       raise TypeError( 'BtlPlayer.setInput() - invalid input module' )
     pass
-  
+
+  def getInput( self ):
+    if self.__input is not None:
+      return self.__input
+    else:
+      raise Exception( 'BtlPlayer().getInput() - No input set' )
+
   def getName( self ):
     return self.__name
 
@@ -41,10 +47,17 @@ class BtlPlayer( object ):
       return self.__history[ -1 ]
     else:
       return None
-
+  
+  # Get the players next move using the
+  # player input and take the shot
+  # returns True  if a hit
+  #         False if a miss
   def getNextMove( self ):
-    if self.__input is None:
+    if self.__input is not None:
       self.__history.append( self.__input.getMove() )
+      hit = self.__board.takeShot( self.getLastMove() ) 
+      self.getLastMove().setHit( hit )
+      return hit
     else:
       raise Exception( 'BtlPlayer.getMove() - No input module set' )
 # ------------------------------------

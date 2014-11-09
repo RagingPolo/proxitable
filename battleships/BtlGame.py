@@ -1,5 +1,6 @@
 from BtlPlayer import BtlPlayer
 from BtlInputAbstract import
+from time import sleep
 # ------------------------------------
 # CLASS BtlGame                      |
 #                                    |
@@ -21,12 +22,15 @@ class BtlGame( object ):
     # they are happy
     while self.__hasWinner() is False:
       self.__showState( self.P1 )
-      # Get P1 move is ai pause
+      # Get P1 move
+      self.__players[ self.P1 ].getNextMove()
+      if self.__players[ self.P1 ].getInput().isAi() is True:
+        sleep( 1 )
       self.__showState( self.P1 )
-      # pause
       # Get P2 move if ai pause
+      if self.__players[ self.P2 ].getInput().isAi() is True:
+        sleep( 1 )
       self.__showState( self.P1 )
-      # pause
     # there is a winner,do winner stuff
       
   def setInput( self, player, _input ):
