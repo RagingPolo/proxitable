@@ -13,8 +13,8 @@ class BtlMove( object ):
   def __init__( self, x, y ):
     if ( str( x ).upper() in [ 'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J' ] and
          int( y ) in range( 1, 11 ) ):
-      self.__x = x
-      self.__y = y
+      self.__x = str( x ).upper()
+      self.__y = int( y )
       self.__hit = False
     else:
       raise TypeError( 'BtlMove() - invalid move' )
