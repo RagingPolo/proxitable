@@ -25,15 +25,18 @@ class BtlGame( object ):
     while winner == 0:
       self.__showState( self.P1 )
       # Get P1 move
-      self.__players[ self.P1 ].getNextMove()
+      self.__players[ self.P1 ].getNextMove( self.__players[ self.P2 ].getBoard() )
       if self.__players[ self.P1 ].getInput().isAi() is True:
         sleep( 1 )
       self.__showState( self.P1 )
-      # Get P2 move if ai pause
-      if self.__players[ self.P2 ].getInput().isAi() is True:
-        sleep( 1 )
-      self.__showState( self.P1 )
       winner = self.__hasWinner()
+      if winner == 0:
+        # Get P2 move if ai pause
+        self.__players[ self.P2 ].getNextMove( self.__players[ self.P1 ].getBoard() )
+        if self.__players[ self.P2 ].getInput().isAi() is True:
+          sleep( 1 )
+        self.__showState( self.P1 )
+        winner = self.__hasWinner()
     # there is a winner,do winner stuff
     self.__output.displayWinner( self.__players[ winner ] )
 
@@ -74,8 +77,8 @@ class BtlGame( object ):
   #         2 - player 2 has won
   def __hasWinner( self ):
     if self.__players[ self.P1 ].getBoard().isAllSunk() is True:
-      return self.P1
-    elif self.player[ self.P2 ].getBoard().isAllSunk() is True:
       return self.P2
+    elif self.__players[ self.P2 ].getBoard().isAllSunk() is True:
+      return self.P1
     return 0
 # ------------------------------------

@@ -52,10 +52,11 @@ class BtlPlayer( object ):
   # player input and take the shot
   # returns True  if a hit
   #         False if a miss
-  def getNextMove( self ):
+  def getNextMove( self, opBoard ):
     if self.__input is not None:
+      lastMoveHit = self.getLastMove().wasHit() if len( self.__history ) > 0 else False
       self.__history.append( self.__input.getMove() )
-      hit = self.__board.takeShot( self.getLastMove() ) 
+      hit = opBoard.takeShot( self.getLastMove() ) 
       self.getLastMove().setHit( hit )
       return hit
     else:

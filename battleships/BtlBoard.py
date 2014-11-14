@@ -43,7 +43,7 @@ class BtlBoard( object ):
   # Check if all of the ships on the board have been sunk
   def isAllSunk( self ):
     for ship in self.__ships:
-      if ship.isSunk is False:
+      if ship.isSunk() is False:
         return False
     return True
   

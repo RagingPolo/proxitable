@@ -14,6 +14,9 @@ class BtlShip( object ):
     self.__y    = None
     self.__dir  = None
 
+  def __str__( self ):
+    return self.__name + ' ' + str( self.__hits ).strip( '[]' )
+
   def getName( self ):
     return self.__name
 

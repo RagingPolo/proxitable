@@ -7,7 +7,7 @@ import random
 #                                    |
 # Bot Battleships player             |
 # ------------------------------------
-class BtlInputBot( BtlInputAbstract ):
+class BtlInputStupidBot( BtlInputAbstract ):
   
   # Size is current board size
   def __init__( self, size ):
