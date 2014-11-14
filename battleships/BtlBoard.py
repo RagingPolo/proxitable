@@ -1,4 +1,5 @@
 from BtlShip import BtlShip
+from BtlMove import BtlMove
 import random
 from os import urandom
 # ------------------------------------
@@ -33,12 +34,31 @@ class BtlBoard( object ):
     self.__board = [ [ 0 for x in range( size ) ] for x in range( size ) ]
     self.__size = size
 
+  def getSize( self ):
+    return self.__size
+
+  def getShips( self ):
+    return self.__ships
+
   # Check if all of the ships on the board have been sunk
   def isAllSunk( self ):
     for ship in self.__ships:
-      if ship.isSunk is False:
+      if ship.isSunk() is False:
         return False
     return True
+  
+  # Check a players move against the ships
+  # on the board.
+  # Returns True if a hit
+  #         False if a miss
+  def takeShot( self, move ):
+    if isinstance( move, BtlMove ):
+      for ship in self.__ships:
+        if ship.isHit( move.getX(), move.getY(), True ) is True:
+          return True
+      return False
+    else:
+      raise TypeError( 'BtlBoard().takeShot() - Not a valid move object' )
 
   # Randomly position the availible ships on the board
   def positionShips( self ):
@@ -75,35 +95,3 @@ class BtlBoard( object ):
               for x in range( ship.getX(), ship.getX() + ship.getSize() ):
                 overlap = boat.isHit( x, y, False )
                 if overlap is True: break
-
-  # For testing ship positions before output modules have been written
-  def testPrintBoard( self ):
-    # Testing print out of the board
-    for s in self.__ships:
-      print( '   ' + s.getName()[ 0 : 1 ], s.getDirection(), s.getX(), s.getY(), s.getSize() )
-    x = 0
-    y = 0
-    print( '\n  ', end='' )
-    for i in range( 0, self.__size ):
-      print( str( i ) + ' ', end='' )
-    print()
-    while y < self.__size:
-      print( str( y ) + ' ', end='' )
-      while x < self.__size:
-        for ship in self.__ships:
-          water = True
-          if ship.isHit( x, y, False ) is True:
-            print( ship.getName()[0:1] + ' ', end='' )
-            water = False
-            break
-        if water is True:
-          print( '~ ', end='' )
-        x += 1
-      x = 0
-      y += 1
-      print()
-
-# Testing of class
-b = BtlBoard( 10 )
-b.positionShips()
-b.testPrintBoard()

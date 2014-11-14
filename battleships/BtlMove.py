@@ -13,12 +13,22 @@ class BtlMove( object ):
   def __init__( self, x, y ):
     if ( str( x ).upper() in [ 'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J' ] and
          int( y ) in range( 1, 11 ) ):
-      self.__x = x
-      self.__y = y
+      self.__x = str( x ).upper()
+      self.__y = int( y )
       self.__hit = False
     else:
       raise TypeError( 'BtlMove() - invalid move' )
-  
+ 
+  # Convert numeric positions into a move object
+  # ie 0,0 into BtlMove( A, 1 )
+  @staticmethod
+  def genMove( x, y ):
+    if int( x ) in range( 0, 10 ) and int( y ) in range( 0, 10 ):
+      xx = [ key for key, value in BtlMove.X.items() if value == x ][0]
+      return BtlMove( xx, y + 1 )
+    else: 
+      raise Exception( 'BtlMove.genMove() - position out of range' )
+
   def setHit( self, hit ):
     if hit is True:
       self.__hit = True

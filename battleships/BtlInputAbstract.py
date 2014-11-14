@@ -16,7 +16,7 @@ class BtlInputAbstract( object ):
   # must RETURN a valid BtlMove
   # object
   @abstractmethod
-  def getMove( self ):
+  def getMove( self, lastMoveHit ):
     pass
 
   def isAi( self ):

@@ -9,11 +9,18 @@ from abc import ABCMeta, abstractmethod
 # ------------------------------------
 class BtlOutputAbstract( object ):
   
+  # Display two boards from the perspective
+  # of 'player'
+  # @player - BtlPlayer object 
+  # @opposition - BtlPlayer object
   @abstractmethod
-  def displayBoards( self ):
+  def showState( self, player, opposition ):
     pass
 
+  # Display a message to convey the
+  # winner of the game
+  # @player - BtlPlayer object of winner
   @abstractmethod
-  def displayWinner( self ):
+  def displayWinner( self, player ):
     pass
 # ------------------------------------
