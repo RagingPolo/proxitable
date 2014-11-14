@@ -55,7 +55,7 @@ class BtlPlayer( object ):
   def getNextMove( self, opBoard ):
     if self.__input is not None:
       lastMoveHit = self.getLastMove().wasHit() if len( self.__history ) > 0 else False
-      self.__history.append( self.__input.getMove() )
+      self.__history.append( self.__input.getMove( lastMoveHit ) )
       hit = opBoard.takeShot( self.getLastMove() ) 
       self.getLastMove().setHit( hit )
       return hit
