@@ -1,16 +1,11 @@
-<h2>proxitable</h2>
-
+<h1>proxitable</h1>
 <hr />
 
 The terminal output modules for both Citiedal and Battleships require the Colorama python module to be installed, https://pypi.python.org/pypi/colorama
 
 <hr />
 
-Proximity Table code.
-
-<hr />
-
-Citadel Rules:
+<h3>Citadel Rules:</h3>
 
 The object of the game is to reach the opposing players side of the board while defending you side. The board is made up of severn positions and the starting position is in the middle.
 
@@ -23,7 +18,7 @@ The object of the game is to reach the opposing players side of the board while 
 
 <hr />
 
-Battleship Rules:
+<h3>Battleship Rules:</h3>
 
 The object of the game is to sink the opponents fleet before they sink yours. This version supports multiple board sizes:
 <table>
@@ -49,8 +44,8 @@ The object of the game is to sink the opponents fleet before they sink yours. Th
   </tr>
 </table>
 
-==========
+<hr />
 
-TicTacToe Rules:
+<h3>TicTacToe Rules:</h3>
 
-==========
+<hr />
