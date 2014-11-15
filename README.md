@@ -1,4 +1,5 @@
 proxitable
+==========
 
 The terminal output modules for both Citiedal and Battleships require the Colorama python module to be installed, https://pypi.python.org/pypi/colorama
 
@@ -24,11 +25,13 @@ The object of the game is to reach the opposing players side of the board while 
 Battleship Rules:
 
 The object of the game is to sink the opponents fleet before they sink yours. This version supports multiple board sizes:
-* 6x6   - 3 Ships
-* 7x7   - 3 Ships
-* 8x8   - 4 Ships
-* 9x9   - 4 Ships
-* 10x10 - 5 Ships
+| Size  | # Ships |
+|:-----:|:-------:|
+| 6x6   | 3 Ships |
+| 7x7   | 3 Ships |
+| 8x8   | 4 Ships |
+| 9x9   | 4 Ships |
+| 10x10 | 5 Ships |
 
 ==========
 
