@@ -1,5 +1,4 @@
 <h1>proxitable</h1>
-<hr />
 
 The terminal output modules for both Citiedal and Battleships require the Colorama python module to be installed, https://pypi.python.org/pypi/colorama
 
