@@ -6,7 +6,7 @@
     <script type="text/javascript">
       function wsConnect() {
         if ( 'WebSocket' in window) {
-          var ws = new WebSocket( 'ws://127.0.0.1' );
+          var ws = new WebSocket( 'ws://127.0.0.1:8000' );
           ws.onopen = function() {
             $( '#connect' ).hide();
           };
@@ -15,7 +15,7 @@
             $( '#connect' ).show();
           };
           ws.onmessage = function( msg ) {
-            $( '#game' ).replaceWith( msg.data );
+            $( '#game' ).html( msg.data );
           };
         }
       }
