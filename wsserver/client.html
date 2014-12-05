@@ -1,4 +1,3 @@
-<!DOCTYPE HTML>
 <html>
   <head>
     <title>PES</title>
@@ -15,7 +14,12 @@
             $( '#connect' ).show();
           };
           ws.onmessage = function( msg ) {
-            $( '#game' ).html( msg.data );
+            var data = jQuery.parseJSON( msg.data );
+            if ( data.cmd == 'R' ) {
+              $( data.tag ).html( data.html );
+            } else if ( data.cmd == 'A' ) {
+              $( data.tag ).append( data.html );
+            }
           };
         }
       }

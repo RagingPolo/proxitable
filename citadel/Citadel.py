@@ -6,14 +6,14 @@
 # -----------------------------------------------------------------
 import CitGame
 # Import desired output class here
-import CitOutAscii as output
+from CitOutSock import CitOutSock as Output
 # Import desired imput classes here
-import CitInTerminal as input1
-import CitInBot as input2
+from CitInTerminal import CitInTerminal as Input1
+from CitInBot import CitInBot as Input2
 # -----------------------------------------------------------------
 game = CitGame.CitGame()
-game.setInput( 1, input1.CitInTerminal() ) 
-game.setInput( 2, input2.CitInBot( '.CitBot.pkl', 10 ) ) 
-game.setOutput( output.CitOutAscii() )
+game.setInput( 1, Input1() ) # '.CitBot2.pkl', 3 ) ) 
+game.setInput( 2, Input2( '.CitBot.pkl', 10 ) ) 
+game.setOutput( Output( '127.0.0.1', 9000 ) )
 game.run()
 # -----------------------------------------------------------------

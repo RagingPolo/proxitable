@@ -32,7 +32,7 @@ class wsserver( socketserver.StreamRequestHandler ):
           self.lsock.bind( ( '', 9000 ) )
           self.lsock.listen( 1 )
         except socket.error as e:
-          print( 'wsserver startup failed: ' + e )
+          print( 'wsserver startup failed: ' + str( e ) )
           self.lsock.close()
           exit( 1 )
       elif self.handshake is False:
@@ -80,17 +80,14 @@ class wsserver( socketserver.StreamRequestHandler ):
   def sendMsg( self, msg ):
     if isinstance( msg, str ):
       msg = bytes( msg, 'utf-8' )
-    self.request.send( struct.pack( '>B', 129 ) )
     length = len( msg )
     if length <= 125:
-      self.request.send( struct.pack( '>B', length ) )
+      hdr = struct.pack( '>BB', 129, length )
     elif length >= 126 and length <= 65535:
-      self.request.send( 126 )
-      self.request.send( struct.pack( '>H', length ) )
+      hdr = struct.pack( '>BBH', 129, 126, length )
     else:
-      self.request.send( 127 )
-      self.request.send( struct.pack( '>Q', length ) )
-    self.request.send( msg )    
+      hdr = struct.pack( '>BBQ', 129, 127, length )
+    self.request.send( hdr + msg )    
 
 if __name__ == '__main__':
   server = socketserver.TCPServer( ( 'localhost', 8000 ), wsserver )

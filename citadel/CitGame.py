@@ -26,7 +26,7 @@ class CitGame( object ):
       self.showState()
       if ( self.__input[ self.P1 ].isAi() is True and
            self.__input[ self.P2 ].isAi() is True ):
-        sleep( 1 )
+        sleep( 3 )
       self.move( self.getMove( self.P1 ), self.getMove( self.P2 ) )
       winner = self.hasWinner()
     self.showState()
