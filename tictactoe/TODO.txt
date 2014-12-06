@@ -1,1 +1,6 @@
- 
+TODO:
+------------------------------
+
+- Finish player and board classes
+- Create main class
+- Interface with GPIO
