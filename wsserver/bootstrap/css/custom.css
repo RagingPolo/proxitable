@@ -1,0 +1,38 @@
+.position {
+	margin: 1% 1% 1% 1%;
+	background-color: #0000AF;
+	color: #FFFFFF;
+	vertical-align: middle;
+	height: 50px;
+	float: left;
+	width: 12.285714286%;
+	-webkit-border-radius: 1%;
+	-moz-border-radius: 1%;
+	border-radius: 10px;
+}
+
+.position-container {
+	width: 80%;
+	margin: 0.5% auto;
+	overflow: hidden;
+}
+
+.player-container {
+	width: 80%;
+	margin: 0.5% auto;
+	overflow: hidden;
+	height: 30%;
+}
+
+.player {
+	margin: 1% 10% 1% 10%;
+	background-color: #0000FF;
+	color: #FFFFFF;
+	vertical-align: middle;
+	height: 80%;
+	float: left;
+	width: 30%;
+	-webkit-border-radius: 1%;
+	-moz-border-radius: 1%;
+	border-radius: 10px;
+}

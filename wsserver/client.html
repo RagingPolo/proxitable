@@ -2,6 +2,9 @@
   <head>
     <title>PES</title>
     <link href="bootstrap/css/bootstrap.min.css" rel="stylesheet">
+    <link href="bootstrap/css/bootstrap-responsive.css" rel="stylesheet">
+    <link href="bootstrap/css/docs.css" rel="stylesheet">
+    <link href="bootstrap/css/custom.css" rel="stylesheet">
     <script type="text/javascript">
       function wsConnect() {
         if ( 'WebSocket' in window) {
@@ -26,14 +29,39 @@
     </script>
   </head>
   <body>
-    <div id="connect">
-      <p />
-      <p class="text-center">
-        <a href="javascript:wsConnect()" class="btn btn-danger btn-lg" role="button">Connect</a>
-      </p>
-    </div>
-    <div id='game'>
-      <!-- Game output is inserted here -->
+    <div class="col-md-12">
+	<div id="connect">
+		<p />
+		<p class="text-center">
+			<a href="javascript:wsConnect()" class="btn btn-danger btn-lg" role="button">Connect</a>
+		</p>
+	</div>
+	<div id="game" align="center">
+		<div class="player-container">
+			<div id="player_one_score" class="player" style="background-color:0000AF;">
+				<h1 style="color: white">Player One</h1>
+				<div id="player_one_score">
+					<h2 style="color: white">50</h2>
+				</div>
+			</div>
+			<div id="player_two_score" class="player" style="background-color:0000AF;">
+				<h1 style="color: white">Player Two</h1>
+				<div id="player_two_score">
+					<h2 style="color: white">50</h2>
+				</div>
+			</div>
+		</div>
+		<br/>
+		<div class="position-container">
+			<div id="position0" class="position"></div>
+			<div id="position1" class="position"></div>
+			<div id="position2" class="position"></div>
+			<div id="position3" class="position"></div>
+			<div id="position4" class="position"></div>
+			<div id="position5" class="position"></div>
+			<div id="position6" class="position"></div>
+		</div>
+	</div>
     </div>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
     <script src="bootstrap/js/bootstrap.min.js"></script>
