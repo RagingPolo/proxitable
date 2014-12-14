@@ -2,13 +2,13 @@ import CitOutAbstract
 from colorama import init, Fore
 import os
 # ------------------------------------
-# CLASS CitOutAscii                  |
+# CLASS CitOutTerminal               |
 #                                    |
 # Basic output class displaying the  |
 # current game state on the command  |
 # line                               |
 # ------------------------------------
-class CitOutAscii( CitOutAbstract.CitOutAbstract ):
+class CitOutTerminal( CitOutAbstract.CitOutAbstract ):
 
   def __init__( self ):
     super().__init__()
