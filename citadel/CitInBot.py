@@ -120,4 +120,4 @@ class CitInBot( CitInAbstract.CitInAbstract ):
           move = random.randrange( 1, points )
       if move > points:
         move = points
-    return move
+    return int( move )
