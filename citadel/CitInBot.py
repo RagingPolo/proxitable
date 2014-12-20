@@ -118,4 +118,6 @@ class CitInBot( CitInAbstract.CitInAbstract ):
         else:
           # If all else fails, just pick a random number
           move = random.randrange( 1, points )
-    return int( move )
+      if move > points:
+        move = points
+    return move
