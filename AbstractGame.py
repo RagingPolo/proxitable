@@ -8,9 +8,13 @@ class AbstractGame( object ):
     pass
   
   @abstractmethod
-  def setInput( self, player, imod, iargs ):
+  def setInput( self, player, imod ):
     pass
 
   @abstractmethod
-  def setOutput( self, omod, oargs ):
+  def setOutput( self, omod ):
+    pass
+
+  @abstractmethod
+  def getName( self ):
     pass

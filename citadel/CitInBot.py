@@ -2,6 +2,7 @@ import CitInAbstract
 from os import urandom
 import random
 import pickle
+import atexit
 from enum import Enum
 # ------------------------------------
 # CLASS CitInBot                     |
@@ -11,7 +12,7 @@ from enum import Enum
 # ------------------------------------
 class CitInBot( CitInAbstract.CitInAbstract ):
 
-  def __init__( self, filename, variance ):
+  def __init__( self, args ):
     # Set as a ai player input
     super().__init__( True )
     # Initialise the random number generator
@@ -19,8 +20,8 @@ class CitInBot( CitInAbstract.CitInAbstract ):
     # Store class attributes
     self.__pos      = 3
     self.__opPoints = 50
-    self.__filename = filename
-    self.__variance = variance
+    self.__filename = args[ 0 ]
+    self.__variance = int( args[ 1 ] )
     # Setup mode
     self.__opLast = list()
     self.__mode = Enum( 'mode', 'UNK DEF AGR' )
@@ -31,8 +32,9 @@ class CitInBot( CitInAbstract.CitInAbstract ):
         self.__history = pickle.load( fd )
     except FileNotFoundError:
       self.__history = list()
+    atexit.register( self.saveHistory )
 
-  def __del__( self ):
+  def saveHistory( self ):
     # Trim history list to at most last 100 turns
     if len( self.__history ) > 100:
       cut = len( self.__history ) - 101

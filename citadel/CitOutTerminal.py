@@ -10,7 +10,9 @@ import os
 # ------------------------------------
 class CitOutTerminal( CitOutAbstract.CitOutAbstract ):
 
-  def __init__( self ):
+  # Args will be an empty list, to allow the use of
+  # a generic dynamic module loader
+  def __init__( self, args ):
     super().__init__()
     init() # Colorama init
 

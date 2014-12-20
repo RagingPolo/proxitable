@@ -9,7 +9,9 @@ import numbers
 # ------------------------------------
 class CitInTerminal( CitInAbstract.CitInAbstract ):
 
-  def __init__( self ):
+  # args with be an empty list - this allows for
+  # the use of generic module loader
+  def __init__( self, args ):
     # Set as non ai input
     super().__init__( False )
 

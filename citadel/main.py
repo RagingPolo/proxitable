@@ -1,7 +1,8 @@
-import CitPlayer as CP
-import CitBoard as CB
-import CitOutAbstract
-import CitInAbstract
+from AbstractGame import AbstractGame
+from CitPlayer import CitPlayer
+from CitBoard import CitBoard
+from CitInAbstract import CitInAbstract
+from CitOutAbstract import CitOutAbstract
 import numbers
 from time import sleep
 # ------------------------------------
@@ -10,15 +11,21 @@ from time import sleep
 # Contains game logic and maintains  |
 # overall game state                 |
 # ------------------------------------
-class CitGame( object ):
+class Main( AbstractGame ):
 
   def __init__( self ):
     self.P1 = 1
     self.P2 = 2
-    self.__board = CB.CitBoard()
-    self.__player = { self.P1 : CP.CitPlayer( 'Player 1' ), self.P2 : CP.CitPlayer( 'Player 2' ) }
+    self.__board = CitBoard()
+    self.__player = { self.P1 : CitPlayer( 'Player 1' ), self.P2 : CitPlayer( 'Player 2' ) }
     self.__output = None
     self.__input = { self.P1 : None, self.P2 : None }
+
+  def __str__( self ):
+    return self.getName()
+
+  def getName( self ):
+    return 'Citadel'
 
   def run( self ):
     winner = self.hasWinner()
@@ -34,7 +41,7 @@ class CitGame( object ):
   
   # Set the desired move input module for the specified player ( P1 | P2 )
   def setInput( self, player, input_ ):
-    if isinstance( input_, CitInAbstract.CitInAbstract ):
+    if isinstance( input_, CitInAbstract ):
       try:
         self.__input[ player ] = input_
       except KeyError:
@@ -44,7 +51,7 @@ class CitGame( object ):
       
 
   def setOutput( self, output ):
-    if isinstance( output, CitOutAbstract.CitOutAbstract ):
+    if isinstance( output, CitOutAbstract ):
       self.__output = output
     else:
       raise Exception( 'CitGame.setOutput(): Not a valid output object' )
@@ -71,21 +78,21 @@ class CitGame( object ):
   #         2 : player two
   #         3 : draw
   def hasWinner( self ):
-    if self.__board.getPosition() == CB.CitBoard.MAX:
+    if self.__board.getPosition() == CitBoard.MAX:
       return 1
-    if self.__board.getPosition() == CB.CitBoard.MIN:
+    if self.__board.getPosition() == CitBoard.MIN:
       return 2
     if self.__player[ 1 ].hasLost():
       if self.__player[ 2 ].canWin( self.__board.getPosition() ):
-        while self.__board.getPosition() > CB.CitBoard.MIN:
+        while self.__board.getPosition() > CitBoard.MIN:
           self.__player[ 2 ].addMove( 1 )
           self.__board.moveLeft()
         return 2
       else:
         return 3
     if self.__player[ 2 ].hasLost():
-      if self.__player[ 1 ].canWin( CB.CitBoard.MAX - self.__board.getPosition() ):
-        while self.__board.getPosition() < CB.CitBoard.MAX:
+      if self.__player[ 1 ].canWin( CitBoard.MAX - self.__board.getPosition() ):
+        while self.__board.getPosition() < CitBoard.MAX:
           self.__player[ 1 ].addMove( 1 )
           self.__board.moveRight()
         return 1
@@ -108,7 +115,7 @@ class CitGame( object ):
                                                self.__player[ player ].getPoints(),
                                                self.__player[ opponent ].getLastMove() )
       else:
-        # TODO is there a way to make this an uncatchable fatal error?
+        # TODO is there a w to make this an uncatchable fatal error?
         raise Exception( 'CitGame.getMove(): Fatal error - No input module provided for ' + self.__player[ player ].getName() )
     except KeyError:
       raise Exception( 'CitGame.getMove(): Not a valid player, use P1 - 1 or P2 - 2' )
