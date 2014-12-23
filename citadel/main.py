@@ -127,7 +127,7 @@ class Main( AbstractGame ):
       raise Exception( 'CitGame.getMove(): Not a valid player, use P1 - 1 or P2 - 2' )
     return move
 
-  def showState( self ):
+  def newGame( self ):
     if self.__output is not None:
       self.__output.newGame()
 

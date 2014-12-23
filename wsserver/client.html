@@ -4,8 +4,7 @@
     <link href="bootstrap/css/bootstrap.min.css" rel="stylesheet">
     <link href="bootstrap/css/bootstrap-responsive.css" rel="stylesheet">
     <link href="bootstrap/css/docs.css" rel="stylesheet">
-    <link href="bootstrap/css/custom.css" rel="stylesheet">
-    <div id="game-css"><!-- Game specific css will be inserted here --></div>
+    <style id="game-css"><!-- Game specific css will be inserted here --></style>
     <script type="text/javascript">
       function wsConnect() {
         if ( 'WebSocket' in window) {
@@ -23,8 +22,12 @@
               $( data.target ).html( data.content );
             } else if ( data.cmd == 'A' ) {
               $( data.target ).append( data.content );
-            } elseif ( data.cmd == 'X' ) {
-              jQuery.globalEval( data.content );
+            } else if ( data.cmd == 'X' ) {
+              try {
+                jQuery.globalEval( data.content );
+              } catch ( e ) {
+                alert( e.message );
+              }
             }
           };
         }

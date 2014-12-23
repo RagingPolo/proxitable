@@ -1,9 +1,11 @@
 #!/usr/bin/env python3
 import os
 import sys
+import struct
 import socket
 from time import sleep
 import importlib.machinery
+from GlOutWss import GlOutWss
 # ------------------------------------
 # CLASS Launcher
 #
@@ -19,7 +21,9 @@ class Launcher( object ):
     self.imod  = None
     self.omod  = None
     self.games = self.__loadGames()
-    # Test code
+    
+  # Test code
+  def test( self ):
     for x in self.games:
       self.__runGame( x )
 
@@ -47,22 +51,28 @@ class Launcher( object ):
           games.append( game )
         except Exception as e:
           # TODO log the error to a proper log file
-          print( e )
+          print( 'launch.loadGames() ' + str( e ) )
     return games
 
   def __runGame( self, game ):
-    if self.__output is not None:
-      os.unlink( game.getName() + '_socket' )
+    if self.omod is not None:
+      try:
+        os.unlink( game.getName() + '_socket' )
+      except OSError:
+        if os.path.exists( game.getName() + '_socket' ):
+          raise
       sock = socket.socket( socket.AF_UNIX, socket.SOCK_STREAM )
       sock.bind( game.getName() + '_socket' ) 
       if os.fork() > 0:
         # Parent - game launcher
         # TODO error handling
         sock.listen( 1 )
-        data = sock.recv( 10240 )
-        while len( data ) > 0:
-          self.__output.send( 
-          data = sock.recv( 10240 )
+        con, client = sock.accept()
+        size = con.recv( 4 )
+        while len( size ) > 0:
+          data = con.recv( struct.unpack( '>I', size )[ 0 ] )
+          self.omod.send( size + data )
+          size = con.recv( 4 )
       else:
         # Child - the game
         sleep( 1 ) # Allow time for the listener to be set up
@@ -100,10 +110,12 @@ class Launcher( object ):
     self.imod = imod
 
   def setOutputMod( self, omod ):
-   #if omod is of class abstract omod
+    #if omod is of class abstract omod
     self.omod = omod
   
 # ------------------------------------
 
 if __name__ == '__main__':
   launch = Launcher()
+  launch.setOutputMod( GlOutWss( '', 9000 ) )
+  launch.test()
