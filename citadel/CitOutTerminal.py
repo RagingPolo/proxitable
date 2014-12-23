@@ -16,6 +16,12 @@ class CitOutTerminal( CitOutAbstract.CitOutAbstract ):
     super().__init__()
     init() # Colorama init
 
+  def connect( self, addr ):
+    pass
+
+  def newGame( self ):
+    self.showState( 3, 50, 50, 0, 0 )
+
   def showState( self, pos, p1p, p2p, p1m, p2m ):
     os.system( 'cls' if os.name == 'nt' else 'clear' ) 
     print( Fore.CYAN + '   P1[' + Fore.RED + '{0:2d}'.format( p1p ) + Fore.CYAN + ']' + Fore.WHITE +

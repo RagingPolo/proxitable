@@ -21,6 +21,11 @@ class Main( AbstractGame ):
     self.__output = None
     self.__input = { self.P1 : None, self.P2 : None }
 
+  def connect( self, addr ):
+    if self.__output is not None:
+      return self.__output.connect( addr )
+    return False
+
   def __str__( self ):
     return self.getName()
 
@@ -29,6 +34,7 @@ class Main( AbstractGame ):
 
   def run( self ):
     winner = self.hasWinner()
+    self.newGame()
     while winner == 0:
       self.showState()
       if ( self.__input[ self.P1 ].isAi() is True and
@@ -120,6 +126,10 @@ class Main( AbstractGame ):
     except KeyError:
       raise Exception( 'CitGame.getMove(): Not a valid player, use P1 - 1 or P2 - 2' )
     return move
+
+  def showState( self ):
+    if self.__output is not None:
+      self.__output.newGame()
 
   def showState( self ):
     if self.__output is not None:

@@ -1,6 +1,8 @@
 #!/usr/bin/env python3
 import os
 import sys
+import socket
+from time import sleep
 import importlib.machinery
 # ------------------------------------
 # CLASS Launcher
@@ -19,7 +21,7 @@ class Launcher( object ):
     self.games = self.__loadGames()
     # Test code
     for x in self.games:
-      x.run()
+      self.__runGame( x )
 
   def __loadGames( self ):
     games = []
@@ -48,6 +50,29 @@ class Launcher( object ):
           print( e )
     return games
 
+  def __runGame( self, game ):
+    if self.__output is not None:
+      os.unlink( game.getName() + '_socket' )
+      sock = socket.socket( socket.AF_UNIX, socket.SOCK_STREAM )
+      sock.bind( game.getName() + '_socket' ) 
+      if os.fork() > 0:
+        # Parent - game launcher
+        # TODO error handling
+        sock.listen( 1 )
+        data = sock.recv( 10240 )
+        while len( data ) > 0:
+          self.__output.send( 
+          data = sock.recv( 10240 )
+      else:
+        # Child - the game
+        sleep( 1 ) # Allow time for the listener to be set up
+        # TODO error checking that connection is established      
+        game.connect( game.getName() + '_socket' )
+        game.run()
+    else:
+      # TODO log to file
+      print( 'No output module found' )
+
   # Load specified io module and instantiate with givern args
   def __setupIOModule( self, line ):
     io = line.rstrip().split( ':' )
@@ -75,7 +100,7 @@ class Launcher( object ):
     self.imod = imod
 
   def setOutputMod( self, omod ):
-    #if omod is of class abstract omod
+   #if omod is of class abstract omod
     self.omod = omod
   
 # ------------------------------------
