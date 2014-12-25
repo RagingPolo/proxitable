@@ -67,23 +67,36 @@ class Launch( object ):
       except OSError:
         if os.path.exists( game.getName() + '_socket' ):
           raise
-      sock = socket.socket( socket.AF_UNIX, socket.SOCK_STREAM )
-      sock.bind( game.getName() + '_socket' ) 
+      try:
+        sock = socket.socket( socket.AF_UNIX, socket.SOCK_STREAM )
+        sock.bind( game.getName() + '_socket' )
+      except socket.error as e:
+        logging.exception( 'Failed to create unix socket for %s', game.getName() )
+        return
       if os.fork() > 0:
         # Parent - game launcher
         # TODO error handling
-        sock.listen( 1 )
-        con, client = sock.accept()
-        size = con.recv( 4 )
-        while len( size ) > 0:
-          data = con.recv( struct.unpack( '>I', size )[ 0 ] )
-          self.omod.send( size + data )
+        try:
+          sock.listen( 1 )
+          con, client = sock.accept()
+        except socket.error as e:
+          logging.exception( 'Failed to recieve connection from %s', game.getName() )
+        try:
           size = con.recv( 4 )
+          while len( size ) > 0:
+            data = con.recv( struct.unpack( '>I', size )[ 0 ] )
+            self.omod.send( size + data )
+            size = con.recv( 4 )
+        except socket.error as e:
+          logging.exception( 'Connection to %s failed', game.getName() )
       else:
         # Child - the game
         sleep( 1 ) # Allow time for the listener to be set up
-        # TODO error checking that connection is established      
-        game.connect( game.getName() + '_socket' )
+        try:
+          game.connect( game.getName() + '_socket' )
+        except socket.error as e:
+          logging.exception( '%s failed to connect to launcher', game.getName() )
+          sys.exit( 1 )
         game.run()
     else:
       logging.error( 'No ouput module loaded' )

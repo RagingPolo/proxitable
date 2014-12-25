@@ -7,16 +7,23 @@ from io import StringIO
 from binascii import a2b_hex
 import socket
 from sys import exit
+import logging
 
 class wsserver( socketserver.StreamRequestHandler ):
 
   GUID = '258EAFA5-E914-47DA-95CA-C5AB0DC85B11'
- 
+  PORT = 9000
+  
   def setup( self ):
+    # Setup logging
+    LOGFORMAT = '[ %(levelname)s ] [ %(asctime)-15s ] [ %(module)s.%(funcName)s() ] [ %(message)s ]'
+    logging.basicConfig( filename='.wsserver.log', level=logging.INFO, format=LOGFORMAT )
+    logging.info( 'Wsserver started' )
+    # Setup server
     socketserver.StreamRequestHandler.setup( self )
     self.handshake = False
-    self.lsock     = False
-    self.gsock     = False
+    self.lsock     = False # Socket for listening to connections from games
+    self.gsock     = False # Active socket for a connected game
 
   # Main loop once server is up and running
   # Output modules can pass msgs to the server
@@ -25,21 +32,24 @@ class wsserver( socketserver.StreamRequestHandler ):
   def handle( self ):
     while True:
       if self.lsock is False:
-        print( 'Hello' )
         # Setup listening socket for recieveing game output
         self.lsock = socket.socket()
         try:
-          self.lsock.bind( ( '', 9000 ) )
+          self.lsock.bind( ( '', self.PORT ) )
           self.lsock.listen( 1 )
+          logging.info( 'Wsserver listening for game connection on port %d', self.PORT )
         except socket.error as e:
-          print( 'wsserver startup failed: ' + str( e ) )
+          logging.execption( 'Wsserver startup failed' )
           self.lsock.close()
           exit( 1 )
       elif self.handshake is False:
         self.doHandshake()
       else:
         if self.gsock is False:
-          self.gsock = self.lsock.accept()[ 0 ]
+          try:
+            self.gsock = self.lsock.accept()[ 0 ]
+          except socket.error as e:
+            logging.exception( 'Error accpeting connectiob from game' )
         else:
           # Wait for data from output modules to pass onto client
           # Incomming messages in format of:
@@ -76,6 +86,7 @@ class wsserver( socketserver.StreamRequestHandler ):
       response = ''.join( response )
       print( response )
       self.handshake = self.request.send( bytes( response, 'utf-8' ) )
+      logging.info( 'web socket connect established using client key: %s', hdrs[ 'Sec-WebSocket-Key' ] )
  
   def sendMsg( self, msg ):
     if isinstance( msg, str ):
@@ -87,7 +98,8 @@ class wsserver( socketserver.StreamRequestHandler ):
       hdr = struct.pack( '>BBH', 129, 126, length )
     else:
       hdr = struct.pack( '>BBQ', 129, 127, length )
-    self.request.send( hdr + msg )    
+    self.request.send( hdr + msg )
+    logging.debug( 'Msg sent' )
 
 if __name__ == '__main__':
   server = socketserver.TCPServer( ( 'localhost', 8000 ), wsserver )
