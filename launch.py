@@ -3,6 +3,7 @@ import os
 import sys
 import struct
 import socket
+import logging
 from time import sleep
 import importlib.machinery
 from GlOutWss import GlOutWss
@@ -15,9 +16,14 @@ from GlOutWss import GlOutWss
 # requested. Regain execution when 
 # game finishes
 # ------------------------------------
-class Launcher( object ):
+class Launch( object ):
 
   def __init__( self ):
+    # Start the logger
+    LOGFORMAT = '[ %(levelname)s ] [ %(asctime)-15s ] [ %(module)s.%(funcName)s() ] [ %(message)s ]'
+    logging.basicConfig( filename='.proxitable.log', level=logging.INFO, format=LOGFORMAT )
+    logging.info( 'Started Launcher' ) 
+    # Setup the launcher
     self.imod  = None
     self.omod  = None
     self.games = self.__loadGames()
@@ -50,8 +56,8 @@ class Launcher( object ):
             game.setOutput( self.__setupIOModule( ioConf.readline() ) )
           games.append( game )
         except Exception as e:
-          # TODO log the error to a proper log file
-          print( 'launch.loadGames() ' + str( e ) )
+          logging.exception( 'Failed loading %s', d ) 
+    logging.info( '%d games loaded', len( games ) )
     return games
 
   def __runGame( self, game ):
@@ -80,8 +86,7 @@ class Launcher( object ):
         game.connect( game.getName() + '_socket' )
         game.run()
     else:
-      # TODO log to file
-      print( 'No output module found' )
+      logging.error( 'No ouput module loaded' )
 
   # Load specified io module and instantiate with givern args
   def __setupIOModule( self, line ):
@@ -116,6 +121,6 @@ class Launcher( object ):
 # ------------------------------------
 
 if __name__ == '__main__':
-  launch = Launcher()
+  launch = Launch()
   launch.setOutputMod( GlOutWss( '', 9000 ) )
   launch.test()

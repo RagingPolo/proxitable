@@ -4,6 +4,8 @@ from CitBoard import CitBoard
 from CitInAbstract import CitInAbstract
 from CitOutAbstract import CitOutAbstract
 import numbers
+import logging
+import sys
 from time import sleep
 # ------------------------------------
 # CLASS CitGame                      |
@@ -33,6 +35,7 @@ class Main( AbstractGame ):
     return 'Citadel'
 
   def run( self ):
+    logging.info( '%s ] [ Started', self.getName() )
     winner = self.hasWinner()
     self.newGame()
     while winner == 0:
@@ -43,6 +46,7 @@ class Main( AbstractGame ):
       self.move( self.getMove( self.P1 ), self.getMove( self.P2 ) )
       winner = self.hasWinner()
     self.showState()
+    logging.info( '%s ] [ Player %d Wins', self.getName(), winner )
     self.showResult()
   
   # Set the desired move input module for the specified player ( P1 | P2 )
@@ -51,16 +55,15 @@ class Main( AbstractGame ):
       try:
         self.__input[ player ] = input_
       except KeyError:
-        raise Exception( 'CitGame.setInput(): Not a valid player, use P1 - 1 or P2 - 2' )
+        logging.warning( '%s ] [ Not a valid player', self.getName() )
     else:
-      raise Exception( 'CitGame.setInput(): Not a valid input object' )
-      
+      logging.warning( '%s ] [ Not a valid input object: %s', self.getName(), str( input_ ) )
 
   def setOutput( self, output ):
     if isinstance( output, CitOutAbstract ):
       self.__output = output
     else:
-      raise Exception( 'CitGame.setOutput(): Not a valid output object' )
+      logging.warning( '%s ] [ Not a valid output object: %s', self.getName(), str( output ) )
 
   # Play out a turn of the game
   # p1m : Player ones move
@@ -75,8 +78,9 @@ class Main( AbstractGame ):
         self.__board.moveRight()
       elif p2m > p1m:
         self.__board.moveLeft()
+      logging.info( '%s ] [ Player 1 move: %d, Player 2 move: %d, Current board position: %d', self.getName(), p1m, p2m, self.__board.getPosition() )
     else:
-      raise Exception( 'CitGame.move(): Not a number' );
+      logging.warning( '%s ] [ Move was not a number', self.getName() )
 
   # Check if there == a winner
   # returns 0 : game not finished
@@ -121,10 +125,10 @@ class Main( AbstractGame ):
                                                self.__player[ player ].getPoints(),
                                                self.__player[ opponent ].getLastMove() )
       else:
-        # TODO is there a w to make this an uncatchable fatal error?
-        raise Exception( 'CitGame.getMove(): Fatal error - No input module provided for ' + self.__player[ player ].getName() )
+        logging.critical( '%s ] [ No input module for %s', self.getName(), self.__player[ player ].getName() )
+        sys.exit( 1 )
     except KeyError:
-      raise Exception( 'CitGame.getMove(): Not a valid player, use P1 - 1 or P2 - 2' )
+      logging.warning( '%s ] [ Not a valid player', self.getName() )
     return move
 
   def newGame( self ):
