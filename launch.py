@@ -6,6 +6,7 @@ import socket
 import logging
 from time import sleep
 import importlib.machinery
+from GlOutAbstract import GlOutAbstract
 from GlOutWss import GlOutWss
 # ------------------------------------
 # CLASS Launcher
@@ -124,13 +125,16 @@ class Launch( object ):
     pass
 
   def setInputMod( self, imod ):
-    #if imod is of class abstrct imod
+    #if imod is of class abstract imod
     self.imod = imod
 
   def setOutputMod( self, omod ):
-    #if omod is of class abstract omod
-    self.omod = omod
-  
+    if isinstance( omod, GlOutAbstract ):
+      self.omod = omod
+      logging.info( 'Output module set to: %s', omod.getName() )
+    else:
+      logging.warning( 'Invalid output module' ) 
+ 
 # ------------------------------------
 
 if __name__ == '__main__':

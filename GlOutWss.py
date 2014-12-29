@@ -12,6 +12,12 @@ class GlOutWss( GlOutAbstract ):
       logging.exception( 'Error connectiong to output server' )
       self.__sock = None
 
+  def getName( self ):
+    return 'Game Launcher Web Socket Server Output Module'
+
+  def __str__( self ):
+    return self.getName()
+
   def send( self, msg ):
     if self.__sock is not None:
        self.__sock.send( msg )

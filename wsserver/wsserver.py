@@ -63,6 +63,7 @@ class wsserver( socketserver.StreamRequestHandler ):
           else:
             self.gsock.close()
             self.gsock = False
+            logging.info( 'Game connection closed' )
 
   # Complete handshake with client as per rfc6455
   def doHandshake( self ):
