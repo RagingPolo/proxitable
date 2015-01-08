@@ -23,25 +23,22 @@ class ProxitableSim( object ):
     thread.start_new_thread( self.__readInput, () )
 
   def __readInput( self ):
-    fd = sys.stdin.fileno()
-    old_settings = termios.tcgetattr( fd )
-    try:
-      tty.setraw( sys.stdin.fileno() )
-      while True:
-        if self.selected >= 0:
+    self.fd = sys.stdin.fileno()
+    self.old_settings = termios.tcgetattr( self.fd )
+    tty.setraw( sys.stdin.fileno() )
+    while True:
+      if self.selected >= 0:
+        key = ord( sys.stdin.read( 1 ) )
+        if key == 27:
+          sys.stdin.read( 1 )
           key = ord( sys.stdin.read( 1 ) )
-          if key == 27:
-            sys.stdin.read( 1 )
-            key = ord( sys.stdin.read( 1 ) )
-            if key in self.pins.keys():
-              self.selected = self.pins[ key ]
-          else:
-            if key in self.pins.keys():
-              self.selected = self.pins[ key ]
+          if key in self.pins.keys():
+            self.selected = self.pins[ key ]
         else:
-          break
-    finally:
-      termios.tcsetattr( fd, termios.TCSADRAIN, old_settings )
+          if key in self.pins.keys():
+            self.selected = self.pins[ key ]
+      else:
+        break
 
   def getPin( self ):
     selected = self.selected
@@ -49,6 +46,7 @@ class ProxitableSim( object ):
     return selected
 
   def closeThreads( self ):
+    termios.tcsetattr( self.fd, termios.TCSADRAIN, self.old_settings )
     self.selected = -1
 
 if __name__ == '__main__':
