@@ -3,6 +3,7 @@ from CitInAbstract import CitInAbstract
 import socket
 import struct
 import json
+import logging
 
 class CitOutDSock( CitInAbstract, CitOutAbstract ):
 
@@ -46,9 +47,9 @@ class CitOutDSock( CitInAbstract, CitOutAbstract ):
       return True
     # TODO log these errors to file
     except socket.error as e:
-      print( 'Error connecting to game launcher: ' + e )
+      logging.exception( 'Failed to connect to game launcher' )
     except Exception as e:
-      print( 'Error: ' + e )
+      logging.exception( 'Connection error' )
     return False
 
   def newGame( self ):
