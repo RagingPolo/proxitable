@@ -45,7 +45,6 @@ class CitOutDSock( CitInAbstract, CitOutAbstract ):
       self.__sock = socket.socket( socket.AF_UNIX, socket.SOCK_STREAM )
       self.__sock.connect( addr )
       return True
-    # TODO log these errors to file
     except socket.error as e:
       logging.exception( 'Failed to connect to game launcher' )
     except Exception as e:
@@ -84,7 +83,8 @@ class CitOutDSock( CitInAbstract, CitOutAbstract ):
     # Recieve an input button pin
     pin = 0
     while pin != 07: # Button A
-      pin = self.__recv()
+      self.sendReadyToRecieve()
+      pin = self.__recv( 4 )
       # If up/down adjust output display accordingly
       if pin == 65: # Up
         if move < self.points:
@@ -107,10 +107,13 @@ class CitOutDSock( CitInAbstract, CitOutAbstract ):
     if self.__sock is not None:
       size = struct.pack( '>I', len( data ) )
       self.__sock.send( size + data )
+
+  def __sendReadyToRecieve( self ):
+    self.__sock.send( b'\xab\xba\xfa\xce' )
   
   # Recieve a selected pin number
   def __recv( self ):
     if self.__sock is not None:
       pin = self.__sock.recv( 4 )
-      return int( struct.unpack( '>I', pin ) )
+      return int( struct.unpack( '>I', pin )[ 0 ] )
 # ------------------------------------

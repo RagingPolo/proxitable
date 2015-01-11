@@ -3,6 +3,7 @@ import os
 import sys
 import struct
 import socket
+import select
 import logging
 from time import sleep
 import importlib.machinery
@@ -19,14 +20,15 @@ from GlOutWss import GlOutWss
 # ------------------------------------
 class Launch( object ):
 
-  def __init__( self ):
+  def __init__( self, timeout=10 ):
     # Start the logger
     LOGFORMAT = '[ %(levelname)s ] [ %(asctime)-15s ] [ %(module)s.%(funcName)s() ] [ %(message)s ]'
     logging.basicConfig( filename='.proxitable.log', level=logging.INFO, format=LOGFORMAT )
     logging.info( 'Started Launcher' ) 
     # Setup the launcher
-    self.imod  = None
-    self.omod  = None
+    self.imod    = None
+    self.omod    = None
+    self.timeout = timeout
     self.games = self.__loadGames()
     
   # Test code
@@ -76,7 +78,6 @@ class Launch( object ):
         return
       if os.fork() > 0:
         # Parent - game launcher
-        # TODO error handling
         try:
           sock.listen( 1 )
           con, client = sock.accept()
@@ -86,7 +87,15 @@ class Launch( object ):
           size = con.recv( 4 )
           while len( size ) > 0:
             data = con.recv( struct.unpack( '>I', size )[ 0 ] )
-            self.omod.send( size + data )
+            if data != b'\xab\xba\xfa\xce':
+              self.omod.send( size + data )
+            elif: 
+              # Game has said it is ready to recieve
+              # so get a button pin reading and pass it on
+              # TODO for this to work getButton() will have
+              # to block until it has a pin to return
+              pin = self.imod.getButton()
+              con.send( struct.pack( '>I', pin ) )
             size = con.recv( 4 )
         except socket.error as e:
           logging.exception( 'Connection to %s failed', game.getName() )
