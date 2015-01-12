@@ -5,7 +5,7 @@ import struct
 import json
 import logging
 
-class CitOutDSock( CitInAbstract, CitOutAbstract ):
+class CitIODSock( CitInAbstract, CitOutAbstract ):
 
   CSS = """.display { background-color: #0000AF; color: #FFF; vertical-align: middle; float: left; -webkit-border-radius: 1%; -moz-border-radius: 1%; border-radius: 10px; }
 .player-display { margin: 1% 10% 1% 10%; height: 80%; width: 30%; }
@@ -32,10 +32,19 @@ class CitOutDSock( CitInAbstract, CitOutAbstract ):
   <div id="pos5" class="display position-display"></div>
   <div id="pos6" class="display position-display"></div>
 </div>"""
-  MOVE = """<h1 id="move"></h1>"""
+  MOVE = """<center><h1 id="move"></h1></center>"""
+
+  # Overiding __new__ to enforce a singleton design pattern
+  __instance = None
+  def __new__( cls, val ):
+    if CitIODSock.__instance is None:
+      CitIODSock.__instance = object.__new__( cls )
+    CitIODSock.__instance.val = val
+    return CitIODSock.__instance
+
   # args is an empty list to support the dynamic module loader
   def __init__( self, args ):
-    super().__init__()
+    super().__init__( False ) # Call to CitInAbstract().__init__()
     self.__sock = None
     self.ai = False
     self.points = 50
@@ -77,14 +86,14 @@ class CitOutDSock( CitInAbstract, CitOutAbstract ):
   # Listen for input from the proxitable
   def getMove( self, name, points, last ):
     move = self.points
-    self.__send( self.__genJsonBytes( 'R', '#game-io', self.MOVE )
+    self.__send( self.__genJsonBytes( 'R', '#game-io', self.MOVE ) )
     # Send availble points to the browser
     self.__send( self.__genJsonBytes( 'R', '#move', str( move ) ) )
     # Recieve an input button pin
     pin = 0
-    while pin != 07: # Button A
-      self.sendReadyToRecieve()
-      pin = self.__recv( 4 )
+    while pin != 7: # Button A
+      self.__sendReadyToRecieve()
+      pin = self.__recv()
       # If up/down adjust output display accordingly
       if pin == 65: # Up
         if move < self.points:
@@ -115,5 +124,7 @@ class CitOutDSock( CitInAbstract, CitOutAbstract ):
   def __recv( self ):
     if self.__sock is not None:
       pin = self.__sock.recv( 4 )
+      if len( pin ) != 4:
+        print( len( pin ) )
       return int( struct.unpack( '>I', pin )[ 0 ] )
 # ------------------------------------

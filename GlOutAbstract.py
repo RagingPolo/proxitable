@@ -6,6 +6,7 @@ class GlOutAbstract( object ):
   # Return the name of the output module
   @abstractmethod
   def getName( self ):
+    pass
 
   # Send 'msg' to output device
   @abstractmethod

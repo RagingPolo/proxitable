@@ -8,7 +8,9 @@ import logging
 from time import sleep
 import importlib.machinery
 from GlOutAbstract import GlOutAbstract
+from GlInAbstract import GlInAbstract
 from GlOutWss import GlOutWss
+from GlInProxitable import GlInProxitable
 # ------------------------------------
 # CLASS Launcher
 #
@@ -89,11 +91,9 @@ class Launch( object ):
             data = con.recv( struct.unpack( '>I', size )[ 0 ] )
             if data != b'\xab\xba\xfa\xce':
               self.omod.send( size + data )
-            elif: 
+            else: 
               # Game has said it is ready to recieve
               # so get a button pin reading and pass it on
-              # TODO for this to work getButton() will have
-              # to block until it has a pin to return
               pin = self.imod.getButton()
               con.send( struct.pack( '>I', pin ) )
             size = con.recv( 4 )
@@ -134,8 +134,11 @@ class Launch( object ):
     pass
 
   def setInputMod( self, imod ):
-    #if imod is of class abstract imod
-    self.imod = imod
+    if isinstance( imod, GlInAbstract ):
+      self.imod = imod
+      logging.info( 'Input module set to: %s', imod.getName() )
+    else:
+      logging.warning( 'Invalid input module' )
 
   def setOutputMod( self, omod ):
     if isinstance( omod, GlOutAbstract ):
@@ -144,9 +147,16 @@ class Launch( object ):
     else:
       logging.warning( 'Invalid output module' ) 
  
+  def cleanup( self ):
+    if self.imod is not None:
+      self.imod.cleanup()
+    if self.omod is not None:
+      self.omod.cleanup()
 # ------------------------------------
 
 if __name__ == '__main__':
   launch = Launch()
   launch.setOutputMod( GlOutWss( '', 9000 ) )
+  launch.setInputMod( GlInProxitable() )
   launch.test()
+  launch.cleanup()
