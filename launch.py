@@ -24,8 +24,8 @@ class Launch( object ):
 
   def __init__( self, timeout=10 ):
     # Start the logger
-    LOGFORMAT = '[ %(levelname)s ] [ %(asctime)-15s ] [ %(module)s.%(funcName)s() ] [ %(message)s ]'
-    logging.basicConfig( filename='.proxitable.log', level=logging.INFO, format=LOGFORMAT )
+    LOGFORMAT = '[ %(levelname)s ] [ %(asctime)-15s ] [ %(process)d ] [ %(module)s.%(funcName)s() ] [ %(message)s ]'
+    logging.basicConfig( filename='.proxitable.log', level=logging.DEBUG, format=LOGFORMAT )
     logging.info( 'Started Launcher' ) 
     # Setup the launcher
     self.imod    = None
@@ -35,8 +35,10 @@ class Launch( object ):
     
   # Test code
   def test( self ):
-    for x in self.games:
-      self.__runGame( x )
+    while True:
+      for x in self.games:
+        self.__runGame( x )
+        sleep( 5 )
 
   def __loadGames( self ):
     games = []
@@ -88,26 +90,29 @@ class Launch( object ):
         try:
           size = con.recv( 4 )
           while len( size ) > 0:
-            data = con.recv( struct.unpack( '>I', size )[ 0 ] )
-            if data != b'\xab\xba\xfa\xce':
-              self.omod.send( size + data )
-            else: 
+            size_int = struct.unpack( '>I', size )[ 0 ]
+            data = con.recv( size_int )
+            logging.debug( '[' + str( size_int ) + '] ' + str( data ) )
+            if data == b'\xab\xba\xfa\xce':
               # Game has said it is ready to recieve
               # so get a button pin reading and pass it on
               pin = self.imod.getButton()
+              logging.debug( 'rtr pin = %d', int( pin ) )
               con.send( struct.pack( '>I', pin ) )
+            else: 
+              self.omod.send( size + data )
             size = con.recv( 4 )
         except socket.error as e:
           logging.exception( 'Connection to %s failed', game.getName() )
       else:
         # Child - the game
-        sleep( 1 ) # Allow time for the listener to be set up
         try:
           game.connect( game.getName() + '_socket' )
         except socket.error as e:
           logging.exception( '%s failed to connect to launcher', game.getName() )
           sys.exit( 1 )
         game.run()
+        sys.exit( 1 )
     else:
       logging.error( 'No ouput module loaded' )
 

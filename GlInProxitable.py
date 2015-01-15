@@ -18,7 +18,7 @@ class GlInProxitable( GlInAbstract ):
   def getButton( self ):
     pin = 0
     while pin == 0:
-      pin = self.pes.getPin()
+      pin = int( self.pes.getPin() )
     return pin
 
   def cleanup( self ):

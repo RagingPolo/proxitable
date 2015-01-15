@@ -44,10 +44,12 @@ class CitIODSock( CitInAbstract, CitOutAbstract ):
 
   # args is an empty list to support the dynamic module loader
   def __init__( self, args ):
-    super().__init__( False ) # Call to CitInAbstract().__init__()
+    CitInAbstract.__init__( self, False )
+    CitOutAbstract.__init__( self )
     self.__sock = None
     self.ai = False
-    self.points = 50
+    self.__points = 50
+    self.__last = 1
 
   def connect( self, addr ):
     try:
@@ -61,9 +63,13 @@ class CitIODSock( CitInAbstract, CitOutAbstract ):
     return False
 
   def newGame( self ):
+    # Clear anything that may or may not be on the browser
+    self.__send( self.__genJsonBytes( 'R', '#game-css', '' ) )
+    self.__send( self.__genJsonBytes( 'R', '#game-html', '' ) )
+    self.__send( self.__genJsonBytes( 'R', '#game-io', '' ) )
+    # Now send the game starting state
     self.__send( self.__genJsonBytes( 'R', '#game-css', self.CSS ) )
     self.__send( self.__genJsonBytes( 'R', '#game-html', self.HTML ) )
-    self.__send( self.__genJsonBytes( 'R', '#game-io', '' ) )
 
   # Send the current game state to the wssocket server
   def showState( self, pos, p1p, p2p, p1m, p2m ):
@@ -85,7 +91,7 @@ class CitIODSock( CitInAbstract, CitOutAbstract ):
 
   # Listen for input from the proxitable
   def getMove( self, name, points, last ):
-    move = self.points
+    move = self.__last
     self.__send( self.__genJsonBytes( 'R', '#game-io', self.MOVE ) )
     # Send availble points to the browser
     self.__send( self.__genJsonBytes( 'R', '#move', str( move ) ) )
@@ -95,15 +101,18 @@ class CitIODSock( CitInAbstract, CitOutAbstract ):
       self.__sendReadyToRecieve()
       pin = self.__recv()
       # If up/down adjust output display accordingly
-      if pin == 65: # Up
-        if move < self.points:
+      if pin == 23: # Up
+        if move < self.__points:
           move += 1
           self.__send( self.__genJsonBytes( 'R', '#move', str( move ) ) )
-      elif pin == 66: # Down
-        if move > 0:
+      elif pin == 18: # Down
+        if move > 1:
           move -= 1
           self.__send( self.__genJsonBytes( 'R', '#move', str( move ) ) )
     self.__send( self.__genJsonBytes( 'R', '#move', '' ) )
+    # Record values ready for next turn before returning move to game
+    self.__points -= move
+    self.__last = move
     return move
 
   # Construct the json to be sent by the wssocket server
@@ -118,13 +127,14 @@ class CitIODSock( CitInAbstract, CitOutAbstract ):
       self.__sock.send( size + data )
 
   def __sendReadyToRecieve( self ):
-    self.__sock.send( b'\xab\xba\xfa\xce' )
+    logging.debug( '' )
+    self.__send( b'\xab\xba\xfa\xce' )
   
   # Recieve a selected pin number
   def __recv( self ):
     if self.__sock is not None:
       pin = self.__sock.recv( 4 )
       if len( pin ) != 4:
-        print( len( pin ) )
+        logging.debug( 'pin len = ' + str( len( pin ) ) )
       return int( struct.unpack( '>I', pin )[ 0 ] )
 # ------------------------------------
