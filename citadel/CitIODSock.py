@@ -5,6 +5,9 @@ import struct
 import json
 import logging
 
+# TODO Some of these methods will apply to any game using the
+# proxitable and game launcher -> make a parent class
+
 class CitIODSock( CitInAbstract, CitOutAbstract ):
 
   CSS = """.display { background-color: #0000AF; color: #FFF; vertical-align: middle; float: left; -webkit-border-radius: 1%; -moz-border-radius: 1%; border-radius: 10px; }
@@ -34,6 +37,8 @@ class CitIODSock( CitInAbstract, CitOutAbstract ):
 </div>"""
   MOVE = """<center><h1 id="move"></h1></center>"""
 
+  PIN_TURN_ON = [ 5, 16, 22 ]
+
   # Overiding __new__ to enforce a singleton design pattern
   __instance = None
   def __new__( cls, val ):
@@ -62,7 +67,16 @@ class CitIODSock( CitInAbstract, CitOutAbstract ):
       logging.exception( 'Connection error' )
     return False
 
+  # Return a serialised list of pin numbers to turn on for the game
+  def getTurnOnPins( self ):
+    pins = []
+    for pin in self.PIN_TURN_ON:
+      pins.append( struct.pack( '>I', pin ) )
+    return b''.join( pins )  
+
   def newGame( self ):
+    # Tell the launcher which pins need to be set to high
+    self.__send( self.getTurnOnPins() )
     # Clear anything that may or may not be on the browser
     self.__send( self.__genJsonBytes( 'R', '#game-css', '' ) )
     self.__send( self.__genJsonBytes( 'R', '#game-html', '' ) )
@@ -91,7 +105,7 @@ class CitIODSock( CitInAbstract, CitOutAbstract ):
 
   # Listen for input from the proxitable
   def getMove( self, name, points, last ):
-    move = self.__last
+    move = self.__last if self.__last <= self.__points else self.__points
     self.__send( self.__genJsonBytes( 'R', '#game-io', self.MOVE ) )
     # Send availble points to the browser
     self.__send( self.__genJsonBytes( 'R', '#move', str( move ) ) )

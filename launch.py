@@ -11,6 +11,7 @@ from GlOutAbstract import GlOutAbstract
 from GlInAbstract import GlInAbstract
 from GlOutWss import GlOutWss
 from GlInProxitable import GlInProxitable
+# import RPi.GPIO as GPIO
 # ------------------------------------
 # CLASS Launcher
 #
@@ -32,6 +33,26 @@ class Launch( object ):
     self.omod    = None
     self.timeout = timeout
     self.games = self.__loadGames()
+    #self.__setupGPIO()
+
+#  def __setupGPIO.IN self ):
+#    GPIO.setmode( GPIO.BOARD )
+#    GPIO.setup( 5, GPIO.OUT )
+#    GPIO.setup( 7, GPIO.IN )
+#    GPIO.setup( 8, GPIO.OUT )
+#    GPIO.setup( 10, GPIO.IN )
+#    GPIO.setup( 11, GPIO.OUT )
+#    GPIO.setup( 12, GPIO.IN )
+#    GPIO.setup( 13, GPIO.OUT )
+#    GPIO.setup( 15, GPIO.IN )
+#    GPIO.setup( 16, GPIO.OUT )
+#    GPIO.setup( 18, GPIO.IN )
+#    GPIO.setup( 19, GPIO.OUT )
+#    GPIO.setup( 21, GPIO.IN )
+#    GPIO.setup( 22, GPIO.OUT )
+#    GPIO.setup( 23, GPIO.IN )
+#    GPIO.setup( 24, GPIO.OUT )
+#    GPIO.setup( 26, GPIO.IN )
     
   # Test code
   def test( self ):
@@ -88,6 +109,9 @@ class Launch( object ):
         except socket.error as e:
           logging.exception( 'Failed to recieve connection from %s', game.getName() )
         try:
+          # Get the PES pins that need turning on
+          self.__setPesPins( con, game.getName() )
+          # Start Game IO
           size = con.recv( 4 )
           while len( size ) > 0:
             size_int = struct.unpack( '>I', size )[ 0 ]
@@ -115,6 +139,31 @@ class Launch( object ):
         sys.exit( 1 )
     else:
       logging.error( 'No ouput module loaded' )
+
+  # Get which pins need turing on from the game
+  # and set them to high
+  def __setPesPins( self, con, name ):
+    try:
+      size = con.recv( 4 )
+      if len( size ) > 0:
+        size_int = struct.unpack( '>I', size )[ 0 ]
+        pinsBytes = con.recv( size_int )
+        # Make the struct fmt
+        length = int( len( pinsBytes ) / 4 )
+        fmt = []
+        fmt.append( '>' )
+        for i in range( length ):
+          fmt.append( 'I' )
+        # trim pinBytes and convert to tuple
+        pins = struct.unpack( ''.join( fmt ), pinsBytes[ : length * 4 ] )
+        # set all pins in tuple to high
+        for pin in pins:
+          pass
+          # GPIO.output( pin, True )
+      else:
+        logging.warning( 'Failed to recieve game pins list' )
+    except socket.error as e:
+      logging.exception( '%s connection failed', name )
 
   # Load specified io module and instantiate with givern args
   def __setupIOModule( self, line ):
