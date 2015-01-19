@@ -39,7 +39,7 @@ def main():
     GPIO.output(5,True) ## A button (8)
 
     ## while statement to constantly run, outputting various messages
-    while True:
+    while true:
         if GPIO.input(26):
             print("Left button")
         elif GPIO.input(23):
