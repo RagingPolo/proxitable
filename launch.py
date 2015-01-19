@@ -1,4 +1,4 @@
-#!/usr/bin/env python3
+#!/opt/python3.4/bin/python3.4
 import os
 import sys
 import struct
@@ -11,7 +11,7 @@ from GlOutAbstract import GlOutAbstract
 from GlInAbstract import GlInAbstract
 from GlOutWss import GlOutWss
 from GlInProxitable import GlInProxitable
-# import RPi.GPIO as GPIO
+import RPi.GPIO as GPIO
 # ------------------------------------
 # CLASS Launcher
 #
@@ -23,6 +23,9 @@ from GlInProxitable import GlInProxitable
 # ------------------------------------
 class Launch( object ):
 
+  PIN_IN  = [ 26, 23, 21, 18, 15, 12, 10, 7 ]
+  PIN_OUT = [ 24, 22, 19, 16, 13, 11, 8, 5 ]
+
   def __init__( self, timeout=10 ):
     # Start the logger
     LOGFORMAT = '[ %(levelname)s ] [ %(asctime)-15s ] [ %(process)d ] [ %(module)s.%(funcName)s() ] [ %(message)s ]'
@@ -33,27 +36,15 @@ class Launch( object ):
     self.omod    = None
     self.timeout = timeout
     self.games = self.__loadGames()
-    #self.__setupGPIO()
+    self.__setupGPIO()
 
-#  def __setupGPIO.IN self ):
-#    GPIO.setmode( GPIO.BOARD )
-#    GPIO.setup( 5, GPIO.OUT )
-#    GPIO.setup( 7, GPIO.IN )
-#    GPIO.setup( 8, GPIO.OUT )
-#    GPIO.setup( 10, GPIO.IN )
-#    GPIO.setup( 11, GPIO.OUT )
-#    GPIO.setup( 12, GPIO.IN )
-#    GPIO.setup( 13, GPIO.OUT )
-#    GPIO.setup( 15, GPIO.IN )
-#    GPIO.setup( 16, GPIO.OUT )
-#    GPIO.setup( 18, GPIO.IN )
-#    GPIO.setup( 19, GPIO.OUT )
-#    GPIO.setup( 21, GPIO.IN )
-#    GPIO.setup( 22, GPIO.OUT )
-#    GPIO.setup( 23, GPIO.IN )
-#    GPIO.setup( 24, GPIO.OUT )
-#    GPIO.setup( 26, GPIO.IN )
-    
+  def __setupGPIO( self ):
+    GPIO.setmode( GPIO.BOARD )
+    for pin in self.PIN_IN:
+      GPIO.setup( pin, GPIO.IN )
+    for pin in self.PIN_OUT:
+      GPIO.setup( pin, GPIO.OUT )
+
   # Test code
   def test( self ):
     while True:
@@ -118,6 +109,7 @@ class Launch( object ):
             data = con.recv( size_int )
             logging.debug( '[' + str( size_int ) + '] ' + str( data ) )
             if data == b'\xab\xba\xfa\xce':
+              logging.debug( 'Lets recieve stuff...' )
               # Game has said it is ready to recieve
               # so get a button pin reading and pass it on
               pin = self.imod.getButton()
@@ -157,9 +149,11 @@ class Launch( object ):
         # trim pinBytes and convert to tuple
         pins = struct.unpack( ''.join( fmt ), pinsBytes[ : length * 4 ] )
         # set all pins in tuple to high
-        for pin in pins:
-          pass
-          # GPIO.output( pin, True )
+        for pin in self.PIN_OUT:
+          if pin in pins:
+            GPIO.output( pin, True )
+          else:
+            GPIO.output( pin, False )
       else:
         logging.warning( 'Failed to recieve game pins list' )
     except socket.error as e:
