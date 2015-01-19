@@ -4,13 +4,13 @@
 #                                                                 |
 # To run game: python3 path/to/Citadel.py                         |
 # -----------------------------------------------------------------
-import CitGame
+import CitOutTerminal as CitGame
 # Import desired output class here
 #from CitOutSock import CitOutSock as Output
 from CitOutTerminal import CitOutTerminal as Output
 # Import desired imput classes here
 from CitInTerminal import CitInTerminal as Input1
-from CitInBot import CitInBot as Input2
+from CitInBotNew import CitInBotNew as Input2
 # -----------------------------------------------------------------
 game = CitGame.CitGame()
 game.setInput( 1, Input1() ) # '.CitBot2.pkl', 3 ) ) 

@@ -18,15 +18,15 @@ class CitInBot( CitInAbstract.CitInAbstract ):
     # Initialise the random number generator
     random.seed( urandom( 128 ) )
     # Store class attributes
-    self.__pos      = 3
+    self.__pos = 3
     self.__opPoints = 50
     self.__filename = args[ 0 ]
     self.__variance = int( args[ 1 ] )
-	self.__onethird = 1 / 3
-	self.__twothirds = 2 / 3
-	self.__onequarter = 1 / 4
-	self.__twoquarter = 2 / 4
-	self.__threequarter = 3 / 4
+    self.__onethird = 1/3
+    self.__twothirds = 2/3
+    self.__onequarter = 1/4
+    self.__twoquarter = 2/4
+    self.__threequarter = 3/4
     # Setup mode
     self.__opLast = list()
     self.__mode = Enum( 'mode', 'UNK DEF AGR' )
@@ -89,62 +89,57 @@ class CitInBot( CitInAbstract.CitInAbstract ):
 	# Check history for previous turns on this position
     total = 0
     count = 0
-	for turn in self.__history:
+    for turn in self.__history:
       if turn[ 4 ] == self.__pos:
         total += turn[ 3 ]
-        count += 1
-	
-	# if points are 50 and position is 3, must be start of game, random between 1 and 9	
-	if ( points == 50 and self.__pos == 3):
-		random.randint(1,9)
-		
-	if ( self.__pos == 1 ):
-		# if loss is inevitable, lose
-		if ( points < self.opPoints ):
-			move = points
-		# if opponents points are less than one quarter, play one quarter of points
-		elif ( ( points * self.__onequarter ) > self.opPoints ):
-			move = points * self.__onequarter
-		# if opponents points are less than one third, play one third of points
-		elif ( ( points * self.__onethird ) > self.opPoints ):
-			move = points * self.__onethird
-		# if opponents points are less half, play one half of points
-		elif ( ( points * self.__twoquarter ) > self.opPoints ):
-			move = points * self.__twoquarter
-		# if opponents points are less than two thirds, play one third of points
-		elif ( ( points * self.__twothirds ) > self.opPoints ):
-			move = points * self.__twothirds
-		# if opponents points are less than three quarters, play three quarters of points
-		elif ( ( points * self.__threequarter ) > self.opPoints ):
-			move = points * self.__threequarter
-		############################# placeholder move #############################
-		else:
-			move = points * self.__twoquarter
-	elif ( self.__pos == 2 ):
-		# if opponents points are more than two thirds, play one third of points
-		if ( ( points * self.__twothirds ) < self.opPoints ):
-			move = points * self.__onethird
-		############################# placeholder move #############################
-		else:
-			move = points * self.__twoquarter
-	elif ( self.__pos == 3 ):
-		# if points are 50 at pos 3, must be start of game, random between 1 and 9	
-		if ( points == 50 ):
-			random.randint(1,9)
-		############################# placeholder move #############################
-		else:
-			move = points * self.__twoquarter
-	elif ( self.__pos == 4 ):
-	    ############################# placeholder move #############################
-		move = points * self.__twoquarter
-	elif ( self.__pos == 5 ):
-		# if win is possible, just win
-		if ( points > self.__opPoints ):
-			move = self.__opPoints + 1		
-		# otherwise, trick the opponent
-		elif ( points < self.__opPoints ):
-			move = points * self.__onequarter
-		############################# placeholder move #############################
-		else:
-			move = points * self.__twoquarter
-    return int( move )	
+        count += 1		
+        if ( self.__pos == 1 ):
+                # if loss is inevitable, lose
+                if ( points < self.opPoints ):
+                        move = points
+                # if opponents points are less than one quarter, play one quarter of points
+                elif ( ( points * self.__onequarter ) > self.opPoints ):
+                        move = points * self.__onequarter
+                # if opponents points are less than one third, play one third of points
+                elif ( ( points * self.__onethird ) > self.opPoints ):
+                        move = points * self.__onethird
+                # if opponents points are less half, play one half of points
+                elif ( ( points * self.__twoquarter ) > self.opPoints ):
+                        move = points * self.__twoquarter
+                # if opponents points are less than two thirds, play one third of points
+                elif ( ( points * self.__twothirds ) > self.opPoints ):
+                        move = points * self.__twothirds
+                # if opponents points are less than three quarters, play three quarters of points
+                elif ( ( points * self.__threequarter ) > self.opPoints ):
+                        move = points * self.__threequarter
+                ############################# placeholder move #############################
+                else:
+                        move = points * self.__twoquarter
+        elif ( self.__pos == 2 ):
+                # if opponents points are more than two thirds, play one third of points
+                if ( ( points * self.__twothirds ) < self.opPoints ):
+                        move = points * self.__onethird
+                ############################# placeholder move #############################
+                else:
+                        move = points * self.__twoquarter
+        elif ( self.__pos == 3 ):
+                # if points are 50 at pos 3, must be start of game, random between 1 and 9	
+                if ( points == 50 ):
+                        random.randint(1,9)
+                ############################# placeholder move #############################
+                else:
+                        move = points * self.__twoquarter
+        elif ( self.__pos == 4 ):
+                ############################# placeholder move #############################
+                move = points * self.__twoquarter
+        elif ( self.__pos == 5 ):
+                # if win is possible, just win
+                if ( points > self.__opPoints ):
+                        move = self.__opPoints + 1		
+                # otherwise, trick the opponent
+                elif ( points < self.__opPoints ):
+                        move = points * self.__onequarter
+                ############################# placeholder move #############################
+                else:
+                        move = points * self.__twoquarter
+        return int( move )	
