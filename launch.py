@@ -12,32 +12,36 @@ from GlInAbstract import GlInAbstract
 from GlOutWss import GlOutWss
 from GlInProxitable import GlInProxitable
 import RPi.GPIO as GPIO
-# ------------------------------------
+import atexit
+# --------------------------------------------------------------------------- #
 # CLASS Launcher
 #
-# Load input and output modules. Load
-# available games, launch selected 
-# game and support its IO when 
-# requested. Regain execution when 
-# game finishes
-# ------------------------------------
+# Load input and output modules. Load available games, launch games on request. 
+# Run games in forked child handling IO with game and the output and input 
+# modules.
+# --------------------------------------------------------------------------- #
 class Launch( object ):
 
   PIN_IN  = [ 26, 23, 21, 18, 15, 12, 10, 7 ]
   PIN_OUT = [ 24, 22, 19, 16, 13, 11, 8, 5 ]
 
-  def __init__( self, timeout=10 ):
+  # Sets up the system wide logging, initialises the GPIO pins needed for the 
+  # PES input. Searches for and load availible games
+  def __init__( self ):
     # Start the logger
-    LOGFORMAT = '[ %(levelname)s ] [ %(asctime)-15s ] [ %(process)d ] [ %(module)s.%(funcName)s() ] [ %(message)s ]'
-    logging.basicConfig( filename='.proxitable.log', level=logging.DEBUG, format=LOGFORMAT )
+    LOGFORMAT = ( '[ %(levelname)s ] [ %(asctime)-15s ] [ %(process)d ] [ '
+                  '%(module)s.%(funcName)s() ] [ %(message)s ]' )
+    logging.basicConfig( filename='.proxitable.log', level=logging.DEBUG,
+                         format=LOGFORMAT )
     logging.info( 'Started Launcher' ) 
     # Setup the launcher
     self.imod    = None
     self.omod    = None
-    self.timeout = timeout
-    self.games = self.__loadGames()
+    self.games   = self.__loadGames()
     self.__setupGPIO()
+    atexit.register( self.cleanup )
 
+  # Sets up the required GPIO pins
   def __setupGPIO( self ):
     GPIO.setmode( GPIO.BOARD )
     for pin in self.PIN_IN:
@@ -45,22 +49,28 @@ class Launch( object ):
     for pin in self.PIN_OUT:
       GPIO.setup( pin, GPIO.OUT )
 
-  # Test code
-  def test( self ):
+  # XXX Pre games menu code. Will launch the next availble game continuosly
+  def loopGames( self ):
     while True:
       for x in self.games:
         self.__runGame( x )
         sleep( 5 )
 
+  # Called by __init__() to look for games in sub folders of current working
+  # directory. Dynamically loads games and imports the correct modules based
+  # on the provided config file.
+  # @returns - list of game objects
   def __loadGames( self ):
     games = []
     for d in os.walk( '.' ).__next__()[ 1 ]:
+      # The files main.py and main.conf are required for dynamic game loading
       if ( os.path.isfile( d + '/main.py' ) and
            os.path.isfile( d + '/main.conf' ) ):
         try:
           # Add game folder to the python path and load the main module
           sys.path.append( os.path.abspath( d ) )
-          mod = importlib.machinery.SourceFileLoader( 'Main', d + '/main.py' ).load_module()
+          mod = importlib.machinery.SourceFileLoader( 'Main', d +
+                                                      '/main.py' ).load_module()
           game = mod.Main()
           # Set up input and output from config file
           with open( d + '/main.conf' ) as ioConf:
@@ -79,6 +89,12 @@ class Launch( object ):
     logging.info( '%d games loaded', len( games ) )
     return games
 
+  # Sets up a unix domain socket for comms with the givern game. Forks and
+  # calls the games .run() method in the child. Parent will recieve game output
+  # and pass it on the launchers output module until the game says it is ready
+  # to recieve some input. Launcher will check for input and pass it on before
+  # returning to listening for output.
+  #  @game - game object to be run
   def __runGame( self, game ):
     if self.omod is not None:
       try:
@@ -90,7 +106,8 @@ class Launch( object ):
         sock = socket.socket( socket.AF_UNIX, socket.SOCK_STREAM )
         sock.bind( game.getName() + '_socket' )
       except socket.error as e:
-        logging.exception( 'Failed to create unix socket for %s', game.getName() )
+        logging.exception( 'Failed to create unix socket for %s', 
+                                                              game.getName() )
         return
       if os.fork() > 0:
         # Parent - game launcher
@@ -98,7 +115,8 @@ class Launch( object ):
           sock.listen( 1 )
           con, client = sock.accept()
         except socket.error as e:
-          logging.exception( 'Failed to recieve connection from %s', game.getName() )
+          logging.exception( 'Failed to recieve connection from %s',
+                                                              game.getName() )
         try:
           # Get the PES pins that need turning on
           self.__setPesPins( con, game.getName() )
@@ -122,18 +140,22 @@ class Launch( object ):
           logging.exception( 'Connection to %s failed', game.getName() )
       else:
         # Child - the game
+        # Try to setup the connection back to the parent and then game the run()
+        # method. call exit() when finished to avoid multiple copies of the game
+        # launcher running.
         try:
           game.connect( game.getName() + '_socket' )
         except socket.error as e:
-          logging.exception( '%s failed to connect to launcher', game.getName() )
+          logging.exception( '%s failed to connect to launcher',
+                                                             game.getName() )
           sys.exit( 1 )
         game.run()
         sys.exit( 1 )
     else:
       logging.error( 'No ouput module loaded' )
 
-  # Get which pins need turing on from the game
-  # and set them to high
+  # __runGame() helper method. Asks the game which pins are required for input
+  # and turns them on. Makes sure that all others are off
   def __setPesPins( self, con, name ):
     try:
       size = con.recv( 4 )
@@ -159,7 +181,10 @@ class Launch( object ):
     except socket.error as e:
       logging.exception( '%s connection failed', name )
 
-  # Load specified io module and instantiate with givern args
+  # Using the information found in main.conf dynamicallyload the specified IO
+  # module. Extract the args from the serialised list in format of [arg,arg,...]
+  #  @line    - Line from main.conf containing module name and args list
+  #  @returns - The loaded module or None on failure
   def __setupIOModule( self, line ):
     io = line.rstrip().split( ':' )
     if len( io ) > 1:
@@ -172,15 +197,23 @@ class Launch( object ):
     return None
 
   # Return a callable object from the imported module
+  # __setupIOModule() helper method. Gets a callable object of givern module
+  #  @name    - name of module to load
+  #  @returns - callable object 
   def __importClass( self, name ):
     mod = importlib.import_module( name )
     return getattr( mod, name )
 
-  # Using information from the games object generate
-  # the load menu to be displayed to the user
+  # TODO Phase 2 method
+  # Generate the required CSS/HTML to produce a tiled menu featuring all loaded
+  # games. Output the menu and handle input launching selected game when
+  # selected.
+  # XXX Could implement konami code easter egg on the main menu ^^vv<><>BA 
   def genMenu( self ):
     pass
-
+  
+  # Validate against the Abstract input class and set as the game launchers
+  # input module
   def setInputMod( self, imod ):
     if isinstance( imod, GlInAbstract ):
       self.imod = imod
@@ -188,13 +221,16 @@ class Launch( object ):
     else:
       logging.warning( 'Invalid input module' )
 
+  # Validate against the Abstract output class and set as the game launchers
+  # output module
   def setOutputMod( self, omod ):
     if isinstance( omod, GlOutAbstract ):
       self.omod = omod
       logging.info( 'Output module set to: %s', omod.getName() )
     else:
       logging.warning( 'Invalid output module' ) 
- 
+
+  # Call the IO module cleanup modules. Should be set to be called on exit 
   def cleanup( self ):
     if self.imod is not None:
       self.imod.cleanup()
@@ -206,5 +242,4 @@ if __name__ == '__main__':
   launch = Launch()
   launch.setOutputMod( GlOutWss( '', 9000 ) )
   launch.setInputMod( GlInProxitable() )
-  launch.test()
-  launch.cleanup()
+  launch.loopGames()
