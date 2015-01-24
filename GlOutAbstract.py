@@ -8,10 +8,14 @@ from abc import ABCMeta, abstractmethod
 class GlOutAbstract( object ):
   __metaclass__ = ABCMeta
 
-  # Return the name of the output module
+  # Return the name of the output module, used for logging
   @abstractmethod
   def getName( self ):
-    pass
+    return 'Game Launcher Abstract Output - Module name not defined'
+
+  # Overiding the object.__str__() with module name
+  def __str__( self ):
+    return self.getName()
 
   # Send 'msg' to output device
   @abstractmethod

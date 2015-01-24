@@ -1,24 +1,23 @@
 from GlInAbstract import GlInAbstract
-from ProxitableSim import ProxitableSim
 import RPi.GPIO as GPIO
 from time import sleep
 
-# Interface with the proxitable hardware and poll
-# for button presses on request
+# --------------------------------------------------------------------------- #
+# CLASS GlInProcitable
+# Interface with the hardware based Proxitable controller. Will check for input
+# buttons on request
+# --------------------------------------------------------------------------- #
 class GlInProxitable( GlInAbstract ):
 
+  # Relevent pins for input from the PES hardware
   PINS = [ 12, 23, 18, 21, 26, 7, 10, 15 ]
 
-#  def __init__( self ):
-#    self.pes = ProxitableSim()
-
-  def __str__( self ):
-    return self.getName()
-
+  # Define the name of the module
   def getName( self ):
     return 'Game Launcher Proxitable Input Module'
 
-  # Keep polling for a button until one is pressed
+  # When a button press is requested keep polling the GPIO pins until one is
+  # high signifying a button has been pressed
   def getButton( self ):
     pin = 0
     while pin == 0:
@@ -27,9 +26,8 @@ class GlInProxitable( GlInAbstract ):
           pin = i
           break
       sleep( 0.1 )
-      #pin = int( self.pes.getPin() )
     return pin
 
+  # Stub as this module does not require any cleanup actions
   def cleanup( self ):
     pass
-    #self.pes.closeThreads()

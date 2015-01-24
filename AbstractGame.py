@@ -10,6 +10,7 @@ from abc import ABCMeta, abstractmethod
 #   Line 2: Player two input module
 #   Line 3: Game output module 
 #   Line format - <module name>:[args,...]
+# A simlink to this abstract class file is also required in the games directory
 # --------------------------------------------------------------------------- #
 class AbstractGame( object ):
   __metaclass__ = ABCMeta

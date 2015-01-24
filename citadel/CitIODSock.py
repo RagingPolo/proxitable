@@ -150,5 +150,6 @@ class CitIODSock( CitInAbstract, CitOutAbstract ):
       pin = self.__sock.recv( 4 )
       if len( pin ) != 4:
         logging.debug( 'pin len = ' + str( len( pin ) ) )
+        return 0
       return int( struct.unpack( '>I', pin )[ 0 ] )
 # ------------------------------------

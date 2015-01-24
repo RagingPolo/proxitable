@@ -11,8 +11,12 @@ class GlInAbstract( object ):
   # Return the name of the module for logging
   @abstractmethod
   def getName( self ):
-    pass
+    return 'Game Launcher Abstract Input - Module name not defined'
  
+  # Overiding the object.__str__() with module name
+  def __str__( self ):
+    return self.getName()
+  
   # return a pin number representing a button
   @abstractmethod
   def getButton( self ):
