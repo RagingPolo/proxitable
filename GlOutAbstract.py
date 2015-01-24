@@ -1,5 +1,10 @@
 from abc import ABCMeta, abstractmethod
 
+# --------------------------------------------------------------------------- #
+# CLASS GlOutAbstract
+# Abstract class for Game Launcher Ouput module. Defines required methods to
+# be called by the launcher. Other private methods can be added.
+# --------------------------------------------------------------------------- #
 class GlOutAbstract( object ):
   __metaclass__ = ABCMeta
 

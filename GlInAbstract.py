@@ -1,5 +1,10 @@
 from abc import ABCMeta, abstractmethod
   
+# --------------------------------------------------------------------------- #
+# CLASS GlInAbstract
+# Abstract class for Game Launcher Input module. Defines required methods to
+# be called by the launcher. Other private methods can be added.
+# --------------------------------------------------------------------------- #
 class GlInAbstract( object ):
   __metaclass__ = ABCMeta
 
