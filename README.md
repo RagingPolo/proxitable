@@ -48,3 +48,35 @@ The object of the game is to sink the opponents fleet before they sink yours. Th
 <h3>TicTacToe Rules:</h3>
 
 <hr />
+
+<h3>Startup</h3>
+
+ * Connect hardware (PES, arduino, RasberryPi, TV/Monitor)
+ * Open wsserver/client.html in browser
+ * Start wsserver/wsserver.py
+ * Click connect button in browser
+ * Start launch.py
+ * Play games
+
+ System logs are found in .proxitable.log and .wsserver.log 
+
+<h3>System Architecture</h3>
+
+#--------------#     #-------#---------------#--------#     #-------------------#
+|              |     |       |               |        |     |                   |
+| PES HARDWARE | --> | INMOD | GAME LAUNCHER | OUTMOD | --> | WEB SOCKET SERVER |
+|              |     |       |               |        |     |                   |
+#--------------#     #-------#---------------#--------#     #-------------------#
+                                     ^                                |
+                                     |                                |
+                             -----------------                        v
+                             |               |                 #-------------#      
+                             v               ^                 |             |
+                         #-------#------#--------#             | WEB BROWSER |
+                         |       |      |        |-#           |             |
+                         | INMOD | GAME | OUTMOD | |-#         #-------------#
+                         |       |      |        | | |
+                         #-------#------#--------# | |
+                           #-------#------#--------# |
+                             #-------#------#--------#
+
