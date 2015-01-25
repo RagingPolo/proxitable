@@ -62,15 +62,15 @@ The object of the game is to sink the opponents fleet before they sink yours. Th
 
 <h3>System Architecture</h3>
 
+<pre>
 #--------------#     #-------#---------------#--------#     #-------------------#
 |              |     |       |               |        |     |                   |
 | PES HARDWARE | --> | INMOD | GAME LAUNCHER | OUTMOD | --> | WEB SOCKET SERVER |
 |              |     |       |               |        |     |                   |
-#--------------#     #-------#---------------#--------#     #-------------------#
-                                     ^                                |
+#--------------#     #-------#---------------#--------#     #-------------------#                                                                         ^                                |
                                      |                                |
                              -----------------                        v
-                             |               |                 #-------------#      
+                             |               |                 #-------------#
                              v               ^                 |             |
                          #-------#------#--------#             | WEB BROWSER |
                          |       |      |        |-#           |             |
@@ -79,4 +79,4 @@ The object of the game is to sink the opponents fleet before they sink yours. Th
                          #-------#------#--------# | |
                            #-------#------#--------# |
                              #-------#------#--------#
-
+</pre>
