@@ -42,7 +42,7 @@ class Main( AbstractGame ):
       self.showState()
       if ( self.__input[ self.P1 ].isAi() is True or
            self.__input[ self.P2 ].isAi() is True ):
-        sleep( 3 )
+        sleep( 1 )
       self.move( self.getMove( self.P1 ), self.getMove( self.P2 ) )
       winner = self.hasWinner()
     self.showState()
