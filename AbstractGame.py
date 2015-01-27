@@ -21,6 +21,8 @@ class AbstractGame( object ):
     pass
   
   # Set the games input module
+  #  @player - Player ( P1 | P2 ) the input is for
+  #  @input_ - The input module
   @abstractmethod
   def setInput( self, player, imod ):
     pass
@@ -31,6 +33,7 @@ class AbstractGame( object ):
     pass
 
   # Should call the output connect method
+  #  @omod - The output module
   @abstractmethod
   def connect( self, addr ):
     pass

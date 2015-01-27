@@ -7,33 +7,40 @@ import numbers
 import logging
 import sys
 from time import sleep
-# ------------------------------------
-# CLASS CitGame                      |
-#                                    |
-# Contains game logic and maintains  |
-# overall game state                 |
-# ------------------------------------
+# ---------------------------------------------------------------------------- #
+# CLASS Main ( citadel )
+# 
+# Contains game logic and maintains overall game state
+# ---------------------------------------------------------------------------- #
 class Main( AbstractGame ):
-
+  
+  # Initialise the game state attributes
   def __init__( self ):
-    self.P1 = 1
-    self.P2 = 2
-    self.__board = CitBoard()
-    self.__player = { self.P1 : CitPlayer( 'Player 1' ), self.P2 : CitPlayer( 'Player 2' ) }
+    self.P1       = 1
+    self.P2       = 2
+    self.__board  = CitBoard()
+    self.__player = { self.P1 : CitPlayer( 'Player 1' ),
+                                             self.P2 : CitPlayer( 'Player 2' ) }
     self.__output = None
-    self.__input = { self.P1 : None, self.P2 : None }
+    self.__input  = { self.P1 : None, self.P2 : None }
 
+  # Calls the output connect method
+  #  @addr - unix domain socket address
   def connect( self, addr ):
     if self.__output is not None:
       return self.__output.connect( addr )
     return False
 
+  # Overrides object.__str__() with game name
   def __str__( self ):
     return self.getName()
 
+  # Get the name of the game
+  #  @returns - name
   def getName( self ):
     return 'Citadel'
 
+  # Start the main game loop
   def run( self ):
     logging.info( '%s ] [ Started', self.getName() )
     winner = self.hasWinner()
@@ -49,7 +56,9 @@ class Main( AbstractGame ):
     logging.info( '%s ] [ Player %d Wins', self.getName(), winner )
     self.showResult()
   
-  # Set the desired move input module for the specified player ( P1 | P2 )
+  # Set the games input module
+  #  @player - Player ( P1 | P2 ) the input is for
+  #  @input_ - The input module
   def setInput( self, player, input_ ):
     if isinstance( input_, CitInAbstract ):
       try:
@@ -57,36 +66,41 @@ class Main( AbstractGame ):
       except KeyError:
         logging.warning( '%s ] [ Not a valid player', self.getName() )
     else:
-      logging.warning( '%s ] [ Not a valid input object: %s', self.getName(), str( input_ ) )
+      logging.warning( '%s ] [ Not a valid input object: %s', self.getName(),
+                                                                 str( input_ ) )
 
+  # Set the games output module
+  #  @omod - The output module
   def setOutput( self, output ):
     if isinstance( output, CitOutAbstract ):
       self.__output = output
     else:
-      logging.warning( '%s ] [ Not a valid output object: %s', self.getName(), str( output ) )
+      logging.warning( '%s ] [ Not a valid output object: %s', self.getName(),
+                                                                 str( output ) )
 
   # Play out a turn of the game
-  # p1m : Player ones move
-  # p2m : Player twos move
+  #  @p1m - Player ones move
+  #  @p2m - Player twos move
   def move( self, p1m, p2m ):
     if ( isinstance( p1m, numbers.Number ) and
          isinstance( p2m, numbers.Number ) ):
-      # AddMove() must not be called until both players moves have been recieved
       self.__player[ 1 ].addMove( p1m )
       self.__player[ 2 ].addMove( p2m )
       if p1m > p2m:
         self.__board.moveRight()
       elif p2m > p1m:
         self.__board.moveLeft()
-      logging.info( '%s ] [ Player 1 move: %d, Player 2 move: %d, Current board position: %d', self.getName(), p1m, p2m, self.__board.getPosition() )
+      logging.info( ( '%s ] [ Player 1 move: %d, Player 2 move: %d, Current '
+                      'board position: %d' ), self.getName(), p1m, p2m,
+                                                 self.__board.getPosition() )
     else:
       logging.warning( '%s ] [ Move was not a number', self.getName() )
 
-  # Check if there == a winner
-  # returns 0 : game not finished
-  #         1 : player one
-  #         2 : player two
-  #         3 : draw
+  # Check if there a winner
+  #  @returns - 0 : game not finished
+  #           - 1 : player one
+  #           - 2 : player two
+  #           - 3 : draw
   def hasWinner( self ):
     if self.__board.getPosition() == CitBoard.MAX:
       return 1
@@ -111,6 +125,7 @@ class Main( AbstractGame ):
     return 0
 
   # Get a move for the specified player using the players input module
+  #  @player - player ( P1 | P2 ) to get input for
   def getMove( self, player ):
     # Calculate opponent from player value, 
     opponent = 3 # if player is invalid opponent will stay invalid as 3
@@ -121,20 +136,24 @@ class Main( AbstractGame ):
     # Try and call the players input module
     try:
       if self.__input[ player ] is not None:
-        move = self.__input[ player ].getMove( self.__player[ player ].getName(),
-                                               self.__player[ player ].getPoints(),
-                                               self.__player[ opponent ].getLastMove() )
+        move = self.__input[ player ].getMove(
+                                              self.__player[ player ].getName(),
+                                            self.__player[ player ].getPoints(),
+                                       self.__player[ opponent ].getLastMove() )
       else:
-        logging.critical( '%s ] [ No input module for %s', self.getName(), self.__player[ player ].getName() )
+        logging.critical( '%s ] [ No input module for %s', self.getName(),
+                                             self.__player[ player ].getName() )
         sys.exit( 1 )
     except KeyError:
       logging.warning( '%s ] [ Not a valid player', self.getName() )
     return move
 
+  # Start the game by calling the output module new game method
   def newGame( self ):
     if self.__output is not None:
       self.__output.newGame()
 
+  # Display the current game state using the output module
   def showState( self ):
     if self.__output is not None:
       self.__output.showState( self.__board.getPosition(),
@@ -143,6 +162,7 @@ class Main( AbstractGame ):
                                self.__player[ 1 ].getLastMove(),
                                self.__player[ 2 ].getLastMove() )
 
+  # Show the games result using the games output module
   def showResult( self ):
     if self.__output is not None:
       self.__output.showResult( self.hasWinner() )

@@ -1,18 +1,19 @@
-import CitInAbstract
+from CitInAbstract import CitInAbstract
 import random
 import pickle
 import atexit
 from enum import Enum
 from os import urandom
-# --------------------------------------------------------------------------- #
+# ---------------------------------------------------------------------------- #
 # CLASS CitInBot
 #
 # Class creates a computer player moves
-# --------------------------------------------------------------------------- #
-class CitInBot( CitInAbstract.CitInAbstract ):
+# ---------------------------------------------------------------------------- #
+class CitInBot( CitInAbstract ):
 
   # Set up the input class with all of the required starting values then
   # attempt to load a history file or create a new one
+  #  @args - empty list (this allows for the use of the generic module loader)
   def __init__( self, args ):
     # Set as a ai player input
     super().__init__( True )
@@ -129,4 +130,4 @@ class CitInBot( CitInAbstract.CitInAbstract ):
       if move > points:
         move = points
     return int( move )
-# --------------------------------------------------------------------------- #
+# ---------------------------------------------------------------------------- #
