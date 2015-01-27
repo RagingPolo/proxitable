@@ -1,34 +1,46 @@
+#!/opt/python3.4/bin/python3.4
+import sys
 import struct
-import socketserver
-from base64 import b64encode
-from hashlib import sha1
-from email import message_from_string
-from io import StringIO
-from binascii import a2b_hex
 import socket
-from sys import exit
-import logging
+import loggingm
+import socketserver
+from io import StringIO
+from hashlib import sha1
+from binascii import a2b_hex
+from base64 import b64encode
+from email import message_from_string
 
+# --------------------------------------------------------------------------- #
+# CLASS wsserver
+#
+# Accepts websocket connections from a browser and act as an intermediary
+# between the game launcher and the browser.
+# --------------------------------------------------------------------------- #
 class wsserver( socketserver.StreamRequestHandler ):
 
+  # GUID as described in RFC 6455
   GUID = '258EAFA5-E914-47DA-95CA-C5AB0DC85B11'
+  # Port to listen for connections from the game launcher on 
   PORT = 9000
-  
+ 
+  # Called before the server is started, sets up server specific logging and
+  # class atrributes
   def setup( self ):
     # Setup logging
-    LOGFORMAT = '[ %(levelname)s ] [ %(asctime)-15s ] [ %(module)s.%(funcName)s() ] [ %(message)s ]'
-    logging.basicConfig( filename='.wsserver.log', level=logging.INFO, format=LOGFORMAT )
+    LOGFORMAT = ( '[ %(levelname)s ] [ %(asctime)-15s ] '
+                  '[ %(module)s.%(funcName)s() ] [ %(message)s ]' )
+    logging.basicConfig( filename='.wsserver.log', level=logging.INFO,
+                                                              format=LOGFORMAT )
     logging.info( 'Wsserver started' )
     # Setup server
     socketserver.StreamRequestHandler.setup( self )
-    self.handshake = False
+    self.handshake = False # Has the web socket handshake happened yet
     self.lsock     = False # Socket for listening to connections from games
     self.gsock     = False # Active socket for a connected game
 
-  # Main loop once server is up and running
-  # Output modules can pass msgs to the server
-  # using a local socket connection and the server 
-  # forward them on to the client browser
+  # Main loop once server is up and running. Output modules can pass msgs to
+  # the server using a local socket connection and the server forward them on
+  # to the client browser
   def handle( self ):
     while True:
       if self.lsock is False:
@@ -41,7 +53,7 @@ class wsserver( socketserver.StreamRequestHandler ):
         except socket.error as e:
           logging.execption( 'Wsserver startup failed' )
           self.lsock.close()
-          exit( 1 )
+          sys.exit( 1 )
       elif self.handshake is False:
         self.doHandshake()
       else:
@@ -54,7 +66,6 @@ class wsserver( socketserver.StreamRequestHandler ):
           # Wait for data from output modules to pass onto client
           # Incomming messages in format of:
           # [ size ][ data ] size os 4 bytes big endian, data is of size bytes
-          # TODO This is currently very naive and will crap out on any error
           size = self.gsock.recv( 4 )
           if len( size ) > 0:
             size = struct.unpack( '>I', size )[ 0 ]
@@ -87,8 +98,10 @@ class wsserver( socketserver.StreamRequestHandler ):
       response = ''.join( response )
       print( response )
       self.handshake = self.request.send( bytes( response, 'utf-8' ) )
-      logging.info( 'web socket connect established using client key: %s', hdrs[ 'Sec-WebSocket-Key' ] )
- 
+      logging.info( 'web socket connect established using client key: %s',
+                                                   hdrs[ 'Sec-WebSocket-Key' ] )
+
+  # Construct a message with preceeded by size and pass it on to the browser
   def sendMsg( self, msg ):
     if isinstance( msg, str ):
       msg = bytes( msg, 'utf-8' )
@@ -102,6 +115,7 @@ class wsserver( socketserver.StreamRequestHandler ):
     self.request.send( hdr + msg )
     logging.debug( 'Msg sent' )
 
+# Start the server and serve indefinitely
 if __name__ == '__main__':
   server = socketserver.TCPServer( ( 'localhost', 8000 ), wsserver )
   try:
