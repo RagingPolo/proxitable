@@ -1,17 +1,18 @@
 import CitInAbstract
-from os import urandom
 import random
 import pickle
 import atexit
 from enum import Enum
-# ------------------------------------
-# CLASS CitInBot                     |
-#                                    |
-# Class creates computyer player     |
-# moves                              |
-# ------------------------------------
+from os import urandom
+# --------------------------------------------------------------------------- #
+# CLASS CitInBot
+#
+# Class creates a computer player moves
+# --------------------------------------------------------------------------- #
 class CitInBot( CitInAbstract.CitInAbstract ):
 
+  # Set up the input class with all of the required starting values then
+  # attempt to load a history file or create a new one
   def __init__( self, args ):
     # Set as a ai player input
     super().__init__( True )
@@ -34,6 +35,7 @@ class CitInBot( CitInAbstract.CitInAbstract ):
       self.__history = list()
     atexit.register( self.saveHistory )
 
+  # Save the internal records to file
   def saveHistory( self ):
     # Trim history list to at most last 100 turns
     if len( self.__history ) > 100:
@@ -43,6 +45,9 @@ class CitInBot( CitInAbstract.CitInAbstract ):
     with open( self.__filename, 'wb' ) as fd:
       pickle.dump( self.__history, fd )
 
+  # Updates historic data, attempts to judge opponents play style and the works
+  # out the next move to play
+  #  @returns - players next move
   def getMove( self, name, points, last=None ):
     # Store last turn, if there was one, in history
     if last is not None:
@@ -78,6 +83,9 @@ class CitInBot( CitInAbstract.CitInAbstract ):
     self.__myLast = move
     return move
 
+  # Calculate the next move based on current position, history and opponents 
+  # play style
+  #  @returns - players next move
   def __calculateMove( self, points ):
     # Check history for previous turns on this position
     total = 0
@@ -121,3 +129,4 @@ class CitInBot( CitInAbstract.CitInAbstract ):
       if move > points:
         move = points
     return int( move )
+# --------------------------------------------------------------------------- #
