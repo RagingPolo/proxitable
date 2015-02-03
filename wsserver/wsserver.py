@@ -2,7 +2,7 @@
 import sys
 import struct
 import socket
-import loggingm
+import logging
 import socketserver
 from io import StringIO
 from hashlib import sha1
