@@ -1,12 +1,9 @@
+from GlBasicGameIO import GlBasicGameIO
 from CitOutAbstract import CitOutAbstract
 from CitInAbstract import CitInAbstract
+import logging
 import socket
 import struct
-import json
-import logging
-
-# TODO Some of these methods will apply to any game using the
-# proxitable and game launcher -> make a parent class
 
 # ---------------------------------------------------------------------------- #
 # CLASS CitIOSock
@@ -14,7 +11,7 @@ import logging
 # Combines the input and output modules for the citadel game. This allows them
 # to share a socket for two way comms with the game launcher
 # ---------------------------------------------------------------------------- #
-class CitIODSock( CitInAbstract, CitOutAbstract ):
+class CitIODSock( CitInAbstract, CitOutAbstract, GlBasicGameIO ):
 
   CSS = ( '.display { background-color: #0000AF; color: #FFF; vertical-align:'
           ' middle; float: left; -webkit-border-radius: 1%; -moz-border-radius:'
@@ -89,14 +86,14 @@ class CitIODSock( CitInAbstract, CitOutAbstract ):
   # Display the game in it's starting state
   def newGame( self ):
     # Tell the launcher which pins need to be set to high
-    self.__send( self.getTurnOnPins() )
+    self.send( self.getTurnOnPins() )
     # Clear anything that may or may not be on the browser
-    self.__send( self.__genJsonBytes( 'R', '#game-css', '' ) )
-    self.__send( self.__genJsonBytes( 'R', '#game-html', '' ) )
-    self.__send( self.__genJsonBytes( 'R', '#game-io', '' ) )
+    self.send( self.genCmd( 'R', '#game-css', '' ) )
+    self.send( self.genCmd( 'R', '#game-html', '' ) )
+    self.send( self.genCmd( 'R', '#game-io', '' ) )
     # Now send the game starting state
-    self.__send( self.__genJsonBytes( 'R', '#game-css', self.CSS ) )
-    self.__send( self.__genJsonBytes( 'R', '#game-html', self.HTML ) )
+    self.send( self.genCmd( 'R', '#game-css', self.CSS ) )
+    self.send( self.genCmd( 'R', '#game-html', self.HTML ) )
 
   # Display the current game state
   #  @pos - board position : 0-6 
@@ -105,11 +102,11 @@ class CitIODSock( CitInAbstract, CitOutAbstract ):
   #  @p1m - player one last move : int
   #  @p2m - player two last move : int
   def showState( self, pos, p1p, p2p, p1m, p2m ):
-    self.__send( self.__genJsonBytes( 'R', '#p1_points', str( p1p ) ) )    
-    self.__send( self.__genJsonBytes( 'R', '#p2_points', str( p2p ) ) )
-    self.__send( self.__genJsonBytes( 'X', 'None', '$( ".position-display" )'
+    self.send( self.genCmd( 'R', '#p1_points', str( p1p ) ) )    
+    self.send( self.genCmd( 'R', '#p2_points', str( p2p ) ) )
+    self.send( self.genCmd( 'X', 'None', '$( ".position-display" )'
                                     '.css( "background-color", "#0000AF" );' ) )
-    self.__send( self.__genJsonBytes( 'X', 'None', '$( "#pos' + str( pos ) +
+    self.send( self.genCmd( 'X', 'None', '$( "#pos' + str( pos ) +
                                     '" ).css( "background-color", "#000" );' ) )
 
   # Display the game result
@@ -122,7 +119,7 @@ class CitIODSock( CitInAbstract, CitOutAbstract ):
       winner = 'Player Two Wins'
     elif result == self.DRAW:
       winner = 'Draw!'
-    self.__send( self.__genJsonBytes( 'R', '#game-io', '<center><b>Game Over: '
+    self.send( self.genCmd( 'R', '#game-io', '<center><b>Game Over: '
                                                   + winner + '</b></center>' ) )
 
   # Get a players move from the proxitable hardware through the game launcher 
@@ -132,57 +129,26 @@ class CitIODSock( CitInAbstract, CitOutAbstract ):
   #  @returns - move ( positive integer no greater than points )
   def getMove( self, name, points, last ):
     move = self.__last if self.__last <= self.__points else self.__points
-    self.__send( self.__genJsonBytes( 'R', '#game-io', self.MOVE ) )
+    self.send( self.genCmd( 'R', '#game-io', self.MOVE ) )
     # Send availble points to the browser
-    self.__send( self.__genJsonBytes( 'R', '#move', str( move ) ) )
+    self.send( self.genCmd( 'R', '#move', str( move ) ) )
     # Recieve an input button pin
     pin = 0
     while pin != 7: # Button A
-      self.__sendReadyToRecieve()
-      pin = self.__recv()
+      self.sendReadyToRecieve()
+      pin = self.recv()
       # If up/down adjust output display accordingly
       if pin == 23: # Up
         if move < self.__points:
           move += 1
-          self.__send( self.__genJsonBytes( 'R', '#move', str( move ) ) )
+          self.send( self.genCmd( 'R', '#move', str( move ) ) )
       elif pin == 18: # Down
         if move > 1:
           move -= 1
-          self.__send( self.__genJsonBytes( 'R', '#move', str( move ) ) )
-    self.__send( self.__genJsonBytes( 'R', '#move', '' ) )
+          self.send( self.genCmd( 'R', '#move', str( move ) ) )
+    self.send( self.genCmd( 'R', '#move', '' ) )
     # Record values ready for next turn before returning move to game
     self.__points -= move
     self.__last = move
     return move
-
-  # Construct the json to be sent by the wssocket server
-  #  @cmd     - Single char command as described in client.html
-  #  @target  - id or class of target DOM element
-  #  @content - data to be used by command on target
-  #  @returns - fully constructed JSON object
-  def __genJsonBytes( self, cmd, target, content ):
-    content = content.replace( '"', '\\"' ).replace( '\n' , ' ' )
-    return bytes( '{"cmd":"' + cmd + '","target":"' + target + '","content":"'
-                                                     + content + '"}', 'utf-8' )
-
-  # Send data to the game launcher to be passed on to the wssocket server
-  #  @data - data to be sent as bytes object
-  def __send( self, data ):
-    if self.__sock is not None:
-      size = struct.pack( '>I', len( data ) )
-      self.__sock.send( size + data )
-  
-  # Send the flag to say that the module is ready to recieve a pin value
-  def __sendReadyToRecieve( self ):
-    logging.debug( '' )
-    self.__send( b'\xab\xba\xfa\xce' )
-  
-  # Recieve a selected pin number
-  def __recv( self ):
-    if self.__sock is not None:
-      pin = self.__sock.recv( 4 )
-      if len( pin ) != 4:
-        logging.debug( 'pin len = ' + str( len( pin ) ) )
-        return 0
-      return int( struct.unpack( '>I', pin )[ 0 ] )
 # ---------------------------------------------------------------------------- #
