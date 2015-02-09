@@ -39,6 +39,14 @@ class Launch( object ):
     self.omod    = None
     self.games   = self.__loadGames()
     self.__setupGPIO()
+    # Clear any old resources
+    resDir = os.path.join( os.path.dirname( os.path.realpath( __file__ ) ), 
+                                                          'wsserver/resources' )
+    try:
+      shutil.rmtree( resDir, ignore_errors=True )
+      os.mkdir( resDir )  
+    except OSError as e:
+      logging.exception( 'Error while cleaning resources' ) 
     atexit.register( self.cleanup )
 
   # Sets up the required GPIO pins
@@ -83,6 +91,7 @@ class Launch( object ):
             game.setInput( 1, self.__setupIOModule( ioConf.readline() ) )
             game.setInput( 2, self.__setupIOModule( ioConf.readline() ) )
             game.setOutput( self.__setupIOModule( ioConf.readline() ) )
+            game.copyResources()
           games.append( game )
         except Exception as e:
           logging.exception( 'Failed loading %s', d ) 

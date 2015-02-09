@@ -42,3 +42,25 @@ class AbstractGame( object ):
   @abstractmethod
   def getName( self ):
     pass
+
+  # Copy any resouces required by the game GUI to the wsserver resources folder
+  def copyResources( self ):
+    game = self.getName().lower()
+    base = os.path.dirname( os.path.realpath( __file__ ) )
+    wssDir  = os.path.join( base, 'wsserver', 'resources' )
+    gameDir = os.path.join( base, game, 'resources' )
+    resDir = []
+    for f in os.listdir( gameDir + '/' ):
+      path = os.path.join( gameDir, f )
+      if os.path.isdir( path ):
+        resDir.append( path ) 
+    for d in resDir:
+      folder = os.path.basename( os.path.normpath( d ) )
+      wss = os.path.join( wssDir, folder )
+      try
+        os.mkdir( os.path.join( wss, game ) )
+      except OSError:
+        # Squash, means folder already exists
+        pass
+      for f in os.listdir( d ):
+        shutil.copy2( os.path.join( d, f ), os.path.join( wss, game, f ) )

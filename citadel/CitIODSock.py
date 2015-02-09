@@ -25,17 +25,17 @@ class CitIODSock( CitInAbstract, CitOutAbstract ):
           '#game-io {width: 100%; position: fixed; top: 40%; text-align: center; font-size: 3em;}'
           '@font-face {'
           'font-family: "devroyeregular";'
-            'src: url("font/DEVROYE_-webfont.eot");'
-            'src: url("font/DEVROYE_-webfont.eot?#iefix") format("embedded-opentype"),'
-                 'url("font/DEVROYE_-webfont.woff") format("woff"),'
-                 'url("font/DEVROYE_-webfont.ttf") format("truetype"),'
-                 'url("font/DEVROYE_-webfont.svg#devroyeregular") format("svg");'
+            'src: url("resources/font/citadel/DEVROYE_-webfont.eot");'
+            'src: url("resources/font/citadel/DEVROYE_-webfont.eot?#iefix") format("embedded-opentype"),'
+                 'url("resources/font/citadel/DEVROYE_-webfont.woff") format("woff"),'
+                 'url("resources/font/citadel/DEVROYE_-webfont.ttf") format("truetype"),'
+                 'url("resources/font/citadel/DEVROYE_-webfont.svg#devroyeregular") format("svg");'
             'font-weight: normal;'
             'font-style: normal; }'
             'body { height: 100%; background-color: #40c0f0!important; color: #fff ;font-family:'
             '"devroyeregular", serif;}'        )
   HTML = ( '<div class="players">'
-   '<img src="images/clouds.png" style="position:absolute;top:0;" width="100%">'
+   '<img src="resources/images/citadel/clouds.png" style="position:absolute;top:0;" width="100%">'
       '<div id="player_one" class="pull-left">'
         '<h1 id="p2_name">Player One</h1>'
         '<h2 id="p1_points">50</h2>'
@@ -46,19 +46,19 @@ class CitIODSock( CitInAbstract, CitOutAbstract ):
       '</div>'
     '</div>'
  '<div class="gameView">'
-   '<img src="images/bg.png" width="100%">'
-   '<img id="redCastle" src="images/castleRed.png" width="11%"' 
+   '<img src="resources/images/citadel/bg.png" width="100%">'
+   '<img id="redCastle" src="resources/images/citadel/castleRed.png" width="11%"' 
    'style="position:absolute;bottom:80%;left:1%">'
-   '<img id="blueCastle" src="images/castleBlue.png" width="11%" style="'
+   '<img id="blueCastle" src="resources/images/citadel/castleBlue.png" width="11%" style="'
    'position:absolute;bottom:77%;right:1%">'
-   '<img id="redTower" src="images/towerRed.png" width="5%"'
+   '<img id="redTower" src="resources/images/citadel/towerRed.png" width="5%"'
    'style="position:absolute;bottom:53%;left:25%">'
-   '<img id="blueTower" src="images/towerBlue.png" width="5%" '
+   '<img id="blueTower" src="resources/images/citadel/towerBlue.png" width="5%" '
    'style="position:absolute;bottom:54%;right:24%">'
-   '<img id="pos" src="images/position.png" width="6%" style="position:absolute;bottom:43%;right:45%">'
+   '<img id="pos" src="resources/images/citadel/position.png" width="6%" style="position:absolute;bottom:43%;right:45%">'
  '</div>' )
   MOVE = ( '<div class="moveNo">'
-   '<img src="images/sword.png" width="5%" style="position:absolute;bottom:15;left:35%">'
+   '<img src="resources/images/citadel/sword.png" width="5%" style="position:absolute;bottom:15;left:35%">'
    '<h1 id="move"></h1>'
  '</div>' )
 
@@ -127,33 +127,33 @@ class CitIODSock( CitInAbstract, CitOutAbstract ):
     self.__send( self.__genJsonBytes( 'R', '#p2_points', str( p2p ) ) )
     if pos == 0:
       self.__send( self.__genJsonBytes( 'X', 'None', '$( "#pos" ).hide();' ) )
-      self.__send( self.__genJsonBytes( 'X', 'None', '$( "#redCastle" ).attr( "src", "images/castleBlueWin.png" );' ) )
+      self.__send( self.__genJsonBytes( 'X', 'None', '$( "#redCastle" ).attr( "src", "resources/images/citadel/castleBlueWin.png" );' ) )
     elif pos == 1:
-      self.__send( self.__genJsonBytes( 'X', 'None', '$( "#redTower" ).attr( "src", "images/towerBlue.png" );' ) )
-      self.__send( self.__genJsonBytes( 'X', 'None', '$( "#pos" ).attr( "style", "'+self.POSITION[pos - 1]+'" );' ) )
+      self.__send( self.__genJsonBytes( 'X', 'None', '$( "#redTower" ).attr( "src", "resources/images/citadel/towerBlue.png" );' ) )
+      self.__send( self.__genJsonBytes( 'X', 'None', '$( "#pos" ).attr( "style", "' + self.POSITION[ pos - 1 ] + '" );' ) )
     elif pos == 2:
-      self.__send( self.__genJsonBytes( 'X', 'None', '$( "#redTower" ).attr( "src", "images/towerRed.png" );' ) )
-      self.__send( self.__genJsonBytes( 'X', 'None', '$( "#pos" ).attr( "style", "'+self.POSITION[pos - 1]+'" );' ) )
+      self.__send( self.__genJsonBytes( 'X', 'None', '$( "#redTower" ).attr( "src", "resources/images/citadel/towerRed.png" );' ) )
+      self.__send( self.__genJsonBytes( 'X', 'None', '$( "#pos" ).attr( "style", "' + self.POSITION[ pos - 1 ] + '" );' ) )
     elif pos == 4:
-      self.__send( self.__genJsonBytes( 'X', 'None', '$( "#blueTower" ).attr( "src", "images/towerBlue.png" );' ) )
-      self.__send( self.__genJsonBytes( 'X', 'None', '$( "#pos" ).attr( "style", "'+self.POSITION[pos - 1]+'" );' ) )
+      self.__send( self.__genJsonBytes( 'X', 'None', '$( "#blueTower" ).attr( "src", "resources/images/citadel/towerBlue.png" );' ) )
+      self.__send( self.__genJsonBytes( 'X', 'None', '$( "#pos" ).attr( "style", "' + self.POSITION[ pos - 1 ] +'" );' ) )
     elif pos == 5:
-      self.__send( self.__genJsonBytes( 'X', 'None', '$( "#blueTower" ).attr( "src", "images/towerRed.png" );' ) )
-      self.__send( self.__genJsonBytes( 'X', 'None', '$( "#pos" ).attr( "style", "'+self.POSITION[pos - 1]+'" );' ) )
+      self.__send( self.__genJsonBytes( 'X', 'None', '$( "#blueTower" ).attr( "src", "resources/images/citadel/towerRed.png" );' ) )
+      self.__send( self.__genJsonBytes( 'X', 'None', '$( "#pos" ).attr( "style", "' + self.POSITION[ pos - 1 ] +'" );' ) )
     elif pos == 6:
       self.__send( self.__genJsonBytes( 'X', 'None', '$( "#pos" ).hide();' ) )
-      self.__send( self.__genJsonBytes( 'X', 'None', '$( "#blueCastle" ).attr( "src", "images/castleRedWin.png" );' ) )
+      self.__send( self.__genJsonBytes( 'X', 'None', '$( "#blueCastle" ).attr( "src", "resources/images/citadel/castleRedWin.png" );' ) )
     else:
-      self.__send( self.__genJsonBytes( 'X', 'None', '$( "#pos" ).attr( "style", "'+self.POSITION[pos - 1]+'" );' ) )
+      self.__send( self.__genJsonBytes( 'X', 'None', '$( "#pos" ).attr( "style", "' + self.POSITION[ pos - 1 ] + '" );' ) )
 
   # Display the game result
   #  @result - the game result : P1, P2, DRAW
   def showResult( self, result ):
     winner = ''
     if result == self.P1:
-      winner = '<div class="gameEnd"><img src="images/win.png" width="8%"> Player One Wins</div>'
+      winner = '<div class="gameEnd"><img src="resources/images/citadel/win.png" width="8%"> Player One Wins</div>'
     elif result == self.P2:
-      winner = '<div class="gameEnd"><img src="images/win.png" width="8%">Player Two Wins</div>'
+      winner = '<div class="gameEnd"><img src="resources/images/citadel/win.png" width="8%">Player Two Wins</div>'
     elif result == self.DRAW:
       winner = '<div class="gameEnd">It\'s a Draw!</div>'
     self.__send( self.__genJsonBytes( 'A', '#game-io',winner ) )
