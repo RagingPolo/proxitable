@@ -4,7 +4,8 @@
     <link href="bootstrap/css/bootstrap.min.css" rel="stylesheet">
     <link href="bootstrap/css/bootstrap-responsive.css" rel="stylesheet">
     <link href="bootstrap/css/docs.css" rel="stylesheet">
-    <style id="game-css"><!-- Game specific css will be inserted here --></style>
+    <style id="game-css"><!-- Game specific css will be inserted here -->
+	  </style>
     <script src="bootstrap/js/jquery.min.js"></script>
     <script src="bootstrap/js/bootstrap.min.js"></script>
     <script type="text/javascript">
@@ -39,15 +40,21 @@
     </script>
   </head>
   <body>
-    <div class="col-md-12">
-    	<div id="connect">
-    		<p />
-    		<p class="text-center">
-    			<a href="javascript:wsConnect()" class="btn btn-danger btn-lg" role="button">Connect</a>
-		    </p>
-	    </div><!-- id="connect" -->
-	    <div id="game-html" align="center"><!-- Game specific html output will be inserted here --></div>
-      <div id="game-io"><!-- game specific messages and input related html will be inserted here --></div>
-		</div><!-- class="col-md-12" -->
+    <div class="wrapper">
+      <div class="wrapper-inner">
+      	<div id="connect">
+      		<p class="text-center">
+      			<a href="javascript:wsConnect()" class="btn btn-danger btn-lg" role="button">Connect</a>
+  		    </p>
+  	    </div><!-- id="connect" -->
+
+  	    <div id="game-html"><!-- Game specific html output will be inserted here -->
+        </div>
+
+        <div id="game-io"><!-- game specific messages and input related html will be inserted here -->
+        </div>
+
+			</div><!-- wrapper inner -->
+		</div><!-- wrapper -->
   </body>
 </html>
