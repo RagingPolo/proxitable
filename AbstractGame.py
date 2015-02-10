@@ -58,11 +58,7 @@ class AbstractGame( object ):
         resDir.append( path ) 
     for d in resDir:
       folder = os.path.basename( os.path.normpath( d ) )
-      wss = os.path.join( wssDir, folder )
-      try:
-        os.mkdir( os.path.join( wss, game ) )
-      except OSError:
-        # Squash, means folder already exists
-        pass
+      wss = os.path.join( wssDir, folder, game )
+      os.makedirs( wss, exist_ok=True )
       for f in os.listdir( d ):
-        shutil.copy2( os.path.join( d, f ), os.path.join( wss, game, f ) )
+        shutil.copy2( os.path.join( d, f ), os.path.join( wss, f ) )
