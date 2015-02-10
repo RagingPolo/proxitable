@@ -4,6 +4,7 @@ import sys
 import struct
 import socket
 import select
+import shutil
 import logging
 from time import sleep
 import importlib.machinery

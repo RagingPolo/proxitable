@@ -57,7 +57,7 @@ class AbstractGame( object ):
     for d in resDir:
       folder = os.path.basename( os.path.normpath( d ) )
       wss = os.path.join( wssDir, folder )
-      try
+      try:
         os.mkdir( os.path.join( wss, game ) )
       except OSError:
         # Squash, means folder already exists
