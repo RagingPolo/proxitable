@@ -35,11 +35,6 @@ class Launch( object ):
     logging.basicConfig( filename='.proxitable.log', level=logging.DEBUG,
                          format=LOGFORMAT )
     logging.info( 'Started Launcher' ) 
-    # Setup the launcher
-    self.imod    = None
-    self.omod    = None
-    self.games   = self.__loadGames()
-    self.__setupGPIO()
     # Clear any old resources
     resDir = os.path.join( os.path.dirname( os.path.realpath( __file__ ) ), 
                                                           'wsserver/resources' )
@@ -48,6 +43,11 @@ class Launch( object ):
       os.mkdir( resDir )  
     except OSError as e:
       logging.exception( 'Error while cleaning resources' ) 
+    # Setup the launcher
+    self.imod    = None
+    self.omod    = None
+    self.games   = self.__loadGames()
+    self.__setupGPIO()
     atexit.register( self.cleanup )
 
   # Sets up the required GPIO pins

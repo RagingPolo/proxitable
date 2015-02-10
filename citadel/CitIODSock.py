@@ -17,6 +17,7 @@ import logging
 class CitIODSock( CitInAbstract, CitOutAbstract ):
 
   CSS = ( '.blah{}'
+          '.black { color: #020304; }'
           '.gameView { width: 100%; position: fixed; bottom: 0;}'
           '.players { width: 100%; position: fixed; top: 0; padding-left: 15px; padding-right: 15px;}'
           '.wrapper {width: 100%;height: 100%; min-height: 100%; display: table;}'
@@ -36,11 +37,11 @@ class CitIODSock( CitInAbstract, CitOutAbstract ):
             '"devroyeregular", serif;}'        )
   HTML = ( '<div class="players">'
    '<img src="resources/images/citadel/clouds.png" style="position:absolute;top:0;" width="100%">'
-      '<div id="player_one" class="pull-left">'
+      '<div id="player_one" class="pull-left black">'
         '<h1 id="p2_name">Player One</h1>'
         '<h2 id="p1_points">50</h2>'
       '</div>'
-      '<div id="player_two" class="pull-right">'
+      '<div id="player_two" class="pull-right black">'
         '<h1 id="p2_name">Player Two</h1>'
         '<h2 id="p2_points">50</h2>'
       '</div>'

@@ -1,5 +1,6 @@
 import os
 import shutil
+import logging
 from abc import ABCMeta, abstractmethod
 
 # --------------------------------------------------------------------------- #
@@ -60,5 +61,8 @@ class AbstractGame( object ):
       folder = os.path.basename( os.path.normpath( d ) )
       wss = os.path.join( wssDir, folder, game )
       os.makedirs( wss, exist_ok=True )
+      logging.debug( wss + ' ' + str( os.access( wss, os.F_OK ) ) )
       for f in os.listdir( d ):
         shutil.copy2( os.path.join( d, f ), os.path.join( wss, f ) )
+        logging.debug( os.path.join( wss, f ) + ' ' + str( os.access(
+                                           os.path.join( wss, f ), os.F_OK ) ) )
