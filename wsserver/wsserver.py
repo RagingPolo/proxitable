@@ -46,6 +46,7 @@ class wsserver( socketserver.StreamRequestHandler ):
       if self.lsock is False:
         # Setup listening socket for recieveing game output
         self.lsock = socket.socket()
+        self.lsock.setsockopt( socket.SOL_SOCKET, socket.SO_REUSEADDR, 1 )
         try:
           self.lsock.bind( ( '', self.PORT ) )
           self.lsock.listen( 1 )
