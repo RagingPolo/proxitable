@@ -29,15 +29,15 @@ class Launch( object ):
   # Sets up the system wide logging, initialises the GPIO pins needed for the 
   # PES input. Searches for and load availible games
   def __init__( self ):
+    self.scriptDir = os.path.dirname( os.path.realpath( __file__ )
     # Start the logger
     LOGFORMAT = ( '[ %(levelname)s ] [ %(asctime)-15s ] [ %(process)d ] [ '
                   '%(module)s.%(funcName)s() ] [ %(message)s ]' )
-    logging.basicConfig( filename='.proxitable.log', level=logging.DEBUG,
-                         format=LOGFORMAT )
+    logging.basicConfig( filename= os.path.join( self.scriptDir,
+                    '.proxitable.log' ), level=logging.DEBUG, format=LOGFORMAT )
     logging.info( 'Started Launcher' ) 
     # Clear any old resources
-    resDir = os.path.join( os.path.dirname( os.path.realpath( __file__ ) ), 
-                                                          'wsserver/resources' )
+    resDir = os.path.join( scriptDir, 'wsserver/resources' )
     try:
       shutil.rmtree( resDir, ignore_errors=True )
       os.mkdir( resDir )  
@@ -71,7 +71,7 @@ class Launch( object ):
   # @returns - list of game objects
   def __loadGames( self ):
     games = []
-    for d in os.walk( '.' ).__next__()[ 1 ]:
+    for d in os.walk( self.scriptDir ).__next__()[ 1 ]:
       # The files main.py and main.conf are required for dynamic game loading
       if ( os.path.isfile( d + '/main.py' ) and
            os.path.isfile( d + '/main.conf' ) ):
