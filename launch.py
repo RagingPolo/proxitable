@@ -29,7 +29,7 @@ class Launch( object ):
   # Sets up the system wide logging, initialises the GPIO pins needed for the 
   # PES input. Searches for and load availible games
   def __init__( self ):
-    self.scriptDir = os.path.dirname( os.path.realpath( __file__ )
+    self.scriptDir = os.path.dirname( os.path.realpath( __file__ ) )
     # Start the logger
     LOGFORMAT = ( '[ %(levelname)s ] [ %(asctime)-15s ] [ %(process)d ] [ '
                   '%(module)s.%(funcName)s() ] [ %(message)s ]' )
