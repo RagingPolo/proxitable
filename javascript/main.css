@@ -1,0 +1,42 @@
+div#menu {
+  text-align: center;
+}
+
+body {
+  background-color: #AAAAAA;
+  padding: 5%;
+}
+
+.tile {
+  display: inline-block;
+  margin: 1px;
+  border: 2px solid;
+  border-radius: 15%;
+  position: relative;
+  width: 25%;
+  padding-bottom: 25%;
+  overflow: hidden;
+}
+
+.content {
+  position: absolute;
+  height: 100%;
+  width: 100%;
+}
+
+.center {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translateX(-50%) translateY(-50%);
+  font-family: "Lucida Console", Monaco, monospace;
+  font-size: 2em;
+}
+
+.unselected {
+  background-color: #0080FF;
+}
+
+.selected {
+  background-color: #B00000;
+}
