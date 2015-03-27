@@ -3,6 +3,7 @@
 // will load the game 'page'. All that is required is the game
 // re loads this main menu when complete.
 // TODO Add game icons/images to be used for menu tiles
+// TODO Make it look pretty!!!
 var games = [
    { name:"Citadel", path:"citadel/main.html" }
   ,{ name:"Battleships", path:"battleships/main.html" }
@@ -12,23 +13,54 @@ var selected;
 
 $( document ).ready( function() {
   generateMenu();
-  // TODO Make ajax call to PES api for button presses
-  // TODO When start/enter is pressed load the file at the selected games path
+  getButton();
   // Allows for keyboard to simulate pes input
   $( 'html' ).keydown( function ( e ) {
-    switch ( e.which ) {
-      case 37: // LEFT
-        select( selected - 1 ); 
-        break;
-      case 39: // RIGHT
-        select( selected + 1 );
-        break;
-      default:
-        // Do Nothing
-        break;
+    var keyMap = { 37 : 'LEFT', 39 : 'RIGHT', 13 : 'START' };
+    if ( e.which in keyMap ) {
+      handleInput( keyMap[ e.which ] );
     }
   });
 });
+
+/*
+ * Call the PES RESTful api for button presses
+ */
+function getButton() {
+  $.ajax( {
+    type: "GET",
+    url: "http://127.0.0.1:8080/pressed",
+    dataType: "json",
+  }).done( function( data, textStatus, jqXHR  ) {
+    handleInput( data[ 'button' ] );
+    // After the request has returned call again
+    getButton();
+  }).fail( function( jqXHR, textStatus, errorThrown ) {
+    console.log( 'Button request failed: ' + textStatus );
+    // After the request has returned call again
+    getButton();
+  });  
+}
+
+/*
+ * Handle the PES/keyboard input
+ */
+function handleInput( button ) {
+  switch( button ) {
+    case 'LEFT':
+      select( selected -1 );
+      break;
+    case 'RIGHT':
+      select( selected + 1 );
+      break;
+    case 'START':
+      alert( 'Opening ' + games[ selected ][ 'path' ] );
+      break;
+    default:
+      // Do nothing
+      break;
+  }
+}
 
 /*
  * Build a tile based menu from the listed games before calling on the 
