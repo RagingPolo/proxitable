@@ -5,7 +5,7 @@ function CitBot() {
   this.last         = 0;
 }
 /* Calculate the next AI move */
-CitBot.prototype.getMove( points, opLast ) {
+CitBot.prototype.getMove = function( points, opLast ) {
   var move = 0;
   var min;
   var max;
@@ -42,7 +42,7 @@ CitBot.prototype.getMove( points, opLast ) {
       else move = this.random( points * ( 1/4 ), points * ( 1/3 ) ); 
       break;
     case 4:
-      if ( points * ( 1/3 ) ) > this.opPoints ) move = points * ( 2/3 );
+      if ( ( points * ( 1/3 ) ) > this.opPoints ) move = points * ( 2/3 );
       else if ( ( points * ( 1/4 ) ) > this.opPoints ) move = points * ( 3/4 );
       else if ( points > this.opPoints ) move = this.random( points * ( 2/4 ), points * ( 3/4 ) );
       else if ( points < this.opPoints ) move = this.random( points * ( 1/4 ), points * ( 2/4 ) );
@@ -50,8 +50,8 @@ CitBot.prototype.getMove( points, opLast ) {
       break;
     case 5:
       if ( points > this.opPoints ) move = this.opPoints + 1;		
-      else if ( points < ( this.opPoints * ( 1/4 ) ) move = points * ( 1/4 );
-      else if ( points < ( this.opPoints * ( 1/3 ) ) move = points * ( 1/3 );
+      else if ( points < ( this.opPoints * ( 1/4 ) ) ) move = points * ( 1/4 );
+      else if ( points < ( this.opPoints * ( 1/3 ) ) ) move = points * ( 1/3 );
       else if ( ( points * ( 3/4 ) ) < ( this.opPoints * ( 2/3 ) ) ) move = points * ( 2/3 );
       else move = this.random( points * ( 1/4 ), points * ( 1/3 ) ); 
       break;
@@ -66,6 +66,6 @@ CitBot.prototype.getMove( points, opLast ) {
   return move;
 };
 /* Generate a random move between the min and max values */
-CitBot.prototype.random( min, max ) {
+CitBot.prototype.random = function( min, max ) {
   return ( Math.random() * ( min + max ) ) + min;
 }

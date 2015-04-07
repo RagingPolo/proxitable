@@ -1,3 +1,10 @@
+/*
+$( document ).ready( function() {
+  var game = new Citadel();
+  game.run();
+  //TODO Add a press something to return to main menu
+});
+*/
 /******************************************************************************
  * Contains game logic and maintains overall game state                      */
 function Citadel() {
