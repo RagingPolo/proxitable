@@ -15,14 +15,14 @@
                 game.state.start('View');
 
                  $( 'html' ).keydown( function ( e ) {
-                    <!--
+                    /*
                     48-55 : 0-6
                     77 : M
                     38 : ->
                     40 : <-
                     66 : B
                     83 : S
-                    -->
+                    */
                     if (e.which >= 48 && e.which < 55  ) {
                       Cit.update.position(e.which - 48);
                     }
