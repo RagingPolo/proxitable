@@ -22,6 +22,7 @@
                     40 : <-
                     66 : B
                     83 : S
+                    80 : P
                     */
                     if (e.which >= 48 && e.which < 55  ) {
                       Cit.update.position(e.which - 48);
@@ -32,6 +33,7 @@
 
                     if(e.which == 66) Cit.update.message("Well done\nyou're almost there!");
                     if(e.which == 83) Cit.update.instructions();
+                    if(e.which == 80) Cit.update.points(20, 99);
                   });
         </script>
     </body>

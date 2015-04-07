@@ -298,5 +298,11 @@ Cit.update = {
 	instructionsShown: function() {
 		if(Cit.instructions.alpha == 1) return true;
 		return false;
+	},
+	//updates points totals
+	points: function(humPoints, comPoints) {
+
+		Cit.humPointsText.setText(humPoints);
+		Cit.comPointsText.setText(comPoints);
 	}
 };
