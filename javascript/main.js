@@ -8,7 +8,7 @@ var games = [
    { name:"Citadel", path:"citadel/main.html" }
   ,{ name:"Battleships", path:"battleships/main.html" }
   ,{ name:"Our History", path:"history/main.html" }
-];
+;
 var selected;
 
 $( document ).ready( function() {
