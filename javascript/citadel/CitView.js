@@ -1,56 +1,56 @@
-var Cit = {};
+var CitPhaser = {};
 //holds all the view items and creates moving background
-Cit.View = function (game) {
+CitPhaser.View = function ( game ) {
 
 	this.cloud1 = null;
 	this.cloud2 = null;
 	this.cloud3 = null;	
 
-	Cit.positionMarker = null;
-	Cit.p1Castle = null;
-	Cit.p2Castle = null;
-	Cit.p1Tower = null;
-	Cit.p2Tower = null;
-	Cit.army = null;
+	CitPhaser.positionMarker = null;
+	CitPhaser.p1Castle = null;
+	CitPhaser.p2Castle = null;
+	CitPhaser.p1Tower = null;
+	CitPhaser.p2Tower = null;
+	CitPhaser.army = null;
 	//points of the army positions;
-	Cit.point1_2 = {
+	CitPhaser.point1_2 = {
 	    'x': [ 137, 564 ],
 	    'y': [ 552, 760 ]
 		};
-	Cit.point2_3 = {
+	CitPhaser.point2_3 = {
 	    'x': [ 564, 994 ],
 	    'y': [ 760, 767 ]
 		};
-	Cit.point3_4 = {
+	CitPhaser.point3_4 = {
 	    'x': [ 994, 1476 ],
 	    'y': [ 767, 705 ]
 		};
-	Cit.point4_5 = {
+	CitPhaser.point4_5 = {
 	    'x': [ 1476, 1760 ],
 	    'y': [ 705, 565 ]
 		};
 
-	Cit.path1_2 = [];
-	Cit.path2_3 = [];
-	Cit.path3_4 = [];
-	Cit.path4_5 = [];
+	CitPhaser.path1_2 = [];
+	CitPhaser.path2_3 = [];
+	CitPhaser.path3_4 = [];
+	CitPhaser.path4_5 = [];
 
-	Cit.boardTween = null;
-	Cit.boardTweenText = null;
-	Cit.messageBubbleTweenFadeIn = null;
-	Cit.messageTextTweenFadeIn = null;
-	Cit.messageBubbleTweenFadeOut = null;
-	Cit.messageTextTweenFadeOut = null;
+	CitPhaser.boardTween = null;
+	CitPhaser.boardTweenText = null;
+	CitPhaser.messageBubbleTweenFadeIn = null;
+	CitPhaser.messageTextTweenFadeIn = null;
+	CitPhaser.messageBubbleTweenFadeOut = null;
+	CitPhaser.messageTextTweenFadeOut = null;
 
-	Cit.humPointsText = null;
-	Cit.comPointsText = null;
-	Cit.moveNumText = null;
-	Cit.messageText = null;
-	Cit.moveBoard = null;
+	CitPhaser.humPointsText = null;
+	CitPhaser.comPointsText = null;
+	CitPhaser.moveNumText = null;
+	CitPhaser.messageText = null;
+	CitPhaser.moveBoard = null;
 
-	Cit.position = 3;
+	CitPhaser.position = 3;
 };
-Cit.View.prototype = {
+CitPhaser.View.prototype = {
 
 	preload: function() {
 
@@ -78,54 +78,54 @@ Cit.View.prototype = {
 	    var humTotal = this.add.sprite(20, 20, 'humTotal');
 	    var comTotal = this.add.sprite(1781, 20, 'comTotal');
 
-	    Cit.positionMarker = this.add.sprite(595,991, 'positionMarker');
-	    Cit.positionMarker.frame = 3;
+	    CitPhaser.positionMarker = this.add.sprite(595,991, 'positionMarker');
+	    CitPhaser.positionMarker.frame = 3;
 
-	    Cit.p1Castle = this.add.sprite(0,264, 'castle');
-	    Cit.p1Castle.frame = 1;
+	    CitPhaser.p1Castle = this.add.sprite(0,264, 'castle');
+	    CitPhaser.p1Castle.frame = 1;
 
-	    Cit.p2Castle = this.add.sprite(1669,287, 'castle');
+	    CitPhaser.p2Castle = this.add.sprite(1669,287, 'castle');
 
-	    Cit.p1Tower = this.add.sprite(524,593, 'tower');
-	    Cit.p1Tower.frame = 1;
+	    CitPhaser.p1Tower = this.add.sprite(524,593, 'tower');
+	    CitPhaser.p1Tower.frame = 1;
 
-	    Cit.p2Tower = this.add.sprite(1440,569, 'tower');
+	    CitPhaser.p2Tower = this.add.sprite(1440,569, 'tower');
 
-	    Cit.army = this.add.sprite(994,767, 'army');
-	    Cit.army.anchor.set(0.5);
+	    CitPhaser.army = this.add.sprite(994,767, 'army');
+	    CitPhaser.army.anchor.set(0.5);
 
 
 	    //setup move board above screen
-	    Cit.moveBoard = this.add.sprite(727,-485, 'moveBoard');
+	    CitPhaser.moveBoard = this.add.sprite(727,-485, 'moveBoard');
 			var moveStyle = { font: "65px Arial", fill: "#ffffff", align: "center" };
-			Cit.moveNumText = this.add.text(965, -187, "1", moveStyle);
+			CitPhaser.moveNumText = this.add.text(965, -187, "1", moveStyle);
 			//tween the board down
-			Cit.boardTween = this.add.tween(Cit.moveBoard).to({ y: '+485' }, 500,Phaser.Easing.Linear.None, false);
-			Cit.boardTweenText = this.add.tween(Cit.moveNumText).to({ y: '+485' }, 500,Phaser.Easing.Linear.None, false);
+			CitPhaser.boardTween = this.add.tween(CitPhaser.moveBoard).to({ y: '+485' }, 500,Phaser.Easing.Linear.None, false);
+			CitPhaser.boardTweenText = this.add.tween(CitPhaser.moveNumText).to({ y: '+485' }, 500,Phaser.Easing.Linear.None, false);
 			//reverse the board
-			Cit.boardTweenReverse = this.add.tween(Cit.moveBoard).to({ y: '-485' }, 500,Phaser.Easing.Linear.None, false);
-			Cit.boardTweenTextReverse = this.add.tween(Cit.moveNumText).to({ y: '-485' }, 500,Phaser.Easing.Linear.None, false);
+			CitPhaser.boardTweenReverse = this.add.tween(CitPhaser.moveBoard).to({ y: '-485' }, 500,Phaser.Easing.Linear.None, false);
+			CitPhaser.boardTweenTextReverse = this.add.tween(CitPhaser.moveNumText).to({ y: '-485' }, 500,Phaser.Easing.Linear.None, false);
 
 			//setup message text and bubble
 			var messageBubble = this.add.sprite(315,-1, 'messageBubble');
 			var messageStyle = { font: "25px Arial", fill: "#000000", align: "left" };
-			Cit.messageText = this.add.text(373, 74, "", messageStyle);
+			CitPhaser.messageText = this.add.text(373, 74, "", messageStyle);
 			messageBubble.alpha = 0;
-			Cit.messageText.alpha = 0;
+			CitPhaser.messageText.alpha = 0;
 			//fade in tweens
-			Cit.messageBubbleTweenFadeIn = this.add.tween(messageBubble).to({alpha: 1}, 500,Phaser.Easing.Linear.None, false);
-			Cit.messageTextTweenFadeIn = this.add.tween(Cit.messageText).to({alpha: 1}, 500,Phaser.Easing.Linear.None, false);
+			CitPhaser.messageBubbleTweenFadeIn = this.add.tween(messageBubble).to({alpha: 1}, 500,Phaser.Easing.Linear.None, false);
+			CitPhaser.messageTextTweenFadeIn = this.add.tween(CitPhaser.messageText).to({alpha: 1}, 500,Phaser.Easing.Linear.None, false);
 			//fade out  tweens - delay (6500 - 500) is how long the message will stay for
-			Cit.messageBubbleTweenFadeOut = this.add.tween(messageBubble).to({alpha: 0}, 500,Phaser.Easing.Linear.None, false, 6500);
-			Cit.messageTextTweenFadeOut = this.add.tween(Cit.messageText).to({alpha: 0}, 500,Phaser.Easing.Linear.None, false, 6500);
+			CitPhaser.messageBubbleTweenFadeOut = this.add.tween(messageBubble).to({alpha: 0}, 500,Phaser.Easing.Linear.None, false, 6500);
+			CitPhaser.messageTextTweenFadeOut = this.add.tween(CitPhaser.messageText).to({alpha: 0}, 500,Phaser.Easing.Linear.None, false, 6500);
 
 			//add point totals
 			var totalStyle = { font: "45px Arial", fill: "#ffffff", align: "center" };
-			Cit.humPointsText = this.add.text(55, 73, "50", totalStyle);
-			Cit.comPointsText = this.add.text(1815, 73,"50", totalStyle);
+			CitPhaser.humPointsText = this.add.text(55, 73, "50", totalStyle);
+			CitPhaser.comPointsText = this.add.text(1815, 73,"50", totalStyle);
 
 			// display instructions
-			Cit.instructions = this.add.sprite(0,0, 'instructions');
+			CitPhaser.instructions = this.add.sprite(0,0, 'instructions');
 
 	   this.plot();
 
@@ -137,30 +137,30 @@ Cit.View.prototype = {
 	    for (var i = 0; i <= 1; i += x)
 	    {
 	        
-	      var px = this.math.catmullRomInterpolation(Cit.point1_2.x, i);
-	      var py = this.math.catmullRomInterpolation(Cit.point1_2.y, i);
-	      Cit.path1_2.push( { x: px, y: py });
+	      var px = this.math.catmullRomInterpolation(CitPhaser.point1_2.x, i);
+	      var py = this.math.catmullRomInterpolation(CitPhaser.point1_2.y, i);
+	      CitPhaser.path1_2.push( { x: px, y: py });
 	    }
 	    for (var i = 0; i <= 1; i += x)
 	    {
 	        
-	      var px = this.math.catmullRomInterpolation(Cit.point2_3.x, i);
-	      var py = this.math.catmullRomInterpolation(Cit.point2_3.y, i);
-	      Cit.path2_3.push( { x: px, y: py });
+	      var px = this.math.catmullRomInterpolation(CitPhaser.point2_3.x, i);
+	      var py = this.math.catmullRomInterpolation(CitPhaser.point2_3.y, i);
+	      CitPhaser.path2_3.push( { x: px, y: py });
 	    }
 	    for (var i = 0; i <= 1; i += x)
 	    {
 	        
-	      var px = this.math.catmullRomInterpolation(Cit.point3_4.x, i);
-	      var py = this.math.catmullRomInterpolation(Cit.point3_4.y, i);
-	      Cit.path3_4.push( { x: px, y: py });
+	      var px = this.math.catmullRomInterpolation(CitPhaser.point3_4.x, i);
+	      var py = this.math.catmullRomInterpolation(CitPhaser.point3_4.y, i);
+	      CitPhaser.path3_4.push( { x: px, y: py });
 	    }
 	    for (var i = 0; i <= 1; i += x)
 	    {
 	        
-	      var px = this.math.catmullRomInterpolation(Cit.point4_5.x, i);
-	      var py = this.math.catmullRomInterpolation(Cit.point4_5.y, i);
-	      Cit.path4_5.push( { x: px, y: py });
+	      var px = this.math.catmullRomInterpolation(CitPhaser.point4_5.x, i);
+	      var py = this.math.catmullRomInterpolation(CitPhaser.point4_5.y, i);
+	      CitPhaser.path4_5.push( { x: px, y: py });
 	    }
 
 	},
@@ -190,44 +190,44 @@ Cit.View.prototype = {
 ////////////////////////////////////////////////////////////////////
 //    Used to update anything in the view/ display messages etc.. //
 ////////////////////////////////////////////////////////////////////
-Cit.update = {
+CitPhaser.update = {
 	//changes position of marker and army
 	position: function(pos) {
 		//direction is -1 when going right and 1 when going left
-		var direction = Cit.position - pos;
+		var direction = CitPhaser.position - pos;
 		switch(pos) {
 
 			case 0:
 				//hide Army and display burning Castle (TODO)
-				Cit.army.alpha = 0;
+				CitPhaser.army.alpha = 0;
 				break;
 			case 1:
-				this.armyPosition(Cit.path1_2, direction);
+				this.armyPosition(CitPhaser.path1_2, direction);
 				break;
 			case 2:
-				if (direction == -1) this.armyPosition(Cit.path1_2, direction);
-				else this.armyPosition(Cit.path2_3, direction);
+				if (direction == -1) this.armyPosition(CitPhaser.path1_2, direction);
+				else this.armyPosition(CitPhaser.path2_3, direction);
 				break;
 			case 3:
-				if (direction == -1) this.armyPosition(Cit.path2_3, direction);
-				else this.armyPosition(Cit.path3_4, direction);
+				if (direction == -1) this.armyPosition(CitPhaser.path2_3, direction);
+				else this.armyPosition(CitPhaser.path3_4, direction);
 				break;
 			case 4:
-				if (direction == -1) this.armyPosition(Cit.path3_4, direction);
-				else this.armyPosition(Cit.path4_5, direction);
+				if (direction == -1) this.armyPosition(CitPhaser.path3_4, direction);
+				else this.armyPosition(CitPhaser.path4_5, direction);
 				break;
 			case 5:
-				this.armyPosition(Cit.path4_5, direction);
+				this.armyPosition(CitPhaser.path4_5, direction);
 				break;
 			case 6:
 				//hide Army and display burning Castle (TODO)
-				Cit.army.alpha = 0;
+				CitPhaser.army.alpha = 0;
 				break;
 			default:
 				//do nothing
 				break;
 		}
-		Cit.positionMarker.frame = pos;
+		CitPhaser.positionMarker.frame = pos;
 	},
 	//
 	armyPosition: function(path, direction) {
@@ -235,74 +235,73 @@ Cit.update = {
 		{
 			for(var i = path.length - 1; i >=0; --i)
 			{
-				Cit.army.x = path[i].x;
-	  		Cit.army.y = path[i].y;
+				CitPhaser.army.x = path[i].x;
+	  		CitPhaser.army.y = path[i].y;
 			}
 		}
 		else {
 			for(var i = 0; i < path.length; ++i)
 			{
-				Cit.army.x = path[i].x;
-	  		Cit.army.y = path[i].y;
+				CitPhaser.army.x = path[i].x;
+	  		CitPhaser.army.y = path[i].y;
 			}
 		}
 	},
 	toggleMoveBoard: function() {
 
-		if(Cit.moveBoard.y == -485) {
-			Cit.boardTween.start();
-			Cit.boardTweenText.start();
+		if(CitPhaser.moveBoard.y == -485) {
+			CitPhaser.boardTween.start();
+			CitPhaser.boardTweenText.start();
 
 		}
-		else if(Cit.moveBoard.y == 0) {
-			Cit.boardTweenTextReverse.start();
-			Cit.boardTweenReverse.start();
+		else if(CitPhaser.moveBoard.y == 0) {
+			CitPhaser.boardTweenTextReverse.start();
+			CitPhaser.boardTweenReverse.start();
 		}
 	},
 	bid: function(amount) {
 		//check board is displayed
-		if (Cit.moveBoard.y == 0) Cit.moveNumText.setText(amount);
+		if (CitPhaser.moveBoard.y == 0) CitPhaser.moveNumText.setText(amount);
 	},
 	//display message in speech bubble - lasts 6 secs 
 	message: function(text) {
-		if(!Cit.messageTextTweenFadeOut.isRunning) {
-		Cit.messageText.setText(text);
-		Cit.messageTextTweenFadeIn.start();
-		Cit.messageBubbleTweenFadeIn.start();
-		Cit.messageTextTweenFadeOut.start();
-		Cit.messageBubbleTweenFadeOut.start();
+		if(!CitPhaser.messageTextTweenFadeOut.isRunning) {
+		CitPhaser.messageText.setText(text);
+		CitPhaser.messageTextTweenFadeIn.start();
+		CitPhaser.messageBubbleTweenFadeIn.start();
+		CitPhaser.messageTextTweenFadeOut.start();
+		CitPhaser.messageBubbleTweenFadeOut.start();
 		}
 		
 	},
 	instructions: function() {
 		//show instructions page 1
-		if(Cit.instructions.alpha == 0) {
-			Cit.instructions.alpha = 1;
+		if(CitPhaser.instructions.alpha == 0) {
+			CitPhaser.instructions.alpha = 1;
 		}
 		//switch to page 2
-		else if(Cit.instructions.frame == 0) {
-			Cit.instructions.frame = 1;
+		else if(CitPhaser.instructions.frame == 0) {
+			CitPhaser.instructions.frame = 1;
 		}
 		//switch to page 3
-		else if(Cit.instructions.frame == 1) {
-			Cit.instructions.frame = 2;
+		else if(CitPhaser.instructions.frame == 1) {
+			CitPhaser.instructions.frame = 2;
 		}
 		//hide and return to page 1
 		else {
-			Cit.instructions.alpha = 0;
-			Cit.instructions.frame = 0;
+			CitPhaser.instructions.alpha = 0;
+			CitPhaser.instructions.frame = 0;
 		}
 	},
 	// returns if instructions are being shown 
 	// should be used to ignore other inputs apart from START
 	instructionsShown: function() {
-		if(Cit.instructions.alpha == 1) return true;
+		if(CitPhaser.instructions.alpha == 1) return true;
 		return false;
 	},
 	//updates points totals
 	points: function(humPoints, comPoints) {
-
-		Cit.humPointsText.setText(humPoints);
-		Cit.comPointsText.setText(comPoints);
+		CitPhaser.humPointsText.setText(humPoints);
+		CitPhaser.comPointsText.setText(comPoints);
 	}
 };

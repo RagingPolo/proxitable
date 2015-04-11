@@ -1,52 +1,136 @@
 $( document ).ready( function() {
   var game = new Citadel();
   game.run();
-  //TODO Add a press something to return to main menu
 });
 
 /******************************************************************************
  * Contains game logic and maintains overall game state                      */
 function Citadel() {
-  this.board = new CitBoard();
+  this.winner = 0;
+  this.help   = 1;
+  this.move   = 1;
+  this.board  = new CitBoard();
+  this.bot    = new CitInBot();
   this.player = { 1 : new CitPlayer( 'Player 1' ),
                   2 : new CitPlayer( 'Player 2' ) };
-  this.output = CitOutput();
-  this.input  = { 1 : new CitInPES(),
-                  2 : new CitInBot() };
+  this.phaser = new Phaser.Game( '100', '100', Phaser.AUTO, '<html>', {}, true ); 
+  this.phaser.state.add( 'View', CitPhaser.View );
 }
-/* Main game loop */
 Citadel.prototype.run = function() {
-  var winner = this.hasWinner();
-  while ( 0 == winner ) {
-    this.output.showState( this.board.getPosition(),
-                           this.player[ 1 ].getPoints(),
-                           this.player[ 2 ].getPoints(),
-                           this.player[ 1 ].getLastMove(),
-                           this.player[ 2 ].getLastMove() );
-    this.getMoves();
-    winner = this.hasWinner();
-  }
-  this.output.showState( this.board.getPosition(),
-                         this.player[ 1 ].getPoints(),
-                         this.player[ 2 ].getPoints(),
-                         this.player[ 1 ].getLastMove(),
-                         this.player[ 2 ].getLastMove() );
-  this.output.showResult( this.hasWinner() );
+  this.phaser.state.start( 'View' );
+  CitPhaser.update.toggleMoveBoard();
+  // Start ajax calls to RESTful api
+  this.ajax();
+  // Allows for keyboard to simulate pes input
+  $( 'html' ).keydown( function ( e ) {
+    var keyMap = { 37 : 'LEFT', 39 : 'RIGHT', 38 : 'UP', 40 : 'DOWN',
+                   13 : 'START', 83 : 'SELECT', 65 : 'A', 66 : 'B' };
+    if ( e.which in keyMap ) {
+      this.handleInput( keyMap[ e.which ] );
+    }
+  });
 };
-/* Get both players moves */
-Citadel.prototype.getMoves = function() {
-  var p1m = this.input[ 1 ].getMove( this.player[ 1 ].getPoints,
-                                     this.player[ 2 ].getLastMove() );
-  var p2m = this.input[ 2 ].getMove( this.player[ 2 ].getPoints,
-                                     this.player[ 1 ].getLastMove() );
-  this.player[ 1 ].addMove( p1m );
-  this.player[ 2 ].addMove( p2m );
-  if ( p1m > p2m ) {
-    this.board.moveRight();
-  } else if ( p2m > p1m ) {
-    this.board.moveLeft();
-  } 
-}
+Citadel.prototype.ajax = function() {
+  $.ajax( {
+    type: "GET",
+    url: "http://127.0.0.1:8080/pressed",
+    dataType: "json",
+  }).done( function( data, textStatus, jqXHR  ) {
+    this.handleInput( data[ 'button' ] );
+    // After the request has returned call again
+    this.ajax();
+  }).fail( function( jqXHR, textStatus, errorThrown ) {
+    console.log( 'Button request failed: ' + textStatus );
+    // After the request has returned call again
+    this.ajax();
+  });  
+};
+Citadel.prototype.handleInput = function( button ) {
+  switch ( button ) {
+    case 'UP':
+      // Increase the propsed move by one
+      if ( !help ) {
+        if ( this.move < this.player[ 1 ].getPoints() ) {
+          ++this.move;
+          CitPhaser.update.bid( this.move );
+        }
+      }
+      break;
+    case 'DOWN':
+      // Decrease the proposed move by one
+      if ( !help ) {
+        if ( this.move > 0 ) {
+          --this.move;
+          CitPhaser.update.bid( this.move );
+        }
+      }
+      break;
+    case 'LEFT':
+      // Do nothing
+      break;
+    case 'RIGHT':
+      // Do nothing
+      break;
+    case 'A':
+      if ( !help ) {       
+        CitPhaser.update.toggleMoveBoard();
+        // Play the current amount of points and get a move from the bot
+        this.player[ 1 ].addMove( this.move );
+        this.player[ 2 ].addMove( this.bot.getMove( this.player[ 2 ].getPoints(),
+                                                    this.player[ 1 ].getLastMove() ) );
+        // Perform the move
+        if ( this.player[ 1 ].getLastMove() > this.player[ 2 ].getLastMove() ) {
+          this.board.moveRight();
+        } else if ( this.player[ 1 ].getLastMove() < this.player[ 2 ].getLastMove() ) {
+          this.board.moveLeft();
+        }
+        // Update the view
+        CitPhaser.update.position( this.board.getPosition() );
+        CitPhaser.update.points( this.player[ 1 ].getPoints(), this.player[ 2 ].getPoints() );
+        // TODO implement a flag that is turned on here and turned off after a preset delay
+        // while this flag is on all non help button presses are ignored
+        // when the falg timesout call: CitPhaser.update.toggleMoveBoard();
+      }
+      break;
+    case 'B':
+      // Do nothing
+      break;
+    case 'START':
+      // Display the help
+      CitPhaser.update.instructions();
+      ++this.help;
+      if ( this.help == 4 ) {
+        this.help = 0;
+      }
+      break;
+    case 'SELECT':
+      // Do nothing
+      break
+    default:
+      break;
+  }
+  // Check if the game is over 
+  var winner = this.hasWinner();
+  var msg;
+  if ( winner ) {
+    switch ( winner ) {
+      case 1:
+        msg = 'Congratulations, you won!';
+        break;
+      case 2:
+        msg = 'Oh no, you lost!';
+        break;
+      case 3:
+        msg = 'It\'s a draw! Boring.';
+        break;
+      default:
+        msg = 'Game Over';
+        break;
+    }
+    CitPhaser.update.message( msg );
+    // TODO end the game, return to main menu
+  }
+};
 /* Check if there is a winner
  * returns - 0:not finished, 1:player 1, 2:player 2, 3:draw */
 Citadel.prototype.hasWinner = function() {
@@ -75,50 +159,6 @@ Citadel.prototype.hasWinner = function() {
     }
   }
   return 0;
-};
-/*****************************************************************************/
-
-/******************************************************************************
- * Manipulate the html based on the current game state                       */
-function CitOutput() {
-  this.phaser = new Phaser.Game( '100', '100', Phaser.AUTO, '<html>', {}, true ); 
-  this.phaser.state.add( 'View', Cit.View ); 
-  this.phaser.state.start( 'View' );
-}
-/* Update the board to the current state */
-CitOutput.prototype.showState = function( pos, p1p, p2p, p1m, p2m ) {
-  Cit.update.position( pos );
-  
-  //TODO
-};
-/* Display the result once the game has finished */
-CitOutput.prototype.showResult = function( winner ) {
-  var msg;
-  switch ( winner ) {
-    case 1:
-      msg = 'Congratulations, you won!';
-      break;
-    case 2:
-      msg = 'Oh no, you lost!';
-      break;
-    case 3:
-      msg = 'It\'s a draw! Boring.';
-      break;
-    default:
-      msg = 'Game Over';
-      break;
-  }
-  Cit.update.message( msg );
-};
-/*****************************************************************************/
-
-/******************************************************************************
- * Get user input for the keyboard or pes controller                         */
-function CitInPES() {
-  //TODO
-}
-CitInPES.prototype.getMove = function( points, opLast ) {
-  //TODO
 };
 /*****************************************************************************/
 
