@@ -1,40 +1,19 @@
 <!doctype html>
 <html>
-    <head>
-        <title>Citadel - PES</title>
-        <script src="jquery.min.js"></script>
-        <script src="phaser.min.js"></script>
-        <script src="CitView.js"></script>
-    </head>
-    <body style="background-color:#40c0f0;margin:0!important;">
-        <script>
-                var i= 1;
-                var pos = 3;
-                var game = new Phaser.Game(1920, 1080, Phaser.AUTO, '',{}, true);
-                game.state.add('View', Cit.View);
-                game.state.start('View');
-
-                 $( 'html' ).keydown( function ( e ) {
-                    /*
-                    48-55 : 0-6
-                    77 : M
-                    38 : ->
-                    40 : <-
-                    66 : B
-                    83 : S
-                    80 : P
-                    */
-                    if (e.which >= 48 && e.which < 55  ) {
-                      Cit.update.position(e.which - 48);
-                    }
-                    if(e.which == 77) Cit.update.toggleMoveBoard();
-                    if(e.which == 38) Cit.update.bid(++i);
-                    if(e.which == 40) Cit.update.bid(--i);
-
-                    if(e.which == 66) Cit.update.message("Well done\nyou're almost there!");
-                    if(e.which == 83) Cit.update.instructions();
-                    if(e.which == 80) Cit.update.points(20, 99);
-                  });
-        </script>
-    </body>
+  <head>
+    <title>Citadel - PES</title>
+    <script src="jquery.min.js"></script>
+    <script src="phaser.min.js"></script>
+    <script src="CitView.js"></script>
+    <script src="bot.js"></script>
+    <script src="citadel.js"></script>
+    <style>
+      body {
+        background-color: #40c0f0;
+        margin: 0!important;
+      }
+    </style>
+  </head>
+  <body>
+  </body>
 </html>

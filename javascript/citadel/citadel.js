@@ -1,23 +1,25 @@
 $( document ).ready( function() {
-  var game = new Citadel();
+  var phaser = new Phaser.Game( '100', '100', Phaser.AUTO, '<html>', {}, true ); 
+  phaser.state.add( 'View', CitPhaser.View );
+  phaser.state.start( 'View' );
+  var game = new Citadel( phaser );
   game.run();
 });
 
 /******************************************************************************
  * Contains game logic and maintains overall game state                      */
-function Citadel() {
+function Citadel( phaser  ) {
   this.winner = 0;
   this.help   = 1;
   this.move   = 1;
+  this.delay  = 0;
   this.board  = new CitBoard();
   this.bot    = new CitInBot();
   this.player = { 1 : new CitPlayer( 'Player 1' ),
                   2 : new CitPlayer( 'Player 2' ) };
-  this.phaser = new Phaser.Game( '100', '100', Phaser.AUTO, '<html>', {}, true ); 
-  this.phaser.state.add( 'View', CitPhaser.View );
+  this.phaser = phaser;
 }
 Citadel.prototype.run = function() {
-  this.phaser.state.start( 'View' );
   CitPhaser.update.toggleMoveBoard();
   // Start ajax calls to RESTful api
   this.ajax();
@@ -49,7 +51,7 @@ Citadel.prototype.handleInput = function( button ) {
   switch ( button ) {
     case 'UP':
       // Increase the propsed move by one
-      if ( !help ) {
+      if ( !( help ) && !( delay ) ) {
         if ( this.move < this.player[ 1 ].getPoints() ) {
           ++this.move;
           CitPhaser.update.bid( this.move );
@@ -58,7 +60,7 @@ Citadel.prototype.handleInput = function( button ) {
       break;
     case 'DOWN':
       // Decrease the proposed move by one
-      if ( !help ) {
+      if ( !( help ) && !( delay ) ) {
         if ( this.move > 0 ) {
           --this.move;
           CitPhaser.update.bid( this.move );
@@ -72,12 +74,13 @@ Citadel.prototype.handleInput = function( button ) {
       // Do nothing
       break;
     case 'A':
-      if ( !help ) {       
+      if ( !( help ) && !( delay ) ) {
         CitPhaser.update.toggleMoveBoard();
         // Play the current amount of points and get a move from the bot
-        this.player[ 1 ].addMove( this.move );
         this.player[ 2 ].addMove( this.bot.getMove( this.player[ 2 ].getPoints(),
                                                     this.player[ 1 ].getLastMove() ) );
+        // Add the human players move second so the bot doesn't know what the move is
+        this.player[ 1 ].addMove( this.move );
         // Perform the move
         if ( this.player[ 1 ].getLastMove() > this.player[ 2 ].getLastMove() ) {
           this.board.moveRight();
@@ -87,9 +90,9 @@ Citadel.prototype.handleInput = function( button ) {
         // Update the view
         CitPhaser.update.position( this.board.getPosition() );
         CitPhaser.update.points( this.player[ 1 ].getPoints(), this.player[ 2 ].getPoints() );
-        // TODO implement a flag that is turned on here and turned off after a preset delay
-        // while this flag is on all non help button presses are ignored
-        // when the falg timesout call: CitPhaser.update.toggleMoveBoard();
+        // Set a 3 second delay that will ignore any button presses except help (START)
+        this.delay = 1;
+        setTimeout( function() { this.delay = 0; }, 3 );
       }
       break;
     case 'B':
@@ -128,7 +131,9 @@ Citadel.prototype.handleInput = function( button ) {
         break;
     }
     CitPhaser.update.message( msg );
-    // TODO end the game, return to main menu
+    this.delay = 1;
+    // Return to main menu or if single game refresh the game when finished
+    setTimeout( function() { /* window.location.href = "../main.html"; */ location.reload(); }, 5000 );
   }
 };
 /* Check if there is a winner
