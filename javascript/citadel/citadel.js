@@ -19,20 +19,8 @@ function Citadel( phaser  ) {
                   2 : new CitPlayer( 'Player 2' ) };
   this.phaser = phaser;
 }
-Citadel.prototype.run = function() {
-  CitPhaser.update.toggleMoveBoard();
-  // Start ajax calls to RESTful api
-  this.ajax();
-  // Allows for keyboard to simulate pes input
-  $( 'html' ).keydown( function ( e ) {
-    var keyMap = { 37 : 'LEFT', 39 : 'RIGHT', 38 : 'UP', 40 : 'DOWN',
-                   13 : 'START', 83 : 'SELECT', 65 : 'A', 66 : 'B' };
-    if ( e.which in keyMap ) {
-      this.handleInput( keyMap[ e.which ] );
-    }
-  });
-};
 Citadel.prototype.ajax = function() {
+  var self = this;
   $.ajax( {
     type: "GET",
     url: "http://127.0.0.1:8080/pressed",
@@ -44,7 +32,7 @@ Citadel.prototype.ajax = function() {
   }).fail( function( jqXHR, textStatus, errorThrown ) {
     console.log( 'Button request failed: ' + textStatus );
     // After the request has returned call again
-    this.ajax();
+    self.ajax();
   });  
 };
 Citadel.prototype.handleInput = function( button ) {
@@ -164,6 +152,20 @@ Citadel.prototype.hasWinner = function() {
     }
   }
   return 0;
+};
+Citadel.prototype.run = function() {
+  var self = this;
+  CitPhaser.update.toggleMoveBoard();
+  // Start ajax calls to RESTful api
+  //this.ajax();
+  // Allows for keyboard to simulate pes input
+  $( 'html' ).keydown( function ( e ) {
+    var keyMap = { 37 : 'LEFT', 39 : 'RIGHT', 38 : 'UP', 40 : 'DOWN',
+                   13 : 'START', 83 : 'SELECT', 65 : 'A', 66 : 'B' };
+    if ( e.which in keyMap ) {
+      self.handleInput( keyMap[ e.which ] );
+    }
+  });
 };
 /*****************************************************************************/
 

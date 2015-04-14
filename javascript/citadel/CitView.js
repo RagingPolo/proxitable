@@ -67,6 +67,9 @@ CitPhaser.View.prototype = {
     this.load.image( 'army', 'assets/army.png' );           
   },
   create: function() {
+
+    console.log( 'Create called' );
+
     var bg = this.add.sprite( 0, 0, 'bg' );
     this.cloud1 = this.add.sprite( 640, 358, 'cloud1' );
     this.cloud2 = this.add.sprite( 1436, 189, 'cloud2' );
@@ -87,7 +90,6 @@ CitPhaser.View.prototype = {
     CitPhaser.moveBoard = this.add.sprite( 727, -485, 'moveBoard' );
     var moveStyle = { font: "65px Arial", fill: "#ffffff", align: "center" };
     CitPhaser.moveNumText = this.add.text( 965, -187, "1", moveStyle );
-    console.log( CitPhaser.moveBoard );
     //tween the board down
     CitPhaser.boardTween = this.add.tween( CitPhaser.moveBoard ).to( { y: '+485' }, 500, Phaser.Easing.Linear.None, false );
     CitPhaser.boardTweenText = this.add.tween( CitPhaser.moveNumText ).to( { y: '+485' }, 500, Phaser.Easing.Linear.None, false );
