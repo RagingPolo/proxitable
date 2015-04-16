@@ -5,10 +5,22 @@ from flask.ext.cors import cross_origin
 
 app = Flask( __name__ )
 # Relevent pins for the PES hardware
-INPUT_PINS  = { 'START' : 12, 'UP' : 23, 'DOWN' : 18, 'RIGHT' : 21,
-                'LEFT' : 26, 'A' : 7, 'B' : 10, 'SELECT' : 15 }
-OUTPUT_PINS = { 'LEFT' : 24, 'UP' : 22, 'RIGHT' : 19,'DOWN' : 16,
-                'SELECT' : 13, 'START' : 11, 'B' : 8, 'A' : 5 }
+INPUT_PINS  = { 'UP' : 23,
+                'DOWN' : 18,
+                'LEFT' : 26,
+                'RIGHT' : 21,
+                'START' : 12,
+                'SELECT' : 15,
+                'A' : 7, 
+                'B' : 10 }
+OUTPUT_PINS = { 'UP' : 22,
+                'DOWN' : 16,
+                'LEFT' : 24,
+                'RIGHT' : 19,
+                'START' : 11,
+                'SELECT' : 13,
+                'A' : 5,
+                'B' : 8 }
 
 @app.route( '/pins', methods = [ 'GET', 'POST' ] )
 @cross_origin( allow_headers=['Content-Type'] )
@@ -24,20 +36,21 @@ def pins():
           GPIO.output( OUTPUT_PINS[ button ], setting )
     return "", 204, {}
   if request.method == 'GET':
-    return "", 204, {}
+    for button in OUTPUT_PINS:
+      status[ button ] = True if GPIO.output( OUTPUT_PINS[ button ] ) == 1 else False
+    return jsonify( status )
 
 @app.route( '/pressed', methods = [ 'GET' ] )
 def pressed():
   # Poll GPIO pins
-  pin = 0
-  while pin == 0:
-    for i in INPUT_PINS:
-      if GPIO.input( i ):
-        pin = i
+  pressed = None
+  while True:
+    for button in INPUT_PINS:
+      if GPIO.input( INPUT_PINS[ button ] ):
+        pressed = button
         break
     sleep( 0.1 )
-  pressed = { 'button' : pin }
-  return jsonify( pressed )
+  return jsonify( { 'button' : pressed } )
 
 if '__main__' == __name__:
   # Setup the GPIO pins

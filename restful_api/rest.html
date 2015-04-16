@@ -1,0 +1,58 @@
+<html>
+  <head>
+    <script src="http://code.jquery.com/jquery-1.11.1.min.js"></script>
+    <script>
+      function setStatus() {
+        var pinStat = {};
+        $( ".status" ).each( function( i ) {
+          if ( this.checked ) {
+            pinStat[ this.value ] = true;
+        } else {
+            pinStat[ this.value ] = false;
+          }
+        });
+        $.ajax( {
+            type: "POST",
+            url: "http://" + $( "#ip" ).val() + ":8080/pins",
+            contentType: "application/json",
+            dataType: "json",
+            data: pinStat,
+          }).done( function() {
+            $( "#ssmsg" ).html( "SUCCESS" );
+          }).fail( function() {
+            $( "#ssmsg" ).html( "FAILED" );
+          });
+      }
+      function getStatus() {
+        $.ajax( {
+          type: "GET",
+          url: "http://" + $( "#ip" ).val() + ":8080/pins",
+          dataType: "json",
+        }).done( function( data ) {
+          $( "#ssmsg" ).html( "SUCCESS" );
+          data.each( function ( i ) {
+            // Set the matching checkbox based on status
+          });
+        }).fail( function() {
+          $( "#ssmsg" ).html( "FAILED" );
+        });
+      }
+    </script>
+    <title>RESTful API Test</title>
+  </head>
+  <body>
+    <input id="ip" type="text" name="ip" value="192.168.0.111"/>
+    <p />
+    <input class="status" type="checkbox" name="set" value="UP"> UP<br />
+    <input class="status" type="checkbox" name="set" value="DOWN"> DOWN<br />
+    <input class="status" type="checkbox" name="set" value="LEFT"> LEFT<br />
+    <input class="status" type="checkbox" name="set" value="RIGHT"> RIGHT<br />
+    <input class="status" type="checkbox" name="set" value="SELECT"> SELECT<br />
+    <input class="status" type="checkbox" name="set" value="START"> START<br />
+    <input class="status" type="checkbox" name="set" value="A"> A<br />
+    <input class="status" type="checkbox" name="set" value="B"> B<br />
+    <button type="button" onclick="setStatus()">Set Button Status</button><br />
+    <button type="button" onclick="getStatus()">Get Button Status</button><br />
+    <div id="ssmsg"></div>
+  </body>
+</html>
