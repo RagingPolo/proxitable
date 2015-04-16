@@ -37,7 +37,7 @@ class Launch( object ):
                     '.proxitable.log' ), level=logging.DEBUG, format=LOGFORMAT )
     logging.info( 'Started Launcher' ) 
     # Clear any old resources
-    resDir = os.path.join( scriptDir, 'wsserver/resources' )
+    resDir = os.path.join( self.scriptDir, 'wsserver/resources' )
     try:
       shutil.rmtree( resDir, ignore_errors=True )
       os.mkdir( resDir )  
