@@ -60,8 +60,9 @@ function CitUpdateArmyPos( state, path, direction ) {
 }
 
 /* Display or hide the move board */
-function CitUpdateToggleMoveBoard( state ) {
+function CitUpdateToggleMoveBoard( state, value ) {
   if ( -485 == state.moveBoard.y ) {
+    state.moveNumText.setText( value );
     state.boardTween.start();
     state.boardTweenText.start();
   } else if ( 0 == state.moveBoard.y ) {

@@ -50,7 +50,7 @@ CitGame.prototype.handleInput = function( button ) {
         break;
       case 'A':
         if ( !( CitUpdateInstructionsVisible( this.state ) ) && !( this.delay ) ) {
-          CitUpdateToggleMoveBoard( this.state );
+          CitUpdateToggleMoveBoard( this.state, this.move );
           // Play the current amount of points and get a move from the bot
           this.player[ 2 ].addMove( this.bot.getMove( this.player[ 2 ].getPoints(),
                                                       this.player[ 1 ].getLastMove() ) );
@@ -65,13 +65,16 @@ CitGame.prototype.handleInput = function( button ) {
           // Update the view
           CitUpdatePos( this.state, this.board.getPosition() );
           CitUpdatePoints( this.state, this.player[ 1 ].getPoints(), this.player[ 2 ].getPoints() );
+          if ( this.move > this.player[ 1 ].getPoints() ) {
+            this.move = this.player[ 1 ].getPoints();
+          }
           // Set a 3 second delay that will ignore any button presses except help (START)
           this.delay = 1;
           var self = this;
           setTimeout( function() { 
             self.delay = 0;
             if ( !self.winner ) {
-              CitUpdateToggleMoveBoard( self.state );
+              CitUpdateToggleMoveBoard( self.state, self.move );
             } 
           }, 3000 );
         }
@@ -138,7 +141,7 @@ CitGame.prototype.hasWinner = function() {
 };
 CitGame.prototype.run = function() {
   var self = this;
-  CitUpdateToggleMoveBoard( this.state );
+  CitUpdateToggleMoveBoard( this.state, this.move );
   // Start ajax calls to RESTful api
   //this.ajax();
   // Allows for keyboard to simulate pes input
