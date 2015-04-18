@@ -263,3 +263,7 @@ CitPhaser.update = {
     CitPhaser.comPointsText.setText( comPoints );
   }
 };
+
+var phaser = new Phaser.Game( '100', '100', Phaser.AUTO, '<html>', {}, true );
+phaser.state.add( 'View', CitPhaser.View );
+phaser.state.start( 'View' );

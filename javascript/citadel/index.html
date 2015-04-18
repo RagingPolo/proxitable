@@ -4,15 +4,23 @@
     <title>Citadel - PES</title>
     <script src="jquery.min.js"></script>
     <script src="phaser.min.js"></script>
-    <script src="CitView.js"></script>
-    <script src="bot.js"></script>
-    <script src="citadel.js"></script>
+    <script src="CitBot.js"></script>
+    <script src="CitPlayer.js"></script>
+    <script src="CitBoard.js"></script>
+    <script src="CitState.js"></script>
+    <script src="CitUpdate.js"></script>
+    <script src="CitGame.js"></script>
     <style>
       body {
         background-color: #40c0f0;
         margin: 0!important;
       }
     </style>
+    <script>
+      var game = new Phaser.Game( 1920, 1080, Phaser.AUTO, '', {}, true );
+      game.state.add( 'State', CitState );
+      game.state.start( 'State' );
+    </script>
   </head>
   <body>
   </body>
