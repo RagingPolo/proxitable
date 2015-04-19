@@ -42,7 +42,7 @@ CitGame.prototype.handleInput = function( button ) {
       case 'DOWN':
         // Decrease the proposed move by one
         if ( !( CitUpdateInstructionsVisible( this.state ) ) && !( this.delay ) ) {
-          if ( this.move > 0 ) {
+          if ( this.move > 1 ) {
             --this.move;
             CitUpdateBid( this.state, this.move );
           }
