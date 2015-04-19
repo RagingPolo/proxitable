@@ -1,62 +1,11 @@
 function CitUpdatePos( state, pos ) {
-  // Direction is 1 when going left and -1 when going right
-  var direction = pos - state.position;
-  console.log( 'p:' + pos + ' d:' + direction );
-  if ( direction != 0 ) {
-    switch ( pos ) {
-      case 0:
-        // TODO Display burning castle
-        state.army.alpha = 0;
-        break;
-      case 1:
-        CitUpdateArmyPos( state, state.path1_2, direction );
-        break;
-      case 2:
-        if ( 1 == direction ) {
-          CitUpdateArmyPos( state, state.path2_3, direction );
-        } else {
-          CitUpdateArmyPos( state, state.path1_2, direction );
-        }
-        break;
-      case 3:
-        if ( 1 == direction ) {
-          CitUpdateArmyPos( state, state.path3_4, direction );
-        } else {
-          CitUpdateArmyPos( state, state.path2_3, direction );
-        }
-      case 4:
-        if ( 1 == direction ) {
-          CitUpdateArmyPos( state, state.path4_5, direction );
-        } else {
-          CitUpdateArmyPos( state, state.path3_4, direction );
-        }
-      case 5:
-        CitUpdateArmyPos( state, state.path4_5, direction );
-        break;
-      case 6:
-        // TODO Display burning castle
-        state.army.alpha = 0;
-        break;
-      default: // Do nothing
-        break;
-    }
-  }
+  // Direction is 1 when going right and -1 when going left
+  state.direction = pos - state.position;
+  //update bottom display
+  state.positionMarker.frame = pos;
+  //move the army along
+  state.moveArmyPos = state.point.x[ pos - 1 ];
   state.position = pos;
-}
-
-/* Move the army sprite */
-function CitUpdateArmyPos( state, path, direction ) {
-  if ( 1 == direction ) {
-    for ( var i = path.length - 1; i >= 0; --i ) {
-      state.army.x = path[ i ].x;
-      state.army.y = path[ i ].y;
-    }
-  } else {
-    for ( var i = 0; i < path.length; ++i ) {
-      state.army.x = path[ i ].x;
-      state.army.y = path[ i ].y;
-    }
-  }
 }
 
 /* Display or hide the move board */
@@ -80,8 +29,12 @@ function CitUpdateBid( state, value ) {
 
 /* Update players points totals */
 function CitUpdatePoints( state, hum, com ) {
-  state.humPointsText.setText( hum );
-  state.comPointsText.setText( com );
+  //if less than 10 pad with leading a space
+  if(hum < 10) state.humPointsText.setText( " " + hum );
+  else state.humPointsText.setText( hum );
+
+  if(com < 10) state.comPointsText.setText( " " + com );
+  else state.comPointsText.setText( com );
 }
 
 /* Display a message to the player */

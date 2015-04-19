@@ -18,15 +18,13 @@ CitState = function( game ) {
   this.msgBubbleTweenFadeOut = null;
   this.msgTextTweenFadein    = null;
   this.msgTextTweenFadeOut   = null;
-  // x,y points of the army positions
-  this.point1_2 = { 'x': [ 137, 564 ],   'y': [ 552, 760 ] };
-  this.point2_3 = { 'x': [ 564, 994 ],   'y': [ 760, 767 ] };
-  this.point3_4 = { 'x': [ 994, 1476 ],  'y': [ 767, 705 ] };
-  this.point4_5 = { 'x': [ 1476, 1760 ], 'y': [ 705, 565 ] };
-  this.path1_2 = [];
-  this.path2_3 = [];
-  this.path3_4 = [];
-  this.path4_5 = [];
+  this.direction             = 1;
+  //start at pos 3
+  this.moveArmyPos           = 994;
+  this.arrayOffset           = 0;
+  // x,y points of the army positions :TODO add more so it's smoother
+  this.point = { 'x': [ 137, 564, 994, 1476, 1760 ],   'y': [ 552, 760, 767, 705, 565 ] };
+  this.path = [];
   this.position = 3;
   this.run = true;
 };
@@ -100,26 +98,14 @@ CitState.prototype = {
   },
   // Plots the path of the army between the points
   plot: function () {
-    var x = 1 / this.game.width;
+    var x = (1 / this.game.width) * 3;
+    var j = 0
     for ( var i = 0; i <= 1; i += x ) {
-      var px = this.math.catmullRomInterpolation( this.point1_2.x, i );
-      var py = this.math.catmullRomInterpolation( this.point1_2.y, i );
-      this.path1_2.push( { x: px, y: py } );
-    }
-    for ( var i = 0; i <= 1; i += x ) {
-      var px = this.math.catmullRomInterpolation( this.point2_3.x, i );
-      var py = this.math.catmullRomInterpolation( this.point2_3.y, i );
-      this.path2_3.push( { x: px, y: py } );
-    }
-    for ( var i = 0; i <= 1; i += x ) {
-      var px = this.math.catmullRomInterpolation( this.point3_4.x, i );
-      var py = this.math.catmullRomInterpolation( this.point3_4.y, i );
-      this.path3_4.push( { x: px, y: py } );
-    }
-    for ( var i = 0; i <= 1; i += x ) {
-      var px = this.math.catmullRomInterpolation( this.point4_5.x, i );
-      var py = this.math.catmullRomInterpolation( this.point4_5.y, i );
-      this.path4_5.push( { x: px, y: py } );
+      var px = this.math.catmullRomInterpolation( this.point.x, i );
+      var py = this.math.catmullRomInterpolation( this.point.y, i );
+      if(Math.round(px) == this.moveArmyPos) this.arrayOffset = j;
+      j++;  
+      this.path.push( { x: px, y: py } );
     }
   },
   // State game loop
@@ -136,6 +122,14 @@ CitState.prototype = {
     }
     if ( this.cloud3.x > this.world.width ) {
       this.cloud3.x = 0 - this.cloud3.width;
+    }
+    if(Math.round(this.army.x) != this.moveArmyPos)
+    {
+      this.army.x = this.path[ this.arrayOffset ].x;
+      this.army.y = this.path[ this.arrayOffset ].y;
+      this.arrayOffset += this.direction;
+      if (this.arrayOffset < 0) this.arrayOffset = 0;
+      if (this.arrayOffset >= this.path.length ) this.arrayOffset = this.path.length -1;
     }
     // Run the game
     if ( this.run ) {
