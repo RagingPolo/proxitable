@@ -1,9 +1,9 @@
 function CitUpdatePos( state, pos ) {
   // Direction is 1 when going right and -1 when going left
   state.direction = pos - state.position;
-  //update bottom display
+  // Update bottom display
   state.positionMarker.frame = pos;
-  //move the army along
+  // Move the army along
   state.moveArmyPos = state.point.x[ pos - 1 ];
   state.position = pos;
 }
@@ -20,9 +20,17 @@ function CitUpdateToggleMoveBoard( state, value ) {
   }
 }
 
+/* Check if the move board is visible to the player  */
+function CitUpdateBoardVisible( state ) {
+  if ( 0 == state.moveBoard.y ) {
+    return true;
+  }
+  return false;
+}
+
 /* If the board is displayed update move */
 function CitUpdateBid( state, value ) {
-  if ( 0 == state.moveBoard.y ) {
+  if ( CitUpdateBoardVisible( state )  ) {
     state.moveNumText.setText( value );
   }
 }
@@ -30,10 +38,10 @@ function CitUpdateBid( state, value ) {
 /* Update players points totals */
 function CitUpdatePoints( state, hum, com ) {
   //if less than 10 pad with leading a space
-  if(hum < 10) state.humPointsText.setText( " " + hum );
+  if ( hum < 10 ) state.humPointsText.setText( " " + hum );
   else state.humPointsText.setText( hum );
 
-  if(com < 10) state.comPointsText.setText( " " + com );
+  if ( com < 10 ) state.comPointsText.setText( " " + com );
   else state.comPointsText.setText( com );
 }
 

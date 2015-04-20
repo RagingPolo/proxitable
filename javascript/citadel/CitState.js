@@ -26,7 +26,6 @@ CitState = function( game ) {
   this.point = { 'x': [ 137, 564, 994, 1476, 1760 ],   'y': [ 552, 760, 767, 705, 565 ] };
   this.path = [];
   this.position = 3;
-  this.run = true;
 };
 CitState.prototype = {
   // Load state assets
@@ -95,15 +94,19 @@ CitState.prototype = {
     // Display the game instructions
     this.instructions = this.add.sprite( 0, 0, 'instructions' );
     this.plot();
+    // Run the game
+    var game = new CitGame( this );
+    game.run();
+    this.run = false;
   },
   // Plots the path of the army between the points
   plot: function () {
-    var x = (1 / this.game.width) * 3;
+    var x = ( 1 / this.game.width ) * 3;
     var j = 0
     for ( var i = 0; i <= 1; i += x ) {
       var px = this.math.catmullRomInterpolation( this.point.x, i );
       var py = this.math.catmullRomInterpolation( this.point.y, i );
-      if(Math.round(px) == this.moveArmyPos) this.arrayOffset = j;
+      if ( Math.round( px ) == this.moveArmyPos ) this.arrayOffset = j;
       j++;  
       this.path.push( { x: px, y: py } );
     }
@@ -123,19 +126,12 @@ CitState.prototype = {
     if ( this.cloud3.x > this.world.width ) {
       this.cloud3.x = 0 - this.cloud3.width;
     }
-    if(Math.round(this.army.x) != this.moveArmyPos)
-    {
+    if(Math.round(this.army.x) != this.moveArmyPos) {
       this.army.x = this.path[ this.arrayOffset ].x;
       this.army.y = this.path[ this.arrayOffset ].y;
       this.arrayOffset += this.direction;
-      if (this.arrayOffset < 0) this.arrayOffset = 0;
-      if (this.arrayOffset >= this.path.length ) this.arrayOffset = this.path.length -1;
-    }
-    // Run the game
-    if ( this.run ) {
-      var game = new CitGame( this );
-      game.run();
-      this.run = false;
+      if ( this.arrayOffset < 0 ) this.arrayOffset = 0;
+      if ( this.arrayOffset >= this.path.length ) this.arrayOffset = this.path.length -1;
     }
   }
 } 

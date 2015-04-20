@@ -1,6 +1,20 @@
 /******************************************************************************
  * Contains game logic and maintains overall game                            */
 function CitGame( state ) {
+  // Turn the correct PES buttons on
+  var pinStat = { "UP": true, "DOWN": true, "LEFT": false, "RIGHT": false,
+                  "SELECT": false, "START": true, "A": true, "B": false };
+  $.ajax( {
+    type: "POST",
+    url: "http://127.0.0.1:8080/pins",
+   contentType: "application/json",
+    dataType: "json",
+    data: pinStat,
+  }).done( function() {
+    console.log( 'PES button setup complete' );
+  }).fail( function() {
+    console.log( 'PES button setup failed' );
+  });
   this.winner = 0;
   this.help   = 1;
   this.move   = 1;
@@ -32,7 +46,8 @@ CitGame.prototype.handleInput = function( button ) {
     switch ( button ) {
       case 'UP':
         // Increase the propsed move by one
-        if ( !( CitUpdateInstructionsVisible( this.state ) ) && !( this.delay ) ) {
+        if ( !( CitUpdateInstructionsVisible( this.state ) ) &&
+              ( CitUpdateBoardVisible( this.state ) ) ) {
           if ( this.move < this.player[ 1 ].getPoints() ) {
             ++this.move;
             CitUpdateBid( this.state, this.move );
@@ -41,7 +56,8 @@ CitGame.prototype.handleInput = function( button ) {
         break;
       case 'DOWN':
         // Decrease the proposed move by one
-        if ( !( CitUpdateInstructionsVisible( this.state ) ) && !( this.delay ) ) {
+        if ( !( CitUpdateInstructionsVisible( this.state ) ) &&
+              ( CitUpdateBoardVisible( this.state ) ) ) {
           if ( this.move > 1 ) {
             --this.move;
             CitUpdateBid( this.state, this.move );
@@ -49,7 +65,8 @@ CitGame.prototype.handleInput = function( button ) {
         }
         break;
       case 'A':
-        if ( !( CitUpdateInstructionsVisible( this.state ) ) && !( this.delay ) ) {
+        if ( !( CitUpdateInstructionsVisible( this.state ) ) &&
+              ( CitUpdateBoardVisible( this.state ) ) ) {
           CitUpdateToggleMoveBoard( this.state, this.move );
           // Play the current amount of points and get a move from the bot
           this.player[ 2 ].addMove( this.bot.getMove( this.player[ 2 ].getPoints(),
@@ -92,9 +109,15 @@ CitGame.prototype.handleInput = function( button ) {
     if ( this.winner ) {
       switch ( this.winner ) {
         case 1:
+          for ( var i = this.board.getPosition() ; i < CitBoard.MAX ; ++i ) {
+            this.board.moveRight();
+          }
           msg = 'Congratulations, you won!';
           break;
         case 2:
+          for ( var i = this.board.getPosition() ; i > 0 ; --i ) {
+            this.board.moveLeft();
+          }
           msg = 'Oh no, you lost!';
           break;
         case 3:
@@ -105,8 +128,9 @@ CitGame.prototype.handleInput = function( button ) {
           break;
       }
       CitUpdateMsg( this.state, msg );
+      CitUpdatePos( this.state, this.board.getPosition() );
       // Return to main menu or if single game refresh the game when finished
-      //setTimeout( function() { /* window.location.href = "../main.html"; */ location.reload(); }, 10000 );
+      setTimeout( function() { /* window.location.href = "../main.html"; */ location.reload(); }, 5000 );
     }
   }
 };
