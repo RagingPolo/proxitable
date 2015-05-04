@@ -32,9 +32,9 @@ CitGame.prototype.ajax = function() {
     url: "http://127.0.0.1:8080/pressed",
     dataType: "json",
   }).done( function( data, textStatus, jqXHR  ) {
-    this.handleInput( data[ 'button' ] );
+    this.handleInput( data.button );
     // After the request has returned call again
-    this.ajax();
+    self.ajax();
   }).fail( function( jqXHR, textStatus, errorThrown ) {
     console.log( 'Button request failed: ' + textStatus );
     // After the request has returned call again
@@ -167,7 +167,7 @@ CitGame.prototype.run = function() {
   var self = this;
   CitUpdateToggleMoveBoard( this.state, this.move );
   // Start ajax calls to RESTful api
-  //this.ajax();
+  this.ajax();
   // Allows for keyboard to simulate pes input
   $( 'html' ).keydown( function ( e ) {
     var keyMap = { 37 : 'LEFT', 39 : 'RIGHT', 38 : 'UP', 40 : 'DOWN',

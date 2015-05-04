@@ -5,22 +5,22 @@ from flask.ext.cors import cross_origin
 
 app = Flask( __name__ )
 # Relevent pins for the PES hardware
-INPUT_PINS  = { 'UP' : 23,
-                'DOWN' : 18,
-                'LEFT' : 26,
-                'RIGHT' : 21,
-                'START' : 12,
-                'SELECT' : 15,
-                'A' : 7, 
-                'B' : 10 }
-OUTPUT_PINS = { 'UP' : 22,
-                'DOWN' : 16,
-                'LEFT' : 24,
-                'RIGHT' : 19,
-                'START' : 11,
-                'SELECT' : 13,
-                'A' : 5,
-                'B' : 8 }
+INPUT_PINS  = { 'UP' : 13,
+                'DOWN' : 31,
+                'LEFT' : 11,
+                'RIGHT' : 15,
+                'START' : 33,
+                'SELECT' : 29,
+                'A' : 37, 
+                'B' : 35 }
+OUTPUT_PINS = { 'UP' : 16,
+                'DOWN' : 32,
+                'LEFT' : 12,
+                'RIGHT' : 18,
+                'START' : 36,
+                'SELECT' : 22,
+                'A' : 40,
+                'B' : 38 }
 
 @app.route( '/pins', methods = [ 'POST' ] )
 @cross_origin( allow_headers=['Content-Type'] )
