@@ -22,7 +22,7 @@ OUTPUT_PINS = { 'UP' : 22,
                 'A' : 5,
                 'B' : 8 }
 
-@app.route( '/pins', methods = [ 'GET', 'POST' ] )
+@app.route( '/pins', methods = [ 'POST' ] )
 @cross_origin( allow_headers=['Content-Type'] )
 def pins():
   status = {}
@@ -35,18 +35,15 @@ def pins():
         if button in OUTPUT_PINS:
           GPIO.output( OUTPUT_PINS[ button ], setting )
     return "", 204, {}
-  if request.method == 'GET':
-    for button in OUTPUT_PINS:
-      status[ button ] = True if GPIO.output( OUTPUT_PINS[ button ] ) == 1 else False
-    return jsonify( status )
 
 @app.route( '/pressed', methods = [ 'GET' ] )
+@cross_origin( allow_headers=['Content-Type'] )
 def pressed():
   # Poll GPIO pins
   pressed = None
-  while True:
-    for button in INPUT_PINS:
-      if GPIO.input( INPUT_PINS[ button ] ):
+  while pressed == None:
+    for button, pin in INPUT_PINS.items():
+      if GPIO.input( pin ):
         pressed = button
         break
     sleep( 0.1 )
