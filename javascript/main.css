@@ -34,9 +34,11 @@ body {
 }
 
 .unselected {
+  border: 2px solid;
   background-color: #0080FF;
 }
 
 .selected {
+  border: 6px solid;
   background-color: #B00000;
 }
