@@ -6,9 +6,8 @@ function CitGame( state ) {
                   "SELECT": false, "START": true, "A": true, "B": false };
   $.ajax( {
     type: "POST",
-    //url: "http://127.0.0.1:8080/pins",
-    url: "http://192.168.0.110:8080/pins",
-   contentType: "application/json",
+    url: "http://10.0.0.1:8080/pins",
+    contentType: "application/json",
     dataType: "json",
     data: pinStat,
   }).done( function() {
@@ -30,8 +29,7 @@ CitGame.prototype.ajax = function() {
   var self = this;
   $.ajax( {
     type: "GET",
-    //url: "http://127.0.0.1:8080/pressed",
-    url: "http://192.168.0.110:8080/pressed",
+    url: "http://10.0.0.1:8080/pressed",
     dataType: "json",
   }).done( function( data, textStatus, jqXHR  ) {
     self.handleInput( data.button );

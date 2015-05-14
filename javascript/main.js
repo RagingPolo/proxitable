@@ -4,13 +4,27 @@
 // re loads this main menu when complete.
 // TODO Add game icons/images to be used for menu tiles
 // TODO Make it look pretty!!!
-var games = [ { name:"Citadel", path:"citadel/index.html" }
-             ,{ name:"Our History", path:"history/index.html" }
+var games = [ { "name":"Citadel", "path":"citadel/index.html" }
+             ,{ "name":"Our History","path":"history/index.html" }
 ];
 
 var selected;
 
 $( document ).ready( function() {
+  // Turn the correct PES buttons on
+  var pinStat = { "UP": false, "DOWN": false, "LEFT": true, "RIGHT": true,
+                  "SELECT": false, "START": true, "A": false, "B": false };
+  $.ajax( {
+    type: "POST",
+    url: "http://10.0.0.1:8080/pins",
+    contentType: "application/json",
+    dataType: "json",
+    data: pinStat,
+  }).done( function() {
+    console.log( 'PES button setup complete' );
+  }).fail( function() {
+    console.log( 'PES button setup failed' );
+  });
   generateMenu();
   getButton();
   // Allows for keyboard to simulate pes input
@@ -28,10 +42,10 @@ $( document ).ready( function() {
 function getButton() {
   $.ajax( {
     type: "GET",
-    url: "http://127.0.0.1:8080/pressed",
+    url: "http://10.0.0.1:8080/pressed",
     dataType: "json",
   }).done( function( data, textStatus, jqXHR  ) {
-    handleInput( data[ 'button' ] );
+    handleInput( data.button );
     // After the request has returned call again
     getButton();
   }).fail( function( jqXHR, textStatus, errorThrown ) {
@@ -54,7 +68,7 @@ function handleInput( button ) {
       break;
     case 'START':
       var url = window.location.href;
-      url = url.substring( 0, url.lastIndexOf( "/" ) + 1 ) + games[ selected ][ 'path' ];
+      url = url.substring( 0, url.lastIndexOf( "/" ) + 1 ) + games[ selected ].path;
       window.location.replace( url );
       break;
     default:
@@ -69,8 +83,8 @@ function handleInput( button ) {
  */ 
 function generateMenu() {
   $.each( games, function( idx, game ) {
-    var tile = '<div id="' + idx + '" class="tile unselected"><div class="content"><div class="center">' + game[ 'name' ] + '</div></div></div>';
-    $( '#menu' ).append( tile );                 
+    var tile = '<div id="' + idx + '" class="tile unselected"><div class="content"><div class="center">' + game.name + '</div></div></div>';
+    $( '#menu' ).append( tile );
   });
   select( 0 );
 };
