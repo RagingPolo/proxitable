@@ -4,9 +4,9 @@
 // re loads this main menu when complete.
 // TODO Add game icons/images to be used for menu tiles
 // TODO Make it look pretty!!!
-var games = [ { name:"Citadel", path:"citadel/index.html" } ];
-//  ,{ name:"Battleships", path:"battleships/main.html" }
-//  ,{ name:"Our History", path:"history/main.html" }
+var games = [ { name:"Citadel", path:"citadel/index.html" }
+             ,{ name:"Our History", path:"history/main.html" }
+];
 
 var selected;
 
