@@ -4,11 +4,10 @@
 // re loads this main menu when complete.
 // TODO Add game icons/images to be used for menu tiles
 // TODO Make it look pretty!!!
-var games = [
-   { name:"Citadel", path:"citadel/main.html" }
-  ,{ name:"Battleships", path:"battleships/main.html" }
-  ,{ name:"Our History", path:"history/main.html" }
-;
+var games = [ { name:"Citadel", path:"citadel/index.html" } ];
+//  ,{ name:"Battleships", path:"battleships/main.html" }
+//  ,{ name:"Our History", path:"history/main.html" }
+
 var selected;
 
 $( document ).ready( function() {
@@ -54,7 +53,9 @@ function handleInput( button ) {
       select( selected + 1 );
       break;
     case 'START':
-      alert( 'Opening ' + games[ selected ][ 'path' ] );
+      var url = window.location.href;
+      url = url.substring( 0, url.lastIndexOf( "/" ) + 1 ) + games[ selected ][ 'path' ];
+      window.location.replace( url );
       break;
     default:
       // Do nothing

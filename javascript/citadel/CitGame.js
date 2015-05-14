@@ -132,7 +132,11 @@ CitGame.prototype.handleInput = function( button ) {
       CitUpdateMsg( this.state, msg );
       CitUpdatePos( this.state, this.board.getPosition() );
       // Return to main menu or if single game refresh the game when finished
-      setTimeout( function() { /* window.location.href = "../main.html"; */ location.reload(); }, 5000 );
+      setTimeout( function() { 
+        var url = window.location.href;
+        url = url.substring( 0, url.lastIndexOf( "/" ) + 1 ) + "../index.html";
+        window.location.replace( url );
+      }, 5000 );
     }
   }
 };
