@@ -1,0 +1,24 @@
+.square {
+  float: left;
+  margin: 1px;
+  position: relative;
+  width: 3.8%;
+  padding-bottom: 3.8%;
+  overflow: hidden;
+}
+.content {
+  position: absolute;
+  height: 100%;
+  width: 100%;
+} 
+.centre {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translateX(-50%) translateY(-50%);
+}
+.water { background-color: #0066CC; }
+.ship { background-color: #444444; }
+.hit { background-color: #DF0101; }
+.miss { background-color: #2ECCFA; }
+.axis { background-color: #AAAAAA; }
