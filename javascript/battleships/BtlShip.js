@@ -6,8 +6,9 @@ function BtlShip( name, size ) {
   this.x = null;
   this.y = null;
   this.dir - null;
+  this.hits = [];
   for ( var i = 0 ; i < size ; ++i ) {
-    this.hits[ i ] = 0;
+    this.hits.push( 0 );
   }
 }
 BtlShip.prototype.getName = function() { return this.name; };
@@ -18,7 +19,7 @@ BtlShip.prototype.getSize = function() { return this.size; };
 // Record the position of the ship on the board, it is assumed that this
 // position fits inside the current board, the checking should be done
 // by the callee
-BtlShip.prototype.setPostion = function( x, y, direction ) {
+BtlShip.prototype.setPosition = function( x, y, direction ) {
   if ( $.inArray( direction, [ 'v', '>' ] ) > -1 ) {
      this.x = x;
      this.y = y;

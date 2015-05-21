@@ -6,19 +6,19 @@ var Player = function BtlPlayer( name, bsize ) {
   this.history = [];
   this.board.positionShips();
 }
-BtlPlayer.prototype.getName = function() { return this.name; };
-BtlPlayer.prototype.getHistory = function() { return this.history; };
-BtlPlayer.prototype.getBoard = function() { return this.board; };
-BtlPlayer.prototype.repositionShips function() {
+Player.prototype.getName = function() { return this.name; };
+Player.prototype.getHistory = function() { return this.history; };
+Player.prototype.getBoard = function() { return this.board; };
+Player.prototype.repositionShips = function() {
   if ( this.history.length == 0 ) {
     this.board.positionShips();
   }
 };
 // Will return undefined if there is no history
-BtlPlayer.prototype.getLastMove = function() {
+Player.prototype.getLastMove = function() {
   return $( this.history ).get( -1 );
 };
-BtlPlayer.prototype.getNextMove = function() { return false; }; 
+Player.prototype.getNextMove = function() { return false; }; 
 /*****************************************************************************/
 
 /******************************************************************************

@@ -45,7 +45,7 @@ BtlBoard.prototype.isAllSunk = function() {
 // Check a players move against the ships on the board
 BtlBoard.prototype.takeShot = function( move ) {
   for ( var i = 0 ; i < this.ships.length ; ++i ) {
-    if ( this.ships[ i ].isHit( move.getX(), move.getY(), true ) {
+    if ( this.ships[ i ].isHit( move.getX(), move.getY(), true ) ) {
       return true;
     }
   }
@@ -56,9 +56,10 @@ BtlBoard.prototype.takeShot = function( move ) {
 BtlBoard.prototype.positionShips = function() {
   var overlap = true;
   var x, y, d;
+  var i, onboard;
   while ( overlap ) {
     // Pick some random ship positions
-    for ( var i = 0, var onboard = false ; i < this.ships.length ; ++i ) {
+    for ( i = 0, onboard = false ; i < this.ships.length ; ++i ) {
       while ( false == onboard ) {
         x = Math.floor( Math.random() * ( this.size - 1 ) );
         y = Math.floor( Math.random() * ( this.size - 1 ) );

@@ -37,7 +37,7 @@ BtlSquare.prototype.getHtml = function() {
   }
   square += '><div class="content"><div class="centre">';
   square += this.content;
-  square += '</div></div></div>';
+  square += '</div></div></div>\n';
   this.reset();
   return square;
 };
