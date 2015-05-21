@@ -17,7 +17,8 @@ BtlSquare.prototype.addId = function( id ) {
 };
 // Add a class to the square
 BtlSquare.prototype.addClass = function( cssClass ) {
-  this.cssClass += cssClass + ' ';
+  this.cssClass = this.cssClass + ' ' + cssClass;
+  console.log( this.cssClass );
 };
 // Add some content to the square
 BtlSquare.prototype.addContent = function( content ) {
@@ -26,11 +27,11 @@ BtlSquare.prototype.addContent = function( content ) {
 // Get the html for a single square
 BtlSquare.prototype.getHtml = function() {
   var square = '<div class="square';
-  if ( this.cssClass.len > 0  ) {
+  if ( this.cssClass.length > 0  ) {
     square += this.cssClass;
   }
   square += '"';
-  if ( this.id.len > 0 ) {
+  if ( this.id.length > 0 ) {
     square += ' id="';
     square += this.id;
     square += '"';
