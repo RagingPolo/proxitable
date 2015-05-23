@@ -4,8 +4,8 @@
 // re loads this main menu when complete.
 // TODO Add game icons/images to be used for menu tiles
 // TODO Make it look pretty!!!
-var games = [ { "name":"Citadel", "path":"citadel/index.html" }
-             ,{ "name":"Our History","path":"history/index.html" }
+var games = [ { "name":"Citadel", "path":"citadel/index.html", "image":"menu\/citadelMenu.jpg" }
+             ,{ "name":"Our History","path":"history/index.html", "image":"menu\/historyMenu.jpg" }
 ];
 
 var selected;
@@ -83,7 +83,7 @@ function handleInput( button ) {
  */ 
 function generateMenu() {
   $.each( games, function( idx, game ) {
-    var tile = '<div id="' + idx + '" class="tile unselected"><div class="content"><div class="center">' + game.name + '</div></div></div>';
+    var tile = '<div id="' + idx + '" class="tile unselected"><div class="content" style="background-image: url(\''+ game.image +'\');"></div><div class="caret">></div><div class="center">' + game.name + '</div></div>';
     $( '#menu' ).append( tile );
   });
   select( 0 );

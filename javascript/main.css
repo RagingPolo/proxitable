@@ -1,44 +1,54 @@
-div#menu {
-  text-align: center;
-}
-
 body {
-  background-color: #AAAAAA;
-  padding: 5%;
+  background-color: #000;
+  font-family: 'press_start_kregular', Consolas,"Courier New",monospace;
+  color: #fff;
+  margin: 0;
+  text-align: center; 
+  font-size: 1.5em;
 }
 
 .tile {
   display: inline-block;
-  margin: 1px;
-  border: 2px solid;
-  border-radius: 15%;
+  margin: 5px;
   position: relative;
-  width: 25%;
-  padding-bottom: 25%;
-  overflow: hidden;
+  width: 300px;
+  height: 360px;
 }
 
 .content {
-  position: absolute;
-  height: 100%;
-  width: 100%;
+  border-radius: 10%;
+  height:300px;
+  width: 300px;
 }
 
 .center {
   position: absolute;
-  top: 50%;
+  bottom: 0;
   left: 50%;
-  transform: translateX(-50%) translateY(-50%);
-  font-family: "Lucida Console", Monaco, monospace;
-  font-size: 2em;
+  transform: translateX(-50%);
+}
+.unselected > .caret {
+  display: none;
+}
+.caret {
+  position: absolute;
+  bottom: 0;
+  left: 0;
 }
 
-.unselected {
-  border: 2px solid;
-  background-color: #0080FF;
+#bannerTop {
+  max-width:100%;
+  height: auto;
+  padding-top: 15px;
+  padding-bottom: 5%
 }
-
-.selected {
-  border: 6px solid;
-  background-color: #B00000;
+#bannerBot {
+  position: absolute;
+  bottom: 0;
+  width:100%;
+  padding: 20px 0px;
+}
+#bannerBot > img {
+  max-width:100%;
+  height: auto;
 }

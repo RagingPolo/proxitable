@@ -4,8 +4,18 @@ function CitUpdatePos( state, pos ) {
   // Update bottom display
   state.positionMarker.frame = pos;
   // Move the army along
-  state.moveArmyPos = state.point.x[ pos - 1 ];
-  state.position = pos;
+  if( 0 == pos ) {
+    state.p1Castle.frame = 2;
+    state.army.alpha = 0;
+  }
+  else if ( 6 == pos ) {
+    state.p2Castle.frame = 3;
+    state.army.alpha = 0;
+  }
+  else {
+    state.moveArmyPos = state.point.x[ pos - 1 ];
+    state.position = pos;
+  }
 }
 
 /* Display or hide the move board */
