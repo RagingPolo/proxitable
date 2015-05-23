@@ -112,7 +112,7 @@ CitGame.prototype.handleInput = function( button ) {
           for ( var i = this.board.getPosition() ; i < CitBoard.MAX ; ++i ) {
             this.board.moveRight();
           }
-          msg = 'Congratulations, you won!';
+          msg = 'Congratulations,\nyou won!';
           break;
         case 2:
           for ( var i = this.board.getPosition() ; i > 0 ; --i ) {
