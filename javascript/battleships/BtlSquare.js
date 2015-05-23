@@ -18,7 +18,6 @@ BtlSquare.prototype.addId = function( id ) {
 // Add a class to the square
 BtlSquare.prototype.addClass = function( cssClass ) {
   this.cssClass = this.cssClass + ' ' + cssClass;
-  console.log( this.cssClass );
 };
 // Add some content to the square
 BtlSquare.prototype.addContent = function( content ) {

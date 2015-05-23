@@ -38,13 +38,13 @@ BtlShip.prototype.isHit = function( x, y, shot ) {
     // Vertical ship
     if ( this.dir == 'v' && this.x == x ) {
       if ( y >= this.y && y < ( this.y + this.size ) ) {
-        if ( shot ) this.hits[ this.y - y ] = 1;
+        if ( shot ) this.hits[ y - this.y ] = 1;
         return true;
       }
     // Horizontal ship
     } else if ( this.dir == '>' && this.y == y ) {
       if ( x >= this.x && x < ( this.x + this.size ) ) {
-        if ( shot ) this.hits[ this.x - x ] = 1;
+        if ( shot ) this.hits[ x - this.x ] = 1;
         return true;
       }
     }
@@ -54,9 +54,9 @@ BtlShip.prototype.isHit = function( x, y, shot ) {
 // Check if the shit has been sunk
 BtlShip.prototype.isSunk = function() {
   var sunk = 0;
-  $.each( this.hits, function( idx, val ) {
-    sunk += val;
-  });
+  for ( var i = 0 ; i < this.hits.length ; ++i ) {
+    sunk += this.hits[ i ];
+  }
   if ( sunk == this.size ) return true;
   return false;
 };
