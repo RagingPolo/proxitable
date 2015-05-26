@@ -13,6 +13,20 @@ function BtlGame( bsize, view ) {
 }
 BtlGame.prototype.run = function() {
   var self = this;
+  // Turn the correct PES buttons on
+  var pinStat = { "UP": true, "DOWN": true, "LEFT": true, "RIGHT": true,
+                  "SELECT": false, "START": false, "A": true, "B": false };
+  $.ajax( {
+    type: "POST",
+    url: "http://10.0.0.1:8080/pins",
+    contentType: "application/json",
+    dataType: "json",
+    data: pinStat,
+  }).done( function() {
+    console.log( 'PES button setup complete' );
+  }).fail( function() {
+    console.log( 'PES button setup failed' );
+  });
   // Allows for keyboard to simulate pes input
   $( 'html' ).keydown( function ( e ) {
     var keyMap = { 37 : 'LEFT', 39 : 'RIGHT', 38 : 'UP', 40 : 'DOWN',
@@ -21,6 +35,23 @@ BtlGame.prototype.run = function() {
       self.handleInput( keyMap[ e.which ] );
     }
   });
+  this.ajax();
+};
+CitGame.prototype.ajax = function() {
+  var self = this;
+  $.ajax( {
+    type: "GET",
+    url: "http://10.0.0.1:8080/pressed",
+    dataType: "json",
+  }).done( function( data, textStatus, jqXHR  ) {
+    self.handleInput( data.button );
+    // After the request has returned call again
+    self.ajax();
+  }).fail( function( jqXHR, textStatus, errorThrown ) {
+    console.log( 'Button request failed: ' + textStatus );
+    // After the request has returned call again
+    self.ajax();
+  });  
 };
 // Handle the user input forom pes/keyboard
 BtlGame.prototype.handleInput = function( button ) {
