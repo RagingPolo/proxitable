@@ -20,7 +20,7 @@ function BtlBoard( size ) {
     this.ships.push( new BtlShip( 'Submarine', 3 ) );
   }
   if ( this.size == 10 ) {
-    this.ships.push( new BtlShip( 'Aircraft Carrier', 5 ) );
+    this.ships.push( new BtlShip( 'AircraftCarrier', 5 ) );
   }
   // Generate the board
   this.board = [];

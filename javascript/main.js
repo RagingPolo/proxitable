@@ -5,7 +5,8 @@
 // TODO Add game icons/images to be used for menu tiles
 // TODO Make it look pretty!!!
 var games = [ { "name":"Citadel", "path":"citadel/index.html", "image":"menu\/citadelMenu.jpg" }
-             ,{ "name":"Our History","path":"history/index.html", "image":"menu\/historyMenu.jpg" }
+             ,{ "name":"Our History","path":"history/index.html", "image":"menu\/historyMenu.jpg"}
+             ,{ "name":"Battleships","path":"battleships/index.html", "image":"menu\/battleMenu.jpg" }
 ];
 
 var selected;

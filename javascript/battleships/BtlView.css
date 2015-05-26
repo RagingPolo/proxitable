@@ -1,15 +1,45 @@
 * {
   cursor: none;
 }
-
+h1 {
+  text-align: center;
+  font-size: 2.4em;
+}
 body {
-  padding-top: 3.6%;
+  padding-top: 1%;
+  background-image: url(back.jpg);
+  font-family: 'veteran_typewriterregular', monospace;
 }
 #msg {
   clear: both;
   padding: 10px;
   font-size: x-large;
   text-align: center;
+}
+.boat {
+  position: absolute;
+  z-index: 314;
+}
+.boat > img {
+  max-width: 100%;
+  height: auto;
+}
+.vertical {
+  transform-origin: 17%;
+  transform: rotate(90deg);
+}
+#half {
+  width:50%;
+  text-align: center;
+  float: left;
+  font-size: x-large;
+}
+#half-red {
+  width:50%;
+  text-align: center;
+  float: right;
+  font-size: x-large;
+  color: rgb(189, 0, 0);
 }
 .square {
   float: left;
@@ -18,6 +48,12 @@ body {
   width: 3.6%;
   padding-bottom: 3.6%;
   overflow: hidden;
+}
+@media (min-width: 1366px) {
+  .square {
+    width: 3.7%;
+    padding-bottom: 3.7%;
+  }
 }
 .content {
   position: absolute;
@@ -30,8 +66,8 @@ body {
   left: 50%;
   transform: translateX(-50%) translateY(-50%);
 }
-.water { background-color: #0066CC; }
-.ship { background-color: #444444; }
+.water { background-color: rgba(24, 150, 215, 0.71); }
+.ship { background-color: rgba(24, 150, 215, 0.71); }
 .hit { background-color: #DF0101; }
 .miss { background-color: #2ECCFA; }
 .axis { 

@@ -4,6 +4,45 @@ function BtlView( size ) {
   var x = 'A';
   var square = new BtlSquare();
   var body = $( "body" );
+  percentage = '3.6%';
+  percentageNum = 3.7;
+  switch ( size ) {
+    case 10:
+      percentage = '3.7%';
+      percentageNum = 3.7;
+      break;
+    case 9:
+      percentage = '4.1%';
+      percentageNum = 4.1;
+      break;
+    case 8:
+      percentage = '4.5%';
+      percentageNum = 4.5;
+      break;
+    case 7:
+      percentage = '5.0%';
+      percentageNum = 5.0;
+      break;
+    case 6:
+      percentage = '5.6%';
+      percentageNum = 5.6;
+      break;
+    default:
+      break;
+  }
+  $( '.square' ).css( 'width', percentage ).css( 'padding-bottom', percentage );
+  //title
+  body.append('<h1>Battleships</h1>');
+  //fleets
+  body.append('<div id="half">Your Fleet</div>');
+  body.append('<div id="half-red">Enemy Fleet</div>');
+  //ships
+  body.append('<div id="Gunship" class="boat"><img src="2.png"/></div>');
+  body.append('<div id="Submarine" class="boat"><img src="31.png"/></div>');
+  body.append('<div id="Destroyer" class="boat"><img src="32.png"/></div>');
+  body.append('<div id="Battleship" class="boat"><img src="4.png"/></div>');
+  body.append('<div id="AircraftCarrier" class="boat"><img src="5.png"/></div>');
+
   // Create top row
   body.append( square.getHtml() ).append( square.getHtml() );
   for ( var i = 0 ; i < size ; ++i ) {
@@ -50,42 +89,28 @@ function BtlView( size ) {
   // Add message div after board
   body.append( '<div id="msg"></div>' )
   this.msg = $( "#msg" );
-  // Update square size based on baord size
-  percentage = '3.6%';
-  switch ( size ) {
-    case 10:
-      percentage = '3.7%';
-      break;
-    case 9:
-      percentage = '4.1%';
-      break;
-    case 8:
-      percentage = '4.5%';
-      break;
-    case 7:
-      percentage = '5.0%';
-      break;
-    case 6:
-      percentage = '5.6%';
-      break;
-    default:
-      break;
-  }
-  $( '.square' ).css( 'width', percentage ).css( 'padding-bottom', percentage );
   this.x = [ 'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J' ];
 };
 // Add the starting position of the human ships
 BtlView.prototype.placeHumanShips = function( ships ) {
   var pos;
   for ( var i = 0 ; i < ships.length ; ++i ) {
-    for ( var j = 0 ; j < ships[ i ].getSize() ; ++j ) {
-      if ( ships[ i ].getDirection() == '>' ) {
-        pos = this.x[ ships[ i ].getX() + j ] + ( ships[ i ].getY() + 1 );
-      } else { // 'v'
-        pos = this.x[ ships[ i ].getX() ] + ( ships[ i ].getY() + 1 + j );
-      }
-      this.addShip( 'hum', pos );
+    var curShip = $( '#' +ships[i].getName() );
+    //scale ships
+    curShip.css("max-width", '' + (percentageNum * ships[i].getSize()) +'%');
+    //get coords of box for ship
+    pos = this.x[ ships[ i ].getX() ] + ( ships[ i ].getY() + 1 );
+    var location = $( "#hum"  + pos ).offset();
+    //rotate ships
+    if ( ships[ i ].getDirection() == '>' ) {
+
+    } else { // 'v'
+      curShip.addClass("vertical");
     }
+    //positon divs
+    curShip.css("left",location.left);
+    curShip.css("top",location.top );
+    
   }
 };
 // Move the aim on the bot board 
