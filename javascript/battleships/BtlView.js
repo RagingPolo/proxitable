@@ -50,6 +50,28 @@ function BtlView( size ) {
   // Add message div after board
   body.append( '<div id="msg"></div>' )
   this.msg = $( "#msg" );
+  // Update square size based on baord size
+  percentage = '3.6%';
+  switch ( size ) {
+    case 10:
+      percentage = '3.7%';
+      break;
+    case 9:
+      percentage = '4.1%';
+      break;
+    case 8:
+      percentage = '4.5%';
+      break;
+    case 7:
+      percentage = '5.0%';
+      break;
+    case 6:
+      percentage = '5.6%';
+      break;
+    default:
+      break;
+  }
+  $( '.square' ).css( 'width', percentage ).css( 'padding-bottom', percentage );
   this.x = [ 'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J' ];
 };
 // Add the starting position of the human ships
