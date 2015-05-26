@@ -37,7 +37,7 @@ BtlGame.prototype.run = function() {
   });
   this.ajax();
 };
-CitGame.prototype.ajax = function() {
+BtlGame.prototype.ajax = function() {
   var self = this;
   $.ajax( {
     type: "GET",
