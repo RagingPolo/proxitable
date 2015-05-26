@@ -1,8 +1,9 @@
 /******************************************************************************
  * Maintains state of a single ship                                          */
-function BtlShip( name, size ) {
+function BtlShip( name, size, img ) {
   this.name = name;
   this.size = size;
+  this.img = img;
   this.x = null;
   this.y = null;
   this.dir - null;
@@ -46,6 +47,23 @@ BtlShip.prototype.isHit = function( x, y, shot ) {
       if ( x >= this.x && x < ( this.x + this.size ) ) {
         if ( shot ) this.hits[ x - this.x ] = 1;
         return true;
+      }
+    }
+  }
+  return false;
+};
+// If part of the ship is at x,y return the correct img
+BtlShip.prototype.getImg = function( x, y ) {
+  if ( this.x != null && this.y != null && this.dir != null ) {
+    // Vertical ship
+    if ( this.dir == 'v' && this.x == x ) {
+      if ( y >= this.y && y < ( this.y + this.size ) ) {
+        return this.img + ( y - this.y ) + '.png';
+      }
+    // Horizontal ship
+    } else if ( this.dir == '>' && this.y == y ) {
+      if ( x >= this.x && x < ( this.x + this.size ) ) {
+        return this.img + ( x - this.x ) + '.png';
       }
     }
   }

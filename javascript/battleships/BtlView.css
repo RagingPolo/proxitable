@@ -7,7 +7,7 @@ h1 {
 }
 body {
   padding-top: 1%;
-  background-image: url(back.jpg);
+  background-image: url( back.jpg );
   font-family: 'veteran_typewriterregular', monospace;
 }
 #msg {
@@ -15,18 +15,6 @@ body {
   padding: 10px;
   font-size: xx-large;
   text-align: center;
-}
-.boat {
-  position: absolute;
-  z-index: 314;
-}
-.boat > img {
-  max-width: 100%;
-  height: auto;
-}
-.vertical {
-  transform-origin: 10%;
-  transform: rotate(90deg);
 }
 #half {
   width:50%;
@@ -43,17 +31,10 @@ body {
 }
 .square {
   float: left;
-  margin: 2px;
   position: relative;
-  width: 3.6%;
-  padding-bottom: 3.6%;
+  width: 4%;
+  padding-bottom: 4%;
   overflow: hidden;
-}
-@media (min-width: 1366px) {
-  .square {
-    width: 3.7%;
-    padding-bottom: 3.7%;
-  }
 }
 .content {
   position: absolute;
@@ -67,15 +48,16 @@ body {
   transform: translateX(-50%) translateY(-50%);
 }
 .water { background-color: rgba(24, 150, 215, 0.71); }
-.ship { background-color: rgba(24, 150, 215, 0.71); }
 .hit { background-color: #DF0101; }
 .miss { background-color: #2ECCFA; }
 .axis { 
-  margin: 1px;
-  border: 1px solid black;
   background-color: #AAAAAA;
 }
-.selected { 
-  margin: 0px;
-  border: 2px solid red;
+.selected {
+  background-image: url( 'img/aim.png' );
+  background-repeat: no-repeat;
+  background-size: contain;
+}
+.ship { 
+  background-color: rgba(24, 150, 215, 0.71);
 }

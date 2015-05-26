@@ -13,14 +13,14 @@ function BtlBoard( size ) {
   }
   this.size = size;
   // Create the ships
-  this.ships = [ new BtlShip( 'Battleship', 4 ),
-                 new BtlShip( 'Destroyer', 3 ),
-                 new BtlShip( 'Gunship', 2 ) ];
+  this.ships = [ new BtlShip( 'Battleship', 4, 'img/4.' ),
+                 new BtlShip( 'Destroyer', 3, 'img/3-1.' ),
+                 new BtlShip( 'Gunship', 2, 'img/2.' ) ];
   if ( this.size > 7 ) {
-    this.ships.push( new BtlShip( 'Submarine', 3 ) );
+    this.ships.push( new BtlShip( 'Submarine', 3, 'img/3-2.' ) );
   }
   if ( this.size == 10 ) {
-    this.ships.push( new BtlShip( 'AircraftCarrier', 5 ) );
+    this.ships.push( new BtlShip( 'AircraftCarrier', 5, 'img/5.' ) );
   }
   // Generate the board
   this.board = [];

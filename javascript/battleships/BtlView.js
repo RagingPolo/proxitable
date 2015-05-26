@@ -1,48 +1,19 @@
 /******************************************************************************
  * Generate the html view and provide methods to modify it                   */
 function BtlView( size ) {
+  if ( size < 6 ) {
+    size = 6;
+  } else if ( size > 10 ) {
+    size = 10;
+  }
   var x = 'A';
   var square = new BtlSquare();
   var body = $( "body" );
-  percentage = '3.6%';
-  percentageNum = 3.7;
-  switch ( size ) {
-    case 10:
-      percentage = '3.7%';
-      percentageNum = 3.7;
-      break;
-    case 9:
-      percentage = '4.1%';
-      percentageNum = 4.1;
-      break;
-    case 8:
-      percentage = '4.5%';
-      percentageNum = 4.5;
-      break;
-    case 7:
-      percentage = '5.0%';
-      percentageNum = 5.0;
-      break;
-    case 6:
-      percentage = '5.6%';
-      percentageNum = 5.6;
-      break;
-    default:
-      break;
-  }
-  $( '.square' ).css( 'width', percentage ).css( 'padding-bottom', percentage );
   //title
   body.append('<h1>Battleships</h1>');
   //fleets
   body.append('<div id="half">Your Fleet</div>');
   body.append('<div id="half-red">Enemy Fleet</div>');
-  //ships
-  body.append('<div id="Gunship" class="boat"><img src="2.png"/></div>');
-  body.append('<div id="Submarine" class="boat"><img src="31.png"/></div>');
-  body.append('<div id="Destroyer" class="boat"><img src="32.png"/></div>');
-  body.append('<div id="Battleship" class="boat"><img src="4.png"/></div>');
-  body.append('<div id="AircraftCarrier" class="boat"><img src="5.png"/></div>');
-
   // Create top row
   body.append( square.getHtml() ).append( square.getHtml() );
   for ( var i = 0 ; i < size ; ++i ) {
@@ -87,31 +58,48 @@ function BtlView( size ) {
     body.append( square.getHtml() );
   }
   // Add message div after board
+  switch ( size ) {
+    case 10:
+      percentage = '4%';
+      break;
+    case 9:
+      percentage = '4.34%';
+      break;
+    case 8:
+      percentage = '4.76%';
+      break;
+    case 7:
+      percentage = '5.26%';
+      break;
+    case 6:
+      percentage = '5.88%';
+      break;
+    default:
+      break;
+  }
   body.append( '<div id="msg"></div>' )
   this.msg = $( "#msg" );
+  $( '.square' ).css( 'width', percentage ).css( 'padding-bottom', percentage );
   this.x = [ 'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J' ];
 };
 // Add the starting position of the human ships
 BtlView.prototype.placeHumanShips = function( ships ) {
   var pos;
+  var img;
   for ( var i = 0 ; i < ships.length ; ++i ) {
-    var curShip = $( '#' +ships[i].getName() );
-    //scale ships
-    curShip.css("max-width", '' + (percentageNum * ships[i].getSize()) +'%');
-    //get coords of box for ship
-    pos = this.x[ ships[ i ].getX() ] + ( ships[ i ].getY() + 1 );
-    var location = $( "#hum"  + pos ).offset();
-    //rotate ships
-    if ( ships[ i ].getDirection() == '>' ) {
-
-    } else { // 'v'
-      curShip.addClass("vertical");
+    for ( var j = 0 ; j < ships[ i ].getSize() ; ++j ) {
+      if ( ships[ i ].getDirection() == '>' ) {
+        pos = this.x[ ships[ i ].getX() + j ] + ( ships[ i ].getY() + 1 );
+        img = ships[ i ].getImg( ships[ i ].getX() + j, ships[ i ].getY() ); 
+      } else { // 'v'
+        pos = this.x[ ships[ i ].getX() ] + ( ships[ i ].getY() + 1 + j );
+        img = ships[ i ].getImg( ships[ i ].getX(), ships[ i ].getY() + j ); 
+      }
+      this.addShip( 'hum', pos );
+      this.addImg( 'hum', pos, img, ships[ i ].getDirection() );        
     }
-    //positon divs
-    curShip.css("left",location.left);
-    curShip.css("top",location.top );
-    
   }
+
 };
 // Move the aim on the bot board 
 BtlView.prototype.setAim = function( pos ) {
@@ -132,7 +120,16 @@ BtlView.prototype.addMiss = function( player, move ) {
   var pos = this.x[ move.getX() ] + ( move.getY() + 1 );
   this.addClass( player, pos, "miss" );
 };
-
+// Add a background image to a element
+BtlView.prototype.addImg = function( player, pos, img, dir ) {
+  var elem = $( '#' + player + pos );
+  elem.css( 'background-image', 'url(' + img + ')' ); 
+  elem.css( 'background-repeat', 'no-repeat' ); 
+  elem.css( 'background-size', 'contain' ); 
+  if ( 'v' == dir ) {
+    elem.css( 'transform',  'rotate(90deg)' );
+  }
+};
 // Incrememt a single character A->B etc
 function inc( c ) {
   return String.fromCharCode( c.charCodeAt( 0 ) + 1 );
