@@ -1,26 +1,27 @@
 from flask import Flask, jsonify, request
 import RPi.GPIO as GPIO
-from time import sleep
+import time
 from flask.ext.cors import cross_origin
 
 app = Flask( __name__ )
 # Relevent pins for the PES hardware
-INPUT_PINS  = { 'UP' : 13,
-                'DOWN' : 31,
-                'LEFT' : 11,
-                'RIGHT' : 15,
-                'START' : 33,
-                'SELECT' : 29,
-                'A' : 37, 
-                'B' : 35 }
-OUTPUT_PINS = { 'UP' : 16,
-                'DOWN' : 32,
-                'LEFT' : 12,
-                'RIGHT' : 18,
-                'START' : 36,
-                'SELECT' : 22,
-                'A' : 40,
-                'B' : 38 }
+INPUT_PINS  = { 'UP' : 23,
+                'DOWN' : 18,
+                'LEFT' : 26,
+                'RIGHT' : 21,
+                'START' : 12,
+                'SELECT' : 15,
+                'A' : 7, 
+                'B' : 15 }
+OUTPUT_PINS = { 'UP' : 22,
+                'DOWN' : 16,
+                'LEFT' : 24,
+                'RIGHT' : 19,
+                'START' : 11,
+                'SELECT' : 13,
+                'A' : 5,
+                'B' : 8 }
+TIME = None;
 
 @app.route( '/pins', methods = [ 'POST' ] )
 @cross_origin( allow_headers=['Content-Type'] )
@@ -39,6 +40,15 @@ def pins():
 @app.route( '/pressed', methods = [ 'GET' ] )
 @cross_origin( allow_headers=['Content-Type'] )
 def pressed():
+  # We are unable to use redis based rate limiting as py-redis dosen't support 3.4.2 yet
+  # until it does we have a hacky solution
+  if TIME is None:
+    TIME = int( time.time() )
+  else:
+    if int( time.time() ) - TIME < 3:
+      return Response( 'Rate limited', 429 )
+    else:
+      TIME = int( time.time() )
   # Poll GPIO pins
   pressed = None
   while pressed == None:
@@ -46,7 +56,7 @@ def pressed():
       if GPIO.input( pin ):
         pressed = button
         break
-    sleep( 0.1 )
+    time.sleep( 0.1 )
   return jsonify( { 'button' : pressed } )
 
 if '__main__' == __name__:
