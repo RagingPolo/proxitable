@@ -125,10 +125,21 @@ BtlGame.prototype.handleInput = function( button ) {
 BtlGame.prototype.checkWinner = function() {
   if ( this.players.bot.getBoard().isAllSunk() ) {
     this.winner = 1;
-    this.view.showMsg( "Well done, you win!" );
   }
   if ( this.players.human.getBoard().isAllSunk() ) {
     this.winner = 2;
-    this.view.showMsg( "Your fleet is sunk, you lose!" );
+  }
+  if ( this.winner > 0 ) {
+    if ( 1 == this.winner ) {
+      this.view.showMsg( "Well done, you win!" );
+    } else {
+      this.view.showMsg( "Your fleet is sunk, you lose!" );
+    }
+    // Return to main menu
+    setTimeout( function() { 
+      var url = window.location.href;
+      url = url.substring( 0, url.lastIndexOf( "/" ) + 1 ) + "../index.html";
+      window.location.replace( url );
+    }, 5000 );
   }
 };

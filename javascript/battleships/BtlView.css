@@ -13,7 +13,7 @@ body {
 #msg {
   clear: both;
   padding: 10px;
-  font-size: x-large;
+  font-size: xx-large;
   text-align: center;
 }
 .boat {
@@ -32,13 +32,13 @@ body {
   width:50%;
   text-align: center;
   float: left;
-  font-size: x-large;
+  font-size: xx-large;
 }
 #half-red {
   width:50%;
   text-align: center;
   float: right;
-  font-size: x-large;
+  font-size: xx-large;
   color: rgb(189, 0, 0);
 }
 .square {
