@@ -48,8 +48,12 @@ body {
   transform: translateX(-50%) translateY(-50%);
 }
 .water { background-color: rgba(24, 150, 215, 0.71); }
-.hit { background-color: #DF0101; }
-.miss { background-color: #2ECCFA; }
+.hit { 
+  background-color: rgba(223, 10, 10, 0.71);
+}
+.miss {
+  background-color: rgba(46, 204, 250, 0.71);
+}
 .axis { 
   background-color: #AAAAAA;
 }
