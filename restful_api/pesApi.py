@@ -21,7 +21,6 @@ OUTPUT_PINS = { 'UP' : 22,
                 'SELECT' : 13,
                 'A' : 5,
                 'B' : 8 }
-TIME = None;
 
 @app.route( '/pins', methods = [ 'POST' ] )
 @cross_origin( allow_headers=['Content-Type'] )
@@ -42,13 +41,7 @@ def pins():
 def pressed():
   # We are unable to use redis based rate limiting as py-redis dosen't support 3.4.2 yet
   # until it does we have a hacky solution
-  if TIME is None:
-    TIME = int( time.time() )
-  else:
-    if int( time.time() ) - TIME < 3:
-      return Response( 'Rate limited', 429 )
-    else:
-      TIME = int( time.time() )
+  time.sleep( 0.4 );
   # Poll GPIO pins
   pressed = None
   while pressed == None:
