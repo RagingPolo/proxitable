@@ -1,7 +1,8 @@
 /* AI player for citadel */
 function CitBot() {
-  this.pos          = 3
-  this.opPoints     = 50
+  this.pos          = 3;
+  this.opPoints     = 50;
+  this.startPoints  = 50;
   this.last         = 0;
 }
 /* Calculate the next AI move */
@@ -37,9 +38,8 @@ CitBot.prototype.getMove = function( points, opLast ) {
       else move = this.random( points * ( 1/4 ), points * ( 1/3 ) ); 
       break;
     case 3:
-      if ( points == this.startPoints ) move = ( Math.random() * 12 ) + 1;
-      else if ( ( points * ( 2/3 ) ) > ( this.opPoints * ( 3/4 ) ) ) move = ( points * ( 2/3 ) ) - ( points * ( 1/4 ) );
-      else move = this.random( points * ( 1/4 ), points * ( 1/3 ) ); 
+      max = ( points > 10 ) ? 10 : points ;
+      move = ( Math.random() * max ) + 1;
       break;
     case 4:
       if ( ( points * ( 1/3 ) ) > this.opPoints ) move = points * ( 2/3 );
@@ -63,6 +63,7 @@ CitBot.prototype.getMove = function( points, opLast ) {
   if ( move == 0 ) {
     move = 1;
   }
+  console.log(this.pos + ' ' + move);
   return move;
 };
 /* Generate a random move between the min and max values */
