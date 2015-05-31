@@ -12,7 +12,7 @@ INPUT_PINS  = { 'UP' : 23,
                 'START' : 12,
                 'SELECT' : 15,
                 'A' : 7, 
-                'B' : 15 }
+                'B' : 10 }
 OUTPUT_PINS = { 'UP' : 22,
                 'DOWN' : 16,
                 'LEFT' : 24,
