@@ -2,19 +2,19 @@
 // Any new game can be completly self contained as the main menu
 // will load the game 'page'. All that is required is the game
 // re loads this main menu when complete.
-// TODO Add game icons/images to be used for menu tiles
-// TODO Make it look pretty!!!
 var games = [ { "name":"Citadel", "path":"citadel/index.html", "image":"menu\/citadelMenu.jpg" }
              ,{ "name":"Our History","path":"history/index.html", "image":"menu\/historyMenu.jpg"}
              ,{ "name":"Battleships","path":"battleships/index.html", "image":"menu\/battleMenu.jpg" }
 ];
 
 var selected;
+var save = '';
 
 $( document ).ready( function() {
   // Turn the correct PES buttons on
-  var pinStat = { "UP": false, "DOWN": false, "LEFT": true, "RIGHT": true,
-                  "SELECT": false, "START": true, "A": false, "B": false };
+  var pinStat = { "UP": true, "DOWN": true, "LEFT": true, "RIGHT": true,
+                  "SELECT": true, "START": true, "A": true, "B": true };
+  var code = new Code();
   $.ajax( {
     type: "POST",
     url: "http://10.0.0.1:8080/pins",
@@ -27,12 +27,13 @@ $( document ).ready( function() {
     console.log( 'PES button setup failed' );
   });
   generateMenu();
-  getButton();
+  getButton( code );
   // Allows for keyboard to simulate pes input
   $( 'html' ).keydown( function ( e ) {
-    var keyMap = { 37 : 'LEFT', 39 : 'RIGHT', 13 : 'START' };
+    var keyMap = { 37 : 'LEFT', 38 : 'UP', 39 : 'RIGHT', 40 : 'DOWN',
+                   65 : 'A', 66 : 'B', 13 : 'START', 83 : 'SELECT' };
     if ( e.which in keyMap ) {
-      handleInput( keyMap[ e.which ] );
+      handleInput( keyMap[ e.which ], code );
     }
   });
 });
@@ -40,26 +41,26 @@ $( document ).ready( function() {
 /*
  * Call the PES RESTful api for button presses
  */
-function getButton() {
+function getButton( code ) {
   $.ajax( {
     type: "GET",
     url: "http://10.0.0.1:8080/pressed",
     dataType: "json",
   }).done( function( data, textStatus, jqXHR  ) {
-    handleInput( data.button );
+    handleInput( data.button, code );
     // After the request has returned call again
-    getButton();
+    getButton( code );
   }).fail( function( jqXHR, textStatus, errorThrown ) {
     console.log( 'Button request failed: ' + textStatus );
     // After the request has returned call again
-    getButton();
+    getButton( code );
   });  
 }
 
 /*
  * Handle the PES/keyboard input
  */
-function handleInput( button ) {
+function handleInput( button, code ) {
   switch( button ) {
     case 'LEFT':
       select( selected -1 );
@@ -76,6 +77,7 @@ function handleInput( button ) {
       // Do nothing
       break;
   }
+  code.next( button );
 }
 
 /*
@@ -102,3 +104,25 @@ function select( id ) {
   $( '#' + id ).removeClass( 'unselected' ).addClass( 'selected' );
   selected = id;
 };
+
+
+function Code() {
+  this.code = ['UP', 'UP', 'DOWN', 'DOWN', 'LEFT', 'RIGHT', 'LEFT', 'RIGHT', 'B', 'A'];
+  this.pos = 0;
+}
+Code.prototype.next = function(next) {
+  if (next == this.code[this.pos]) {
+    this.pos += 1;
+    if (this.pos == this.code.length) {
+      save = $( 'body' ).html();
+      $( 'body' ).html( '<video id="rickroll" onended="end()"><source src="rickroll.mp4" type="video/mp4"></video>' );
+      $( "#rickroll" )[ 0 ].play()
+      this.pos = 0;
+    }
+  } else {
+    this.pos = 0;
+  }
+};
+function end() {
+  $( 'body' ).html( save );
+}
