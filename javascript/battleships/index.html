@@ -15,7 +15,7 @@
       $( document ).ready( function() {
         var size = 6;
         var view = new BtlView( size );
-        var game = new BtlGame( size, view );
+        var game = new BtlGame( size, view, true /* true == easy, false == hard */ );
         game.run();
       });
     </script>

@@ -1,11 +1,11 @@
 /******************************************************************************
  * Run game and enforce game logic                                           */
-function BtlGame( bsize, view ) {
+function BtlGame( bsize, view, easy ) {
   this.size = bsize;
   this.view = view;
   this.players = { 'human' : new BtlPlayer( 'Player 1', bsize ),
                    'bot' : new BtlPlayer( 'Player 2', bsize ) };
-  this.bot = new BtlBot( bsize );
+  this.bot = new BtlBot( bsize, easy );
   this.selected = [ 0, 0 ];
   this.winner = 0;
   this.view.placeHumanShips( this.players[ 'human' ].getBoard().getShips() );

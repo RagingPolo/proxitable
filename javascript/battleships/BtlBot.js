@@ -1,7 +1,8 @@
 /******************************************************************************
  * Computer player logic                                                     */
-function BtlBot( bsize ) {
+function BtlBot( bsize, easy ) {
   this.bsize = bsize;
+  this.easy = easy;
   this.lock = {
     'on': false,
     'x': null, 
@@ -20,100 +21,102 @@ BtlBot.prototype.getMove = function( history ) {
   var move = null;
   var x, y;
   var last = ( history.length > 0 ) ? history.slice( -1 )[ 0 ] : null;
-  // If our last random shot hit something turn the lock on
-  if ( ( false == this.lock.on ) && ( last != null ) && ( last.isHit() ) ) {
-    this.lock.on = true;
-    this.lock.x = last.getX();
-    this.lock.y = last.getY();
-  }
-  // If we have a lock start homing in on the ship
-  if ( this.lock.on ) {
-    // If a direction is set to true we check the last shot
-    // if it was a miss we try the next untried direction
-    // otherwise we check if the next shot in that direction 
-    // is legal and not already played
-    // If we have to hits in one direction we whether the ship
-    // is horizontal or vertical and can ignore the other
-    if ( this.lock.direction.up != null ) {
-      if ( last.isHit() ) {
-        ++this.lock.direction.up;
-        if ( this.lock.direction.up >= 2 ) {
-          this.lock.direction.left = null;
-          this.lock.direction.right = null;
-        }
-        x = last.getX();
-        y = last.getY() - 1;
-        if ( ( y >= 0 ) && ( this.isUnique( x, y, history ) ) ) {
-          move = [ x, y ];
+  if ( this.easy != true ) {
+    // If our last random shot hit something turn the lock on
+    if ( ( false == this.lock.on ) && ( last != null ) && ( last.isHit() ) ) {
+      this.lock.on = true;
+      this.lock.x = last.getX();
+      this.lock.y = last.getY();
+    }
+    // If we have a lock start homing in on the ship
+    if ( this.lock.on ) {
+      // If a direction is set to true we check the last shot
+      // if it was a miss we try the next untried direction
+      // otherwise we check if the next shot in that direction 
+      // is legal and not already played
+      // If we have to hits in one direction we whether the ship
+      // is horizontal or vertical and can ignore the other
+      if ( this.lock.direction.up != null ) {
+        if ( last.isHit() ) {
+          ++this.lock.direction.up;
+          if ( this.lock.direction.up >= 2 ) {
+            this.lock.direction.left = null;
+            this.lock.direction.right = null;
+          }
+          x = last.getX();
+          y = last.getY() - 1;
+          if ( ( y >= 0 ) && ( this.isUnique( x, y, history ) ) ) {
+            move = [ x, y ];
+          } else {
+            this.lock.direction.up = null;
+          }
         } else {
           this.lock.direction.up = null;
         }
-      } else {
-        this.lock.direction.up = null;
       }
-    }
-    if ( ( null == move ) && ( this.lock.direction.down != null ) ) {
-      if ( ( 0 == this.lock.direction.down ) || ( last.isHit() ) ) {
-        if ( 0 == this.lock.direction.down ) {
-          x = this.lock.x;
-          y = this.lock.y + 1;
-        } else {
-          x = last.getX();
-          y = last.getY() + 1;
-        }
-        ++this.lock.direction.down;
-        if ( this.lock.direction.down >= 2 ) {
-          this.lock.direction.left = null;
-          this.lock.direction.right = null;
-        }
-        if ( ( y < this.bsize ) && ( this.isUnique( x, y, history ) ) ) {
-          move = [ x, y ];
+      if ( ( null == move ) && ( this.lock.direction.down != null ) ) {
+        if ( ( 0 == this.lock.direction.down ) || ( last.isHit() ) ) {
+          if ( 0 == this.lock.direction.down ) {
+            x = this.lock.x;
+            y = this.lock.y + 1;
+          } else {
+            x = last.getX();
+            y = last.getY() + 1;
+          }
+          ++this.lock.direction.down;
+          if ( this.lock.direction.down >= 2 ) {
+            this.lock.direction.left = null;
+            this.lock.direction.right = null;
+          }
+          if ( ( y < this.bsize ) && ( this.isUnique( x, y, history ) ) ) {
+            move = [ x, y ];
+          } else {
+            this.lock.direction.down = null;
+          }
         } else {
           this.lock.direction.down = null;
         }
-      } else {
-        this.lock.direction.down = null;
-      }
-    }
-    if ( ( null == move ) && ( this.lock.direction.left != null ) ) {
-      if ( ( 0 == this.lock.direction.left ) || ( last.isHit() ) ) {
-        if ( 0 == this.lock.direction.left ) {
-          x = this.lock.x - 1;
-          y = this.lock.y;
-        } else {
-          x = last.getX() - 1;
-          y = last.getY();
-        }
-        ++this.lock.direction.left;
-        if ( ( x >= 0 ) && ( this.isUnique( x, y, history ) ) ) {
-          move = [ x, y ];
+      } 
+      if ( ( null == move ) && ( this.lock.direction.left != null ) ) {
+        if ( ( 0 == this.lock.direction.left ) || ( last.isHit() ) ) {
+          if ( 0 == this.lock.direction.left ) {
+            x = this.lock.x - 1;
+            y = this.lock.y;
+          } else {
+            x = last.getX() - 1;
+            y = last.getY();
+          }
+          ++this.lock.direction.left;
+          if ( ( x >= 0 ) && ( this.isUnique( x, y, history ) ) ) {
+            move = [ x, y ];
+          } else {
+            this.lock.direction.left = null;
+          }
         } else {
           this.lock.direction.left = null;
         }
-      } else {
-        this.lock.direction.left = null;
       }
-    }
-    if ( ( null == move ) && ( this.lock.direction.right != null ) ) {
-      if ( ( 0 == this.lock.direction.right ) || ( last.isHit() ) ) {
-        if ( 0 == this.lock.direction.right ) {
-          x = this.lock.x + 1;
-          y = this.lock.y;
-        } else {
-          x = last.getX() + 1;
-          y = last.getY();
-        }
-        ++this.lock.direction.right;
-        if ( ( x < this.bsize ) && ( this.isUnique( x, y, history ) ) ) {
-          move = [ x, y ];
+      if ( ( null == move ) && ( this.lock.direction.right != null ) ) {
+        if ( ( 0 == this.lock.direction.right ) || ( last.isHit() ) ) {
+          if ( 0 == this.lock.direction.right ) {
+            x = this.lock.x + 1;
+            y = this.lock.y;
+          } else {
+            x = last.getX() + 1;
+            y = last.getY();
+          }
+          ++this.lock.direction.right;
+          if ( ( x < this.bsize ) && ( this.isUnique( x, y, history ) ) ) {
+            move = [ x, y ];
+          } else {
+            this.lock.direction.right = null;
+          }
         } else {
           this.lock.direction.right = null;
         }
-      } else {
-        this.lock.direction.right = null;
       }
+      this.resetLock();
     }
-    this.resetLock();
   }
   // We have not generated a move so just fire anywhere
   if ( null == move ) {
