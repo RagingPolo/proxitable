@@ -12,7 +12,7 @@ function ConGame( view ) {
 // Run the game
 ConGame.prototype.run = function() {
   var self = this;
-  this.view.showMsg( 'The aim of the game is to get 4 pieces of your colour in a row. This can be horizontally, vertically or diagonally.<br /><ul><li>Press B when you are ready</li><li>Use LEFT and RIGHT to choose your column</li><li>Press A to drop a piece</li></ul><p><center>Press START to continue</center></p>', 1200, 660 );
+  this.view.showMsg( 'The aim of the game is to get 4 pieces of your colour in a row. This can be horizontally, vertically or diagonally.<br /><ul><li>Press B when you are ready to play your move</li><li>Use LEFT and RIGHT to choose your column</li><li>Press A to drop a piece</li></ul><p><center>Press START to continue</center></p>', 1200, 700 );
   // Turn the correct PES buttons on
   var pinStat = { "UP": false, "DOWN": false, "LEFT": true, "RIGHT": true,
                   "SELECT": false, "START": true, "A": true, "B": true };
@@ -57,10 +57,12 @@ ConGame.prototype.ajax = function() {
 // Make game actions based on recieved input
 ConGame.prototype.handleInput = function( button ) {
   var self = this;
-  if ( ( this.help ) && ( 'START' == button ) ) {
-    this.view.showMsg( 'Player ' + this.player + ' ready?' );
-    this.help = false;
-    this.view.setSelected( this.selected );
+  if ( this.help ) {
+    if ( 'START' == button ) {
+      this.view.showMsg( 'Player ' + this.player + ' ready?' );
+      this.help = false;
+      this.view.setSelected( this.selected );
+    }
   } else {
     if ( 0 == this.winner ) {
       switch ( button ) {
