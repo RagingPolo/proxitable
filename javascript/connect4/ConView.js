@@ -42,9 +42,27 @@ ConView.prototype.drop = function( id, player ) {
   $( '#' + id ).css( 'background-color', colour );
 };
 // Display a message
-ConView.prototype.showMsg = function( msg ) {
-  $( '#msg' ).html( msg ).show();
+ConView.prototype.showMsg = function( msg, width, height ) {
+  if ( undefined === width ) {
+    width = 500;
+  }
+  if ( undefined === height ) {
+    height = 100;
+  }
+  var div = $( '#msg' )
+  div.css( 'width', width + 'px' );
+  div.css( 'height', height + 'px' );
+  div.css( 'margin-left', '-' + ( width / 2 ) + 'px' );
+  div.css( 'margin-top', '-' + ( height / 2 ) + 'px' );
+  div.html( msg ).show();
 }
-ConView.prototype.fadeMsg = function( time ) {
-  $( '#msg' ).fadeOut( time );
+ConView.prototype.fadeMsg = function( time, callback, args ) {
+  if ( undefined === callback ) {
+    $( '#msg' ).fadeOut( time );
+  } else {
+    $( '#msg' ).fadeOut( time, callback( args ) );
+  }
 }
+ConView.prototype.hideMsg = function() {
+  $( '#msg' ).hide();
+};
