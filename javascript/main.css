@@ -16,6 +16,7 @@ body {
 }
 
 .content {
+  background-size: contain;
   border-radius: 10%;
   height:300px;
   width: 300px;

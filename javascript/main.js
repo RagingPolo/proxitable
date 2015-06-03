@@ -5,6 +5,7 @@
 var games = [ { "name":"Citadel", "path":"citadel/index.html", "image":"menu\/citadelMenu.jpg" }
              ,{ "name":"Our History","path":"history/index.html", "image":"menu\/historyMenu.jpg"}
              ,{ "name":"Battleships","path":"battleships/index.html", "image":"menu\/battleMenu.jpg" }
+             ,{ "name":"4 in a Row","path":"connect4/index.html", "image":"menu\/connectMenu.jpg" }
 ];
 
 var selected;

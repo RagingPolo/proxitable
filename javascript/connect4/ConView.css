@@ -1,0 +1,80 @@
+body {
+  background-image: url( 'img/woodpanel.jpg' );
+  background-size: contain; 
+}
+#msg {
+  padding: 5px;
+  width: 500px;
+  height: 100px;
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  margin-left: -250px;
+  margin-top: -50px;
+  text-align: center;
+  background-color: #AAAAAA;
+  font-family: 'press_start_kregular', Consolas,"Courier New",monospace;
+  font-size: 3em;
+  border: 5px solid black;
+  border-radius: 30px;
+}
+.board {
+  margin-top: 1%;
+  margin-left: 22%;
+  margin-right: 22%;
+}
+.square {
+  float: left;
+  position: relative;
+  width: 13.85714%;
+  padding-bottom: 13.85714%;
+  overflow: hidden;
+}
+.square-border {
+  float: left;
+  position: relative;
+  width: 1.5%;
+  padding-bottom: 13.85714%;
+  overflow: hidden;
+}
+.grid {
+  background-color: white;
+  background-image: url( 'img/grid.png' );
+  background-size: contain; 
+}
+.grid-border {
+  background-color: #070791; 
+}
+.drop { 
+
+}
+.selected {
+  background-image: url( 'img/arrow.svg' );
+  background-position: bottom;
+  background-size: contain;
+  background-repeat: no-repeat;
+  -webkit-animation-duration: 2s; 
+  animation-duration: 2s; 
+  -webkit-animation-fill-mode: both; 
+  animation-fill-mode: both; 
+  animation-iteration-count:infinite; 
+  -webkit-animation-iteration-count:infinite; 
+} 
+
+@-webkit-keyframes bounce { 
+  0%, 20%, 50%, 80%, 100% {-webkit-transform: translateY(0);} 
+  40% {-webkit-transform: translateY(-30px);} 
+  60% {-webkit-transform: translateY(-15px);} 
+} 
+
+@keyframes bounce { 
+  0%, 20%, 50%, 80%, 100% {transform: translateY(0);} 
+  40% {transform: translateY(-30px);} 
+  60% {transform: translateY(-15px);} 
+} 
+
+.bounce { 
+  -webkit-animation-name: bounce; 
+  animation-name: bounce; 
+}
+

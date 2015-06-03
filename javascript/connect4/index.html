@@ -1,0 +1,20 @@
+<html>
+  <head>
+    <script src="jquery-2.1.4.min.js"></script>
+    <link rel="stylesheet" type="text/css" href="font/font.css" />
+    <link rel="stylesheet" type="text/css" href="ConView.css" />
+    <script src="ConView.js"></script>
+    <script src="ConBoard.js"></script>
+    <script src="ConGame.js"></script>
+    <script>
+      $( document ).ready( function() {
+        var view = new ConView();
+        var game = new ConGame( view );
+        game.run(); 
+      });
+    </script>
+  </head>
+  <body>
+  <!-- game view inserted here -->
+  </body>
+</html>
