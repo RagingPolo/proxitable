@@ -42,8 +42,12 @@ CitGame.prototype.ajax = function() {
   });  
 };
 CitGame.prototype.handleInput = function( button ) {
+  var self = this;
   if ( !this.winner ) {
     switch ( button ) {
+      case 'E':
+        self.exit();
+        break; 
       case 'UP':
         // Increase the propsed move by one
         if ( !( CitUpdateInstructionsVisible( this.state ) ) &&
@@ -131,9 +135,7 @@ CitGame.prototype.handleInput = function( button ) {
       CitUpdatePos( this.state, this.board.getPosition() );
       // Return to main menu or if single game refresh the game when finished
       setTimeout( function() { 
-        var url = window.location.href;
-        url = url.substring( 0, url.lastIndexOf( "/" ) + 1 ) + "../index.html";
-        window.location.replace( url );
+        self.exit();
       }, 5000 );
     }
   }
@@ -175,10 +177,15 @@ CitGame.prototype.run = function() {
   // Allows for keyboard to simulate pes input
   $( 'html' ).keydown( function ( e ) {
     var keyMap = { 37 : 'LEFT', 39 : 'RIGHT', 38 : 'UP', 40 : 'DOWN',
-                   13 : 'START', 83 : 'SELECT', 65 : 'A', 66 : 'B' };
+                   13 : 'START', 83 : 'SELECT', 65 : 'A', 66 : 'B', 69 : 'E' };
     if ( e.which in keyMap ) {
       self.handleInput( keyMap[ e.which ] );
     }
   });
+};
+CitGame.prototype.exit = function() {
+  var url = window.location.href;
+  url = url.substring( 0, url.lastIndexOf( "/" ) + 1 ) + "../index.html";
+  window.location.replace( url );
 };
 /*****************************************************************************/

@@ -30,7 +30,7 @@ BtlGame.prototype.run = function() {
   // Allows for keyboard to simulate pes input
   $( 'html' ).keydown( function ( e ) {
     var keyMap = { 37 : 'LEFT', 39 : 'RIGHT', 38 : 'UP', 40 : 'DOWN',
-                   13 : 'START', 83 : 'SELECT', 65 : 'A', 66 : 'B' };
+                   13 : 'START', 83 : 'SELECT', 65 : 'A', 66 : 'B', 69 : 'E' };
     if ( e.which in keyMap ) {
       self.handleInput( keyMap[ e.which ] );
     }
@@ -56,6 +56,9 @@ BtlGame.prototype.ajax = function() {
 // Handle the user input forom pes/keyboard
 BtlGame.prototype.handleInput = function( button ) {
   switch ( button ) {
+    case 'E':
+      this.exit();
+      break;   
     case 'LEFT':
       if ( this.selected[ 0 ] > 0 ) {
         --this.selected[ 0 ];
@@ -123,6 +126,7 @@ BtlGame.prototype.handleInput = function( button ) {
 };
 // Check if we have a winner return player number or zero if no winner
 BtlGame.prototype.checkWinner = function() {
+  var self = this;
   if ( this.players.bot.getBoard().isAllSunk() ) {
     this.winner = 1;
   }
@@ -136,10 +140,13 @@ BtlGame.prototype.checkWinner = function() {
       this.view.showMsg( "Your fleet is sunk, you lose!" );
     }
     // Return to main menu
-    setTimeout( function() { 
-      var url = window.location.href;
-      url = url.substring( 0, url.lastIndexOf( "/" ) + 1 ) + "../index.html";
-      window.location.replace( url );
+    setTimeout( function() {
+      self.exit(); 
     }, 5000 );
   }
+};
+BtlGame.prototype.exit = function() {
+  var url = window.location.href;
+  url = url.substring( 0, url.lastIndexOf( "/" ) + 1 ) + "../index.html";
+  window.location.replace( url );
 };

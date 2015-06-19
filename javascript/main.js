@@ -2,11 +2,12 @@
 // Any new game can be completly self contained as the main menu
 // will load the game 'page'. All that is required is the game
 // re loads this main menu when complete.
-var games = [ { "name":"Citadel", "path":"citadel/index.html", "image":"menu\/citadelMenu.jpg" }
-             ,{ "name":"Our History","path":"history/index.html", "image":"menu\/historyMenu.jpg"}
+var games = [ { "name":"Our History","path":"history/index.html", "image":"menu\/historyMenu.jpg"}
              ,{ "name":"Battleships","path":"battleships/index.html", "image":"menu\/battleMenu.jpg" }
              ,{ "name":"4 in a Row","path":"connect4/index.html", "image":"menu\/connectMenu.jpg" }
 ];
+
+// { "name":"Citadel", "path":"citadel/index.html", "image":"menu\/citadelMenu.jpg" },
 
 var selected;
 var save = '';
